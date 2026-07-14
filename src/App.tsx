@@ -229,26 +229,26 @@ export default function App() {
   selectedVideo.aspectRatio.includes('16:9') ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-5'
 }`}>
   
-  {/* Left Side: Video Monitor Box (Adapts conditionally based on Aspect Ratio) */}
-  <div className={`relative bg-black flex items-center justify-center group w-full ${
-    selectedVideo.aspectRatio.includes('16:9') 
-      ? 'aspect-video max-h-[600px] mx-auto' 
-      : 'md:col-span-2 aspect-[9/16] max-h-[650px] mx-auto border-b md:border-b-0 md:border-r border-border-muted'
-  }`}>
-    <video
-  ref={videoRef}
-  src={selectedVideo.videoUrl}
-  className={`w-full h-full object-cover transition-all duration-300 ${
-    colorGrade === 'raw' ? 'saturate-[0.4] contrast-[0.9] brightness-[0.95]' : selectedVideo.cinematicFilter
-  }`}
-  loop
-  playsInline
-  preload="metadata"
-  controlsList="nodownload"
-  onTimeUpdate={handleTimeUpdate}
-  onLoadedMetadata={handleLoadedMetadata}
-  onClick={() => setIsPlaying(!isPlaying)}
-/>
+ {/* Left Side: Video Monitor Box */}
+<div className={`relative bg-black flex items-center justify-center group w-full ${
+  selectedVideo.aspectRatio.includes('16:9') 
+    ? 'aspect-video max-h-[600px] mx-auto' 
+    : 'md:col-span-2 aspect-[9/16] max-h-[750px] mx-auto border-b md:border-b-0 md:border-r border-border-muted'
+}`}>
+  <video
+    ref={videoRef}
+    src={selectedVideo.videoUrl}
+    className={`w-full h-full object-contain transition-all duration-300 ${
+      colorGrade === 'raw' ? 'saturate-[0.4] contrast-[0.9] brightness-[0.95]' : selectedVideo.cinematicFilter
+    }`}
+    loop
+    playsInline
+    preload="metadata"
+    controlsList="nodownload"
+    onTimeUpdate={handleTimeUpdate}
+    onLoadedMetadata={handleLoadedMetadata}
+    onClick={() => setIsPlaying(!isPlaying)}
+  />
 
     <div className="absolute inset-x-0 top-0 p-3 bg-gradient-to-b from-black/60 to-transparent flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-mono text-[9px]">
       <span className="text-red-500 flex items-center gap-1">
