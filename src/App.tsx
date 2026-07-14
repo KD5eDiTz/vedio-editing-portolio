@@ -34,7 +34,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 60.00,
     description: 'Dynamic product promo engineered with kinetic subtitles, zero dead air, and hyper-pacing.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/v1783997093/FILE_1_ilryuy.mp4',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_1_ilryuy.mp4',
     cinematicFilter: 'saturate-[1.25] contrast-[1.1] brightness-[1.05]',
     techniques: ['Kinetic Typography', 'Pattern Interrupts', 'Speed Ramping']
   },
@@ -46,7 +46,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 60.00,
     description: 'Fast-paced timeline breakdown utilizing custom graphic callouts and hard sound hit syncing.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/v1783997098/FILE_2_mc78dn.mp4', 
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997098/FILE_2_mc78dn.mp4', 
     cinematicFilter: 'saturate-[1.2] contrast-[1.15] brightness-[1.0]',
     techniques: ['Graphic Callouts', 'SFX Syncing', 'Defocus Transitions']
   },
@@ -58,7 +58,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 23.976,
     description: 'Cinematic brand integration balancing premium color pacing with modern digital grit overlays.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/v1783997100/FILE_3_nhlwkf.mp4',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997100/FILE_3_nhlwkf.mp4',
     cinematicFilter: 'saturate-[1.1] contrast-[1.2] brightness-[0.98] hue-rotate-[-2deg]',
     techniques: ['Glitch Textures', 'Atmospheric Pacing', 'Color Matching']
   },
@@ -70,7 +70,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 60.00,
     description: 'Micro-retention structure utilizing immediate visual hooks and loop engineering to maximize replay rate.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/v1783997093/FILE_4_rfbxd1.mp4',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_4_rfbxd1.mp4',
     cinematicFilter: 'saturate-[1.3] contrast-[1.1] brightness-[1.02]',
     techniques: ['Loop Engineering', 'Visual Hook Pacing', 'Micro-Zooming']
   },
@@ -82,7 +82,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '16:9 Widescreen',
     fps: 24.00,
     description: 'High-velocity visual edit driven entirely by custom motion design graphics and kinetic layout composition.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/v1783997072/FILE_5_li2r3u.mov',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
     cinematicFilter: 'saturate-[1.15] contrast-[1.25] brightness-[1.0]',
     techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding']
   }
@@ -236,17 +236,19 @@ export default function App() {
       : 'md:col-span-2 aspect-[9/16] max-h-[650px] mx-auto border-b md:border-b-0 md:border-r border-border-muted'
   }`}>
     <video
-      ref={videoRef}
-      src={selectedVideo.videoUrl}
-      className={`w-full h-full object-cover transition-all duration-300 ${
-        colorGrade === 'raw' ? 'saturate-[0.4] contrast-[0.9] brightness-[0.95]' : selectedVideo.cinematicFilter
-      }`}
-      loop
-      playsInline
-      onTimeUpdate={handleTimeUpdate}
-      onLoadedMetadata={handleLoadedMetadata}
-      onClick={() => setIsPlaying(!isPlaying)}
-    />
+  ref={videoRef}
+  src={selectedVideo.videoUrl}
+  className={`w-full h-full object-cover transition-all duration-300 ${
+    colorGrade === 'raw' ? 'saturate-[0.4] contrast-[0.9] brightness-[0.95]' : selectedVideo.cinematicFilter
+  }`}
+  loop
+  playsInline
+  preload="metadata"
+  controlsList="nodownload"
+  onTimeUpdate={handleTimeUpdate}
+  onLoadedMetadata={handleLoadedMetadata}
+  onClick={() => setIsPlaying(!isPlaying)}
+/>
 
     <div className="absolute inset-x-0 top-0 p-3 bg-gradient-to-b from-black/60 to-transparent flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-mono text-[9px]">
       <span className="text-red-500 flex items-center gap-1">
