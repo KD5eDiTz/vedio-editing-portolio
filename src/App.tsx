@@ -100,7 +100,7 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 60.00,
     description: 'High-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784134682/FILE_6_hooop9.mp4',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784135832/FILE_6_pwpy2g.mp4',
     cinematicFilter: 'saturate-[1.2] contrast-[1.1] brightness-[1.02]',
     techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX']
   }
