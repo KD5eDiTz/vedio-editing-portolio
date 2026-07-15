@@ -90,6 +90,19 @@ const VIDEO_WORKS: VideoProject[] = [
     videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
     cinematicFilter: 'saturate-[1.15] contrast-[1.25] brightness-[1.0]',
     techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding']
+  },
+  {
+    id: 'premium-commercial-edit',
+    title: 'Dynamic Narrative Flow',
+    category: 'Short Form',
+    views: '920K',
+    duration: '00:12',
+    aspectRatio: '9:16 Vertical',
+    fps: 60.00,
+    description: 'High-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design.',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784134682/FILE_6_hooop9.mp4',
+    cinematicFilter: 'saturate-[1.2] contrast-[1.1] brightness-[1.02]',
+    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX']
   }
 ];
 
@@ -262,7 +275,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DYNAMIC SIDEBAR CONTEXT PANEL (CLEAN WITH ESTIMATED REACH FIXED) */}
+              {/* DYNAMIC SIDEBAR CONTEXT PANEL */}
               {!selectedVideo.aspectRatio.includes('16:9') && (
                 <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col justify-start text-left bg-[#0A0A0E]">
                   <div className="space-y-6 md:space-y-8">
