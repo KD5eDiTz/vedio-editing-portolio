@@ -309,14 +309,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-4">
-                    <a 
-                      href="mailto:hello@studio-x.com"
-                      className="w-full bg-neutral-100 hover:bg-white text-black font-mono text-[11px] tracking-wider py-3 px-4 rounded-sm flex items-center justify-center gap-2 font-bold transition-all text-center uppercase"
-                    >
-                      Lock Timeline Allocation
-                    </a>
-                  </div>
+                  
                 </div>
               )}
 
