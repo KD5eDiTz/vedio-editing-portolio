@@ -262,9 +262,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DYNAMIC SIDEBAR CONTEXT PANEL */}
+              {/* DYNAMIC SIDEBAR CONTEXT PANEL (CLEANED METRICS & REMOVED WHITE FOOTER BUTTON) */}
               {!selectedVideo.aspectRatio.includes('16:9') && (
-                <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col justify-between text-left bg-[#0A0A0E]">
+                <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col justify-start text-left bg-[#0A0A0E]">
                   <div className="space-y-6 md:space-y-8">
                     <div>
                       <span className="font-mono text-[10px] text-neutral-400 tracking-[0.25em] uppercase block mb-1 font-bold">
@@ -275,14 +275,10 @@ export default function App() {
                       </h3>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 border-t border-b border-neutral-800/50 py-4 font-mono">
+                    <div className="border-t border-b border-neutral-800/50 py-4 font-mono">
                       <div>
                         <span className="text-neutral-500 text-[9px] block uppercase font-medium">Retention Focus</span>
                         <span className="text-white text-xs font-bold tracking-wide">{selectedVideo.category}</span>
-                      </div>
-                      <div>
-                        <span className="text-neutral-500 text-[9px] block uppercase font-medium">Estimated Reach</span>
-                        <span className="text-emerald-400 text-xs font-bold tracking-wide">~{selectedVideo.views} Views</span>
                       </div>
                     </div>
 
@@ -304,19 +300,10 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="mt-8 pt-4">
-                    <a 
-                      href="mailto:hello@studio-x.com"
-                      className="w-full bg-neutral-100 hover:bg-white text-black font-mono text-[11px] tracking-wider py-3 px-4 rounded-sm flex items-center justify-center gap-2 font-bold transition-all text-center uppercase"
-                    >
-                      Lock Timeline Allocation
-                    </a>
-                  </div>
                 </div>
               )}
 
-            </div>  
+            </div> 
 
             {/* Dashboard Control Deck Media Strip */}
             <div className="bg-[#0F0F12] border-t border-neutral-800/80 p-3 md:p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -371,7 +358,7 @@ export default function App() {
           </div>
         </header>
 
-        {/* WORKS BENTO GRID SECTION */}
+        {/* WORKS BENTO GRID SECTION (FULLY ALIGNED & STABILIZED ARCHITECTURE) */}
         <section id="works-section" className="max-w-7xl mx-auto px-4 md:px-6 w-full scroll-mt-20">
           <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-neutral-800 pb-4 mb-8">
             <div className="space-y-1">
@@ -383,6 +370,7 @@ export default function App() {
             </p>
           </div>
 
+          {/* CLEAN DYNAMIC ADAPTIVE ASPECT GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {VIDEO_WORKS.map((work, index) => {
               const isWidescreen = work.aspectRatio.includes('16:9');
@@ -391,12 +379,12 @@ export default function App() {
                 <div 
                   key={work.id}
                   onClick={() => selectDeckVideo(work)}
-                  className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 flex flex-col ${
+                  className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 flex flex-col h-full ${
                     selectedVideo.id === work.id ? 'border-neutral-200 ring-1 ring-white/20' : 'border-neutral-800 hover:border-neutral-700'
                   }`}
                 >
                   {/* ADAPTIVE THUMBNAIL CONTAINER */}
-                  <div className={`w-full bg-black relative overflow-hidden ${
+                  <div className={`w-full bg-black relative overflow-hidden shrink-0 ${
                     isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
                   }`}>
                     <video
@@ -413,7 +401,7 @@ export default function App() {
                   </div>
                   
                   {/* TEXT DETAILS CONTROLLER */}
-                  <div className="p-4 flex flex-col justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
+                  <div className="p-4 flex flex-col flex-grow justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-start gap-3">
                         <h3 className="text-xs md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight">
@@ -426,7 +414,7 @@ export default function App() {
                       <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
                     </div>
                     
-                    <div className="mt-3 flex flex-wrap gap-1">
+                    <div className="mt-4 flex flex-wrap gap-1">
                       {work.techniques.map((tech, idx) => (
                         <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
                           {tech}
