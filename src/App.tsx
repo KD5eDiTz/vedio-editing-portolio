@@ -61,7 +61,6 @@ const VIDEO_WORKS: VideoProject[] = [
     aspectRatio: '9:16 Vertical',
     fps: 23.976,
     description: 'Cinematic brand integration balancing premium color pacing with modern digital grit overlays.',
-    // REPLACE CONVERSION LINK: Paste your new Cloudinary asset link directly inside the quotes below if you need a different video file
     videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997100/FILE_3_nhlwkf.mp4',
     cinematicFilter: 'saturate-[1.1] contrast-[1.2] brightness-[0.98] hue-rotate-[-2deg]',
     techniques: ['Glitch Textures', 'Atmospheric Pacing', 'Color Matching']
@@ -179,7 +178,6 @@ export default function App() {
           <div className="space-y-4 md:space-y-6">
             <span className="font-mono text-[10px] md:text-xs text-neutral-400 tracking-[0.2em] uppercase block font-medium">// VISUAL RETENTION ARCHITECTURE</span>
             
-            {/* UNIQUE HEADINGS FONT STYLING */}
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase leading-[0.9]">
               Retaining attention.<br />
               <span className="bg-gradient-to-r from-neutral-100 via-neutral-400 to-neutral-600 bg-clip-text text-transparent">Elevating scale.</span>
@@ -212,7 +210,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* RESPONSIVE LAYOUT MATRIX: Stacks naturally on mobile devices, grids cleanly on desktop */}
+            {/* RESPONSIVE LAYOUT MATRIX */}
             <div className={`flex flex-col ${
               selectedVideo.aspectRatio.includes('16:9') ? 'w-full' : 'lg:grid lg:grid-cols-5'
             } bg-[#070709]`}>
@@ -264,12 +262,11 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DYNAMIC SIDEBAR CONTEXT PANEL: Dynamically rewrites all metrics on video selection change */}
+              {/* DYNAMIC SIDEBAR CONTEXT PANEL */}
               {!selectedVideo.aspectRatio.includes('16:9') && (
                 <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col justify-between text-left bg-[#0A0A0E]">
                   <div className="space-y-6 md:space-y-8">
                     <div>
-                      {/* UNIQUE TOPIC TITLE FONT STYLING */}
                       <span className="font-mono text-[10px] text-neutral-400 tracking-[0.25em] uppercase block mb-1 font-bold">
                         // CORE PRODUCTION METRICS
                       </span>
@@ -278,7 +275,6 @@ export default function App() {
                       </h3>
                     </div>
 
-                    {/* Performance Indicators Grid */}
                     <div className="grid grid-cols-2 gap-4 border-t border-b border-neutral-800/50 py-4 font-mono">
                       <div>
                         <span className="text-neutral-500 text-[9px] block uppercase font-medium">Retention Focus</span>
@@ -309,7 +305,14 @@ export default function App() {
                     </div>
                   </div>
 
-                  
+                  <div className="mt-8 pt-4">
+                    <a 
+                      href="mailto:hello@studio-x.com"
+                      className="w-full bg-neutral-100 hover:bg-white text-black font-mono text-[11px] tracking-wider py-3 px-4 rounded-sm flex items-center justify-center gap-2 font-bold transition-all text-center uppercase"
+                    >
+                      Lock Timeline Allocation
+                    </a>
+                  </div>
                 </div>
               )}
 
@@ -381,61 +384,61 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-  {VIDEO_WORKS.map((work, index) => {
-    // Determine if the specific project is widescreen or vertical
-    const isWidescreen = work.aspectRatio.includes('16:9');
-    
-    return (
-      <div 
-        key={work.id}
-        onClick={() => selectDeckVideo(work)}
-        className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 flex flex-col ${
-          selectedVideo.id === work.id ? 'border-neutral-200 ring-1 ring-white/20' : 'border-neutral-800 hover:border-neutral-700'
-        }`}
-      >
-        {/* ADAPTIVE THUMBNAIL CONTAINER */}
-        <div className={`w-full bg-black relative overflow-hidden ${
-          isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
-        }`}>
-          <video
-            src={work.videoUrl}
-            muted
-            loop
-            playsInline
-            autoPlay
-            className={`w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ${work.cinematicFilter}`}
-          />
-          <div className="absolute top-2.5 left-2.5 bg-black/90 border border-neutral-800 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-wider text-neutral-300">
-            INDEX // _0{index + 1}
+            {VIDEO_WORKS.map((work, index) => {
+              const isWidescreen = work.aspectRatio.includes('16:9');
+              
+              return (
+                <div 
+                  key={work.id}
+                  onClick={() => selectDeckVideo(work)}
+                  className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 flex flex-col ${
+                    selectedVideo.id === work.id ? 'border-neutral-200 ring-1 ring-white/20' : 'border-neutral-800 hover:border-neutral-700'
+                  }`}
+                >
+                  {/* ADAPTIVE THUMBNAIL CONTAINER */}
+                  <div className={`w-full bg-black relative overflow-hidden ${
+                    isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
+                  }`}>
+                    <video
+                      src={work.videoUrl}
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      className={`w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ${work.cinematicFilter}`}
+                    />
+                    <div className="absolute top-2.5 left-2.5 bg-black/90 border border-neutral-800 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-wider text-neutral-300">
+                      INDEX // _0{index + 1}
+                    </div>
+                  </div>
+                  
+                  {/* TEXT DETAILS CONTROLLER */}
+                  <div className="p-4 flex flex-col justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between items-start gap-3">
+                        <h3 className="text-xs md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight">
+                          {work.title}
+                        </h3>
+                        <span className="font-mono text-[9px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-bold shrink-0">
+                          {work.duration}
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
+                    </div>
+                    
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {work.techniques.map((tech, idx) => (
+                        <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
-        
-        {/* TEXT DETAILS CONTROLLER */}
-        <div className="p-4 flex flex-col justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
-          <div className="space-y-1.5">
-            <div className="flex justify-between items-start gap-3">
-              <h3 className="text-xs md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight">
-                {work.title}
-              </h3>
-              <span className="font-mono text-[9px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-bold shrink-0">
-                {work.duration}
-              </span>
-            </div>
-            <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
-          </div>
-          
-          <div className="mt-3 flex flex-wrap gap-1">
-            {work.techniques.map((tech, idx) => (
-              <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  })}
-</div>
+        </section>
 
         {/* CAPABILITIES SECTION */}
         <section id="capabilities-section" className="max-w-7xl mx-auto px-4 md:px-6 w-full">
