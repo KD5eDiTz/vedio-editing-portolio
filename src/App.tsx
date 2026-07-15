@@ -387,49 +387,62 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {VIDEO_WORKS.map((work, index) => (
-              <div 
-                key={work.id}
-                onClick={() => selectDeckVideo(work)}
-                className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 ${
-                  index === 0 ? 'md:col-span-2' : ''
-                } ${selectedVideo.id === work.id ? 'border-neutral-200 ring-1 ring-white/20' : 'border-neutral-800 hover:border-neutral-700'}`}
-              >
-                <div className="aspect-video w-full bg-black relative overflow-hidden">
-                  <video
-                    src={work.videoUrl}
-                    muted
-                    loop
-                    playsInline
-                    autoPlay
-                    className={`w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ${work.cinematicFilter}`}
-                  />
-                  <div className="absolute top-2.5 left-2.5 bg-black/90 border border-neutral-800 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-wider text-neutral-300">
-                    {index === 0 ? 'PRIMARY CUT' : `INDEX // _0${index + 1}`}
-                  </div>
-                </div>
-                
-                <div className="p-4 md:p-5 flex flex-col justify-between text-left">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="space-y-0.5">
-                      <h3 className="text-sm md:text-base font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans">{work.title}</h3>
-                      <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
-                    </div>
-                    <span className="font-mono text-[9px] md:text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-bold">{work.duration}</span>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-1">
-                    {work.techniques.map((tech, idx) => (
-                      <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+  {VIDEO_WORKS.map((work, index) => {
+    // Determine if the specific project is widescreen or vertical
+    const isWidescreen = work.aspectRatio.includes('16:9');
+    
+    return (
+      <div 
+        key={work.id}
+        onClick={() => selectDeckVideo(work)}
+        className={`group bg-[#0B0B0E] border rounded-sm overflow-hidden cursor-pointer transition-all duration-300 flex flex-col ${
+          selectedVideo.id === work.id ? 'border-neutral-200 ring-1 ring-white/20' : 'border-neutral-800 hover:border-neutral-700'
+        }`}
+      >
+        {/* ADAPTIVE THUMBNAIL CONTAINER */}
+        <div className={`w-full bg-black relative overflow-hidden ${
+          isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
+        }`}>
+          <video
+            src={work.videoUrl}
+            muted
+            loop
+            playsInline
+            autoPlay
+            className={`w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ${work.cinematicFilter}`}
+          />
+          <div className="absolute top-2.5 left-2.5 bg-black/90 border border-neutral-800 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-wider text-neutral-300">
+            INDEX // _0{index + 1}
+          </div>
+        </div>
+        
+        {/* TEXT DETAILS CONTROLLER */}
+        <div className="p-4 flex flex-col justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-start gap-3">
+              <h3 className="text-xs md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight">
+                {work.title}
+              </h3>
+              <span className="font-mono text-[9px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-bold shrink-0">
+                {work.duration}
+              </span>
+            </div>
+            <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
+          </div>
+          
+          <div className="mt-3 flex flex-wrap gap-1">
+            {work.techniques.map((tech, idx) => (
+              <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
+                {tech}
+              </span>
             ))}
           </div>
-        </section>
+        </div>
+      </div>
+    );
+  })}
+</div>
 
         {/* CAPABILITIES SECTION */}
         <section id="capabilities-section" className="max-w-7xl mx-auto px-4 md:px-6 w-full">
