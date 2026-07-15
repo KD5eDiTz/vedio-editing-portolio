@@ -262,7 +262,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DYNAMIC SIDEBAR CONTEXT PANEL (CLEANED METRICS & REMOVED WHITE FOOTER BUTTON) */}
+              {/* DYNAMIC SIDEBAR CONTEXT PANEL (CLEAN WITH ESTIMATED REACH FIXED) */}
               {!selectedVideo.aspectRatio.includes('16:9') && (
                 <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col justify-start text-left bg-[#0A0A0E]">
                   <div className="space-y-6 md:space-y-8">
@@ -358,7 +358,7 @@ export default function App() {
           </div>
         </header>
 
-        {/* WORKS BENTO GRID SECTION (FULLY ALIGNED & STABILIZED ARCHITECTURE) */}
+        {/* WORKS BENTO GRID SECTION */}
         <section id="works-section" className="max-w-7xl mx-auto px-4 md:px-6 w-full scroll-mt-20">
           <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-neutral-800 pb-4 mb-8">
             <div className="space-y-1">
@@ -370,7 +370,6 @@ export default function App() {
             </p>
           </div>
 
-          {/* CLEAN DYNAMIC ADAPTIVE ASPECT GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {VIDEO_WORKS.map((work, index) => {
               const isWidescreen = work.aspectRatio.includes('16:9');
