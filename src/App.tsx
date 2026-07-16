@@ -40,6 +40,19 @@ const VIDEO_WORKS: VideoProject[] = [
     techniques: ['Kinetic Typography', 'Pattern Interrupts', 'Speed Ramping']
   },
   {
+    id: 'premium-commercial-edit',
+    title: 'Dynamic Narrative Flow',
+    category: 'Short Form',
+    views: '920K',
+    duration: '00:12',
+    aspectRatio: '9:16 Vertical',
+    fps: 60.00,
+    description: 'High-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design.',
+    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784135832/FILE_6_pwpy2g.mp4',
+    cinematicFilter: 'saturate-[1.2] contrast-[1.1] brightness-[1.02]',
+    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX']
+  },
+  {
     id: 'creator-efficiency-breakdown',
     title: 'Software Workflow Breakdown',
     category: 'Short Form',
@@ -90,19 +103,6 @@ const VIDEO_WORKS: VideoProject[] = [
     videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
     cinematicFilter: 'saturate-[1.15] contrast-[1.25] brightness-[1.0]',
     techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding']
-  },
-  {
-    id: 'premium-commercial-edit',
-    title: 'Dynamic Narrative Flow',
-    category: 'Short Form',
-    views: '920K',
-    duration: '00:12',
-    aspectRatio: '9:16 Vertical',
-    fps: 60.00,
-    description: 'High-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784135832/FILE_6_pwpy2g.mp4',
-    cinematicFilter: 'saturate-[1.2] contrast-[1.1] brightness-[1.02]',
-    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX']
   }
 ];
 
@@ -383,7 +383,8 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+          {/* CLEAN DYNAMIC ADAPTIVE ASPECT GRID - FIXED FOR MOBILE TILES */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 items-start">
             {VIDEO_WORKS.map((work, index) => {
               const isWidescreen = work.aspectRatio.includes('16:9');
               
@@ -407,26 +408,27 @@ export default function App() {
                       autoPlay
                       className={`w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 ${work.cinematicFilter}`}
                     />
-                    <div className="absolute top-2.5 left-2.5 bg-black/90 border border-neutral-800 px-2 py-0.5 rounded-sm font-mono text-[8px] tracking-wider text-neutral-300">
-                      INDEX // _0{index + 1}
+                    <div className="absolute top-1.5 left-1.5 md:top-2.5 md:left-2.5 bg-black/90 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-mono text-[7px] md:text-[8px] tracking-wider text-neutral-300">
+                      _0{index + 1}
                     </div>
                   </div>
                   
-                  {/* TEXT DETAILS CONTROLLER */}
-                  <div className="p-4 flex flex-col flex-grow justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-start gap-3">
-                        <h3 className="text-xs md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight">
+                  {/* TEXT DETAILS CONTROLLER - SHRUNK FOR MOBILE SCANNABILITY */}
+                  <div className="p-2 md:p-4 flex flex-col flex-grow justify-between text-left border-t border-neutral-800/40 bg-[#0B0B0E]">
+                    <div className="space-y-1">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-1 sm:gap-3">
+                        <h3 className="text-[10px] md:text-sm font-bold text-white tracking-wide group-hover:text-neutral-300 transition-colors uppercase font-sans leading-tight line-clamp-2 sm:line-clamp-none">
                           {work.title}
                         </h3>
-                        <span className="font-mono text-[9px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded-sm font-bold shrink-0">
+                        <span className="font-mono text-[7px] md:text-[9px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-1 md:px-1.5 py-0.5 rounded-sm font-bold shrink-0">
                           {work.duration}
                         </span>
                       </div>
-                      <p className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
+                      <p className="text-[8px] md:text-[9px] text-neutral-500 font-mono tracking-wider uppercase">{work.category}</p>
                     </div>
                     
-                    <div className="mt-4 flex flex-wrap gap-1">
+                    {/* Hides tags on mobile to keep dashboard ultra compact, shows them on desktop */}
+                    <div className="hidden sm:flex mt-4 flex-wrap gap-1">
                       {work.techniques.map((tech, idx) => (
                         <span key={idx} className="bg-black text-[8px] font-mono px-2 py-0.5 rounded-sm text-neutral-400 border border-neutral-800">
                           {tech}
