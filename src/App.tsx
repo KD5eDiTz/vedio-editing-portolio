@@ -44,7 +44,7 @@ const VIDEO_WORKS: VideoProject[] = [
     title: 'Dynamic Narrative Flow',
     category: 'Short Form',
     views: '920K',
-    duration: '00:12',
+    duration: '00:24',
     aspectRatio: '9:16 Vertical',
     fps: 60.00,
     description: 'High-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design.',
