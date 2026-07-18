@@ -415,10 +415,12 @@ export default function App() {
 
             <div className="space-y-3">
               <span className="font-mono text-[10px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// EXECUTIVE ALLOCATION</span>
-              <h1 className="text-3xl lg:text-4xl font-black tracking-tighter text-neutral-950 uppercase leading-none">
-                Hi. I am <br />
-                <span className="text-neutral-600">Video Editor</span>
-              </h1>
+             <h1 className="text-3xl lg:text-4xl font-black tracking-tighter text-neutral-950 uppercase leading-none">
+  Hi. I am <br />
+  <span className="inline-block text-neutral-600 border-r-2 border-neutral-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit">
+    Video Editor
+  </span>
+</h1>
               <p className="text-xs text-neutral-600 font-sans leading-relaxed font-light">
                 Specialized in visual architecture, high-velocity sequence flow pacing, color LUT mapping, and advanced multi-channel sound design dynamics.
               </p>
