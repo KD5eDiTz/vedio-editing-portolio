@@ -24,7 +24,7 @@ interface VideoProject {
   techniques: string[];
 }
 
-const ORIGINAL_WORKS: VideoProject[] = [
+const VIDEO_WORKS: VideoProject[] = [
   {
     id: 'retention-hook-promo',
     title: 'High-Retention Hook',
@@ -105,17 +105,15 @@ const ORIGINAL_WORKS: VideoProject[] = [
   }
 ];
 
-const VIDEO_WORKS = [...ORIGINAL_WORKS, ...ORIGINAL_WORKS, ...ORIGINAL_WORKS];
-
 export default function App() {
-  const [selectedVideo, setSelectedVideo] = useState<VideoProject>(ORIGINAL_WORKS[0]);
+  const [selectedVideo, setSelectedVideo] = useState<VideoProject>(VIDEO_WORKS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [colorGrade, setColorGrade] = useState<'raw' | 'cinematic'>('cinematic');
 
-  const [activeScrollIndex, setActiveScrollIndex] = useState<number>(ORIGINAL_WORKS.length);
+  const [activeScrollIndex, setActiveScrollIndex] = useState<number>(0);
   const horizontalScrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -130,21 +128,7 @@ export default function App() {
     }
   }, [selectedVideo, isPlaying, isMuted]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (horizontalScrollRef.current) {
-        const initialTargetIdx = ORIGINAL_WORKS.length;
-        const targetElement = horizontalScrollRef.current.children[initialTargetIdx] as HTMLElement;
-        if (targetElement) {
-          horizontalScrollRef.current.scrollLeft = 
-            targetElement.offsetLeft - horizontalScrollRef.current.clientWidth / 2 + targetElement.clientWidth / 2;
-          setActiveScrollIndex(initialTargetIdx);
-        }
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
+  // SMOOTH DAMPENED WHEEL SCROLL LOGIC
   useEffect(() => {
     const el = horizontalScrollRef.current;
     if (!el) return;
@@ -152,7 +136,12 @@ export default function App() {
     const handleWheel = (e: WheelEvent) => {
       if (e.deltaY === 0) return;
       e.preventDefault();
-      el.scrollLeft += e.deltaY * 2;
+      
+      // Removed loop engines. Uses smooth interpolation increments
+      el.scrollTo({
+        left: el.scrollLeft + e.deltaY * 1.5,
+        behavior: 'smooth'
+      });
     };
 
     el.addEventListener('wheel', handleWheel, { passive: false });
@@ -182,22 +171,6 @@ export default function App() {
 
     setActiveScrollIndex(closestIndex);
     setSelectedVideo(VIDEO_WORKS[closestIndex]);
-
-    const segmentLength = ORIGINAL_WORKS.length;
-
-    if (closestIndex < segmentLength) {
-      const adjustedIndex = closestIndex + segmentLength;
-      const targetElement = container.children[adjustedIndex] as HTMLElement;
-      if (targetElement) {
-        container.scrollLeft = targetElement.offsetLeft - containerWidth / 2 + targetElement.clientWidth / 2;
-      }
-    } else if (closestIndex >= segmentLength * 2) {
-      const adjustedIndex = closestIndex - segmentLength;
-      const targetElement = container.children[adjustedIndex] as HTMLElement;
-      if (targetElement) {
-        container.scrollLeft = targetElement.offsetLeft - containerWidth / 2 + targetElement.clientWidth / 2;
-      }
-    }
   };
 
   const handleTimeUpdate = () => {
@@ -239,7 +212,7 @@ export default function App() {
   return (
     <div className="bg-[#EAEAEA] text-[#1E1E24] font-inter selection:bg-black/10 min-h-screen antialiased flex flex-col overflow-x-hidden relative">
       
-      {/* FULL-SCREEN CINEMATIC BACKGROUND VIDEO LAYER */}
+      {/* Background loop texture animation */}
       <video
         src="https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784357186/White_Background_oxmqqe.mp4"
         autoPlay
@@ -249,7 +222,7 @@ export default function App() {
         className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-[0.18] mix-blend-multiply fixed"
       />
 
-      {/* Navigation Banner (z-50 context to safely hover over background) */}
+      {/* Navigation */}
       <nav className="w-full bg-[#F4F4F4]/60 backdrop-blur-md border-b border-neutral-300/80 px-6 py-4 z-50 shrink-0 relative">
         <div className="max-w-[98vw] mx-auto flex items-center justify-between">
           <span className="font-futura text-xs font-black tracking-widest uppercase text-neutral-800">STUDIO // KD</span>
@@ -329,7 +302,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Media Control Strips */}
+            {/* Media Control Deck */}
             <div className="bg-[#F4F4F4]/90 border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-futura shrink-0">
               <div className="flex items-center gap-2">
                 <button
@@ -372,7 +345,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* About Column Container with Integrated Contact Channels */}
+          {/* About Column Container */}
           <div className="lg:col-span-2 space-y-5 bg-[#F4F4F4]/90 border border-neutral-300/60 p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm">
             <div className="space-y-5">
               <div className="border-b border-neutral-300 pb-2">
@@ -404,33 +377,12 @@ export default function App() {
                 </div>
               </div>
             </div>
-
-            {/* INTEGRATED PROFESSIONAL CONTACT CHANNELS */}
-            <div className="pt-4 border-t border-neutral-300/60 space-y-3">
-              <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
-              <div className="grid grid-cols-2 gap-3">
-                <a 
-                  href="mailto:hello@studio-x.com"
-                  className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[9px] tracking-widest py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
-                >
-                  <Mail className="w-3.5 h-3.5 text-blue-600" /> Email Link
-                </a>
-                <a 
-                  href="https://instagram.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[9px] tracking-widest py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
-                >
-                  <Instagram className="w-3.5 h-3.5 text-pink-600" /> Instagram
-                </a>
-              </div>
-            </div>
           </div>
         </section>
 
         <hr className="border-neutral-300/60" />
 
-        {/* SECTION 3: RE-ENGINEERED INFINITE HORIZONTAL SEQUENCER TIMELINE */}
+        {/* SECTION 3: RE-ENGINEERED FINITE SMOOTH SCROLLER TIMELINE */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
@@ -452,9 +404,10 @@ export default function App() {
               const distanceFromCenter = Math.abs(idx - activeScrollIndex);
               const isCenter = distanceFromCenter === 0;
               
-              let scale = 0.60; 
+              // Dynamic scale calculations: cards shrink aggressively further from center frame
+              let scale = 0.50; 
               if (isCenter) scale = 1.18;
-              else if (distanceFromCenter === 1) scale = 0.76;
+              else if (distanceFromCenter === 1) scale = 0.70;
               
               const isWidescreen = work.aspectRatio.includes('16:9');
               
@@ -462,14 +415,14 @@ export default function App() {
                 <div
                   key={`${work.id}-${idx}`}
                   onClick={() => selectDeckVideo(idx)}
-                  className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-500 transform-gpu"
+                  // Replaced duration-300/500 with slow cinematic cubic bezier properties
+                  className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1) transform-gpu"
                   style={{
                     transform: `scale(${scale})`,
-                    opacity: isCenter ? 1 : 0.4
+                    opacity: isCenter ? 1 : 0.35
                   }}
                 >
-                  {/* MULTI LAYERED CAST SHADOW FOR AUTHENTIC FLOAT EFFECT */}
-                  <div className={`bg-[#F4F4F4]/95 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col border ${
+                  <div className={`bg-[#F4F4F4]/95 rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border ${
                     isCenter 
                       ? 'border-neutral-900 shadow-[0_35px_65px_-10px_rgba(0,0,0,0.22),0_20px_35px_-15px_rgba(0,0,0,0.18)]' 
                       : 'border-neutral-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.04)] hover:border-neutral-400'
@@ -493,7 +446,7 @@ export default function App() {
                         className="w-full h-full object-cover opacity-85"
                       />
                       <div className="absolute top-2.5 left-2.5 bg-white/95 border border-neutral-300 px-1.5 py-0.5 rounded-md text-[8px] font-futura tracking-wider text-neutral-800 font-bold shadow-sm">
-                        _0{(idx % ORIGINAL_WORKS.length) + 1}
+                        _0{idx + 1}
                       </div>
                     </div>
                     
@@ -513,6 +466,61 @@ export default function App() {
             })}
           </div>
         </section>
+
+        <hr className="border-neutral-300/60" />
+
+        {/* SECTION 4: HOW TO WORK TOGETHER WITH CONTACT INTEGRATION */}
+        <section className="bg-[#F4F4F4]/90 border border-neutral-300/60 rounded-2xl p-6 md:p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 text-left">
+          <div className="border-b border-neutral-300 pb-3">
+            <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// COLLABORATION WORKFLOW</span>
+            <h2 className="text-2xl font-black text-neutral-950 uppercase font-playfair tracking-tight mt-1">
+              How to work Together
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs text-neutral-700">
+            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
+              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">01 // BRIEFING</span>
+              <p className="font-sans font-light text-neutral-800 leading-relaxed">
+                Send your raw footage assets along with your tracking references and stylistic project targets.
+              </p>
+            </div>
+            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
+              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">02 // PIPELINE CUT</span>
+              <p className="font-sans font-light text-neutral-800 leading-relaxed">
+                I map the sequences out using tailored velocity hooks, atmospheric dynamic color LUT paths, and custom multi-layered sound design tracks.
+              </p>
+            </div>
+            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
+              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">03 // DELIVERY</span>
+              <p className="font-sans font-light text-neutral-800 leading-relaxed">
+                Review the master draft edit feeds and secure high-fidelity files ready for publication pipelines.
+              </p>
+            </div>
+          </div>
+
+          {/* Secure Correspondence Buttons relocated here */}
+          <div className="pt-2 space-y-3">
+            <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
+              <a 
+                href="mailto:hello@studio-x.com"
+                className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+              >
+                <Mail className="w-4 h-4 text-blue-600" /> Email Link
+              </a>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+              >
+                <Instagram className="w-4 h-4 text-pink-600" /> Instagram
+              </a>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       {/* FOOTER */}
