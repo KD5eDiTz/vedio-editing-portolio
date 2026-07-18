@@ -107,6 +107,43 @@ const VIDEO_WORKS: VideoProject[] = [
   }
 ];
 
+// Robust React Custom Typewriter Hook Engine
+function TypewriterEffect({ text, isDark }: { text: string; isDark: boolean }) {
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  useEffect(() => {
+    let handleType = () => {
+      const fullText = text;
+      if (!isDeleting) {
+        setDisplayText(fullText.substring(0, displayText.length + 1));
+        if (displayText === fullText) {
+          setTimeout(() => setIsDeleting(true), 2500); // Wait on complete string
+        }
+      } else {
+        setDisplayText(fullText.substring(0, displayText.length - 1));
+        if (displayText === '') {
+          setIsDeleting(false);
+          setLoopNum(loopNum + 1);
+        }
+      }
+      setTypingSpeed(isDeleting ? 75 : 120);
+    };
+
+    const timer = setTimeout(handleType, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, typingSpeed, text, loopNum]);
+
+  return (
+    <span className="inline-flex items-center">
+      <span className="text-blue-600 font-black tracking-tight">{displayText}</span>
+      <span className={`inline-block ml-1 w-[3px] h-[1.1em] animate-pulse ${isDark ? 'bg-neutral-200' : 'bg-neutral-800'}`} />
+    </span>
+  );
+}
+
 export default function App() {
   const [selectedVideo, setSelectedVideo] = useState<VideoProject>(VIDEO_WORKS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -210,6 +247,8 @@ export default function App() {
     }
   };
 
+  const isWidescreen = selectedVideo.aspectRatio.includes('16:9');
+
   return (
     <div className={`transition-colors duration-500 min-h-screen antialiased flex flex-col overflow-x-hidden relative font-inter selection:bg-blue-500/20 ${
       isDarkMode ? 'bg-[#121316] text-[#E3E4E6]' : 'bg-[#EAEAEA] text-[#1E1E24]'
@@ -242,13 +281,13 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
-        {/* SECTION 1: UPGRADED BANNER BOX (FIXED COOPY, INTUITIVE LAYOUT & DARK TOGGLE) */}
-        <section className={`border rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
+        {/* SECTION 1: FULLY OPTIMIZED INTRO BANNER BOX */}
+        <section className={`border rounded-2xl p-6 flex flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
           isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
         }`}>
-          <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+          <div className="flex flex-row items-center gap-6 w-full sm:w-auto">
             {/* Photo frame placeholder */}
-            <div className={`w-24 h-24 rounded-xl border flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] transition-colors duration-500 ${
+            <div className={`w-20 h-20 md:w-24 md:h-24 rounded-xl border flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] transition-colors duration-500 ${
               isDarkMode ? 'bg-[#22252A] border-neutral-700' : 'bg-[#EAEAEA] border-neutral-300'
             }`}>
               <div className={`absolute inset-0 bg-[size:8px_8px] ${
@@ -257,18 +296,18 @@ export default function App() {
               <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
             </div>
 
-            <div className="space-y-1 text-center sm:text-left">
+            {/* FIXED NAME ALIGNMENT BLOCK */}
+            <div className="flex flex-col items-start justify-center space-y-1.5 text-left">
               <span className="font-futura text-[9px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// WORKSTATION INGESTION</span>
-              <h1 className="text-2xl md:text-4xl font-black tracking-tight uppercase leading-none font-inter">
-                Hi, I am{' '}
-                <span className="inline-block text-blue-600 border-r-2 border-blue-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit font-black">
-                  Video D Editor
-                </span>
+              <h1 className={`text-2xl md:text-4xl font-black tracking-tight uppercase flex flex-wrap items-center gap-x-2 leading-none ${
+                isDarkMode ? 'text-neutral-100' : 'text-neutral-900'
+              }`}>
+                <span>Hi, I am</span>
+                <TypewriterEffect text="Video D Editor" isDark={isDarkMode} />
               </h1>
             </div>
           </div>
 
-          {/* PREMIUM DESIGN MINIMALIST DARK/LIGHT MODE UTILITY SWITCH */}
           <button 
             onClick={() => setIsDarkMode(!isDarkMode)}
             className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex items-center justify-center shadow-sm ${
@@ -284,11 +323,11 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 2: WORKSPACE MONITORS ROW */}
-        <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
+        {/* SECTION 2: ADAPTIVE GRID MONITORS ROW */}
+        <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           
-          {/* Main Monitor Container */}
-          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
+          {/* Main Video Monitor Container - FIXED ASPECT HANDLING TO PREVENT OVER-STRETCH */}
+          <div className={`lg:col-span-3 border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
             isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'
           }`}>
             <div className={`border-b px-4 py-2.5 flex items-center justify-between font-futura text-[9px] font-bold transition-colors duration-500 ${
@@ -301,7 +340,10 @@ export default function App() {
               <span className="tracking-widest uppercase text-neutral-400">{selectedVideo.aspectRatio}</span>
             </div>
 
-            <div className="relative bg-neutral-950 flex items-center justify-center group aspect-[9/16] md:aspect-video max-h-[60vh] lg:max-h-[520px] w-full mx-auto flex-grow">
+            {/* FIXED CONTROLLER ATTACHMENT ASPECT BALANCING LAYER */}
+            <div className={`relative bg-neutral-950 flex items-center justify-center group w-full mx-auto transition-all duration-500 ${
+              isWidescreen ? 'aspect-video max-h-[520px]' : 'aspect-[9/16] max-h-[650px] max-w-[365px]'
+            }`}>
               <video
                 ref={videoRef}
                 src={selectedVideo.videoUrl}
@@ -335,8 +377,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* Media Control Deck */}
-            <div className={`border-t p-3 flex items-center justify-between gap-4 font-futura shrink-0 transition-colors duration-500 ${
+            {/* Media Control Deck - NOW FULLY POSITION PIPED TO THE BASE WITHOUT GAPS */}
+            <div className={`border-t p-3 flex items-center justify-between gap-4 font-futura shrink-0 transition-colors duration-500 w-full ${
               isDarkMode ? 'border-neutral-800 bg-[#16171A]' : 'border-neutral-300 bg-[#F4F4F4]/90'
             }`}>
               <div className="flex items-center gap-2">
@@ -389,10 +431,10 @@ export default function App() {
           </div>
 
           {/* About Column Container */}
-          <div className={`border p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
+          <div className={`border p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 lg:min-h-[450px] ${
             isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
           }`}>
-            <div className="space-y-5">
+            <div className="space-y-5 text-left">
               <div className={`border-b pb-2 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
                 <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
                 <h3 className="text-2xl font-black text-blue-900 uppercase tracking-tight mt-1 font-playfair">
@@ -431,7 +473,7 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 3: RE-ENGINEERED FINITE SMOOTH SCROLLER TIMELINE */}
+        {/* SECTION 3: SMOOTH HORIZONTAL SEQUENCER TIMELINE */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
@@ -459,13 +501,13 @@ export default function App() {
               if (isCenter) scale = 1.18;
               else if (distanceFromCenter === 1) scale = 0.70;
               
-              const isWidescreen = work.aspectRatio.includes('16:9');
+              const isTileWidescreen = work.aspectRatio.includes('16:9');
               
               return (
                 <div
                   key={`${work.id}-${idx}`}
                   onClick={() => selectDeckVideo(idx)}
-                  className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1) transform-gpu"
+                  className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-750 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu"
                   style={{
                     transform: `scale(${scale})`,
                     opacity: isCenter ? 1 : 0.35
@@ -478,7 +520,7 @@ export default function App() {
                   }`}>
                     
                     <div className={`w-full bg-neutral-950 relative overflow-hidden shrink-0 ${
-                      isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
+                      isTileWidescreen ? 'aspect-video' : 'aspect-[9/16]'
                     }`}>
                       <video
                         src={work.videoUrl}
