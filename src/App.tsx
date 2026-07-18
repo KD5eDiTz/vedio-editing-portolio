@@ -5,7 +5,9 @@ import {
   Pause, 
   Volume2, 
   VolumeX, 
-  ExternalLink 
+  ExternalLink,
+  Mail,
+  Instagram
 } from 'lucide-react';
 
 interface VideoProject {
@@ -22,7 +24,7 @@ interface VideoProject {
   techniques: string[];
 }
 
-const VIDEO_WORKS: VideoProject[] = [
+const ORIGINAL_WORKS: VideoProject[] = [
   {
     id: 'retention-hook-promo',
     title: 'High-Retention Hook',
@@ -103,15 +105,17 @@ const VIDEO_WORKS: VideoProject[] = [
   }
 ];
 
+const VIDEO_WORKS = [...ORIGINAL_WORKS, ...ORIGINAL_WORKS, ...ORIGINAL_WORKS];
+
 export default function App() {
-  const [selectedVideo, setSelectedVideo] = useState<VideoProject>(VIDEO_WORKS[0]);
+  const [selectedVideo, setSelectedVideo] = useState<VideoProject>(ORIGINAL_WORKS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [colorGrade, setColorGrade] = useState<'raw' | 'cinematic'>('cinematic');
 
-  const [activeScrollIndex, setActiveScrollIndex] = useState<number>(0);
+  const [activeScrollIndex, setActiveScrollIndex] = useState<number>(ORIGINAL_WORKS.length);
   const horizontalScrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -126,29 +130,41 @@ export default function App() {
     }
   }, [selectedVideo, isPlaying, isMuted]);
 
-  // HIGH PERFORMANCE HOVER SCROLLING LOGIC
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (horizontalScrollRef.current) {
+        const initialTargetIdx = ORIGINAL_WORKS.length;
+        const targetElement = horizontalScrollRef.current.children[initialTargetIdx] as HTMLElement;
+        if (targetElement) {
+          horizontalScrollRef.current.scrollLeft = 
+            targetElement.offsetLeft - horizontalScrollRef.current.clientWidth / 2 + targetElement.clientWidth / 2;
+          setActiveScrollIndex(initialTargetIdx);
+        }
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const el = horizontalScrollRef.current;
     if (!el) return;
 
-    const onWheel = (e: WheelEvent) => {
+    const handleWheel = (e: WheelEvent) => {
       if (e.deltaY === 0) return;
       e.preventDefault();
-      
-      el.scrollTo({
-        left: el.scrollLeft + e.deltaY * 2.5,
-        behavior: 'auto' // Instant pixel response on wheel track
-      });
+      el.scrollLeft += e.deltaY * 2;
     };
 
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
   }, []);
 
   const handleHorizontalScroll = () => {
     if (!horizontalScrollRef.current) return;
     const container = horizontalScrollRef.current;
-    const containerCenter = container.scrollLeft + container.clientWidth / 2;
+    const scrollLeft = container.scrollLeft;
+    const containerWidth = container.clientWidth;
+    const containerCenter = scrollLeft + containerWidth / 2;
     
     let closestIndex = 0;
     let minDistance = Infinity;
@@ -165,6 +181,23 @@ export default function App() {
     });
 
     setActiveScrollIndex(closestIndex);
+    setSelectedVideo(VIDEO_WORKS[closestIndex]);
+
+    const segmentLength = ORIGINAL_WORKS.length;
+
+    if (closestIndex < segmentLength) {
+      const adjustedIndex = closestIndex + segmentLength;
+      const targetElement = container.children[adjustedIndex] as HTMLElement;
+      if (targetElement) {
+        container.scrollLeft = targetElement.offsetLeft - containerWidth / 2 + targetElement.clientWidth / 2;
+      }
+    } else if (closestIndex >= segmentLength * 2) {
+      const adjustedIndex = closestIndex - segmentLength;
+      const targetElement = container.children[adjustedIndex] as HTMLElement;
+      if (targetElement) {
+        container.scrollLeft = targetElement.offsetLeft - containerWidth / 2 + targetElement.clientWidth / 2;
+      }
+    }
   };
 
   const handleTimeUpdate = () => {
@@ -191,11 +224,7 @@ export default function App() {
     return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:${String(frames).padStart(2, '0')}`;
   };
 
-  const selectDeckVideo = (project: VideoProject, idx: number) => {
-    setSelectedVideo(project);
-    setIsPlaying(false);
-    setCurrentTime(0);
-    
+  const selectDeckVideo = (idx: number) => {
     if (horizontalScrollRef.current) {
       const targetElement = horizontalScrollRef.current.children[idx] as HTMLElement;
       if (targetElement) {
@@ -208,10 +237,20 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#EAEAEA] text-[#1E1E24] font-inter selection:bg-black/10 min-h-screen antialiased flex flex-col overflow-x-hidden">
+    <div className="bg-[#EAEAEA] text-[#1E1E24] font-inter selection:bg-black/10 min-h-screen antialiased flex flex-col overflow-x-hidden relative">
       
-      {/* Top Branding Bar */}
-      <nav className="w-full bg-[#F4F4F4]/60 backdrop-blur-md border-b border-neutral-300/80 px-6 py-4 z-50 shrink-0">
+      {/* FULL-SCREEN CINEMATIC BACKGROUND VIDEO LAYER */}
+      <video
+        src="https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784357186/White_Background_oxmqqe.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-[0.18] mix-blend-multiply fixed"
+      />
+
+      {/* Navigation Banner (z-50 context to safely hover over background) */}
+      <nav className="w-full bg-[#F4F4F4]/60 backdrop-blur-md border-b border-neutral-300/80 px-6 py-4 z-50 shrink-0 relative">
         <div className="max-w-[98vw] mx-auto flex items-center justify-between">
           <span className="font-futura text-xs font-black tracking-widest uppercase text-neutral-800">STUDIO // KD</span>
           <div className="flex items-center gap-2">
@@ -221,11 +260,10 @@ export default function App() {
         </div>
       </nav>
 
-      {/* EXPANDED FULL SCREEN VIEWPORT CONTAINER */}
-      <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14">
+      <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
         {/* SECTION 1: PRO INTRO BANNER BOX */}
-        <section className="bg-[#F4F4F4] border border-neutral-300/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] backdrop-blur-xl">
+        <section className="bg-[#F4F4F4]/90 border border-neutral-300/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl">
           <div className="w-28 h-28 rounded-xl bg-[#EAEAEA] border border-neutral-300 flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] group">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:8px_8px]" />
             <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
@@ -242,12 +280,14 @@ export default function App() {
           </div>
         </section>
 
+        <hr className="border-neutral-300/60" />
+
         {/* SECTION 2: WORKSPACE MONITORS ROW */}
         <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
           
           {/* Main Monitor Container */}
-          <div className="lg:col-span-3 bg-[#FAFAFA] border border-neutral-300/80 rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.18)] overflow-hidden flex flex-col relative transition-all duration-300 hover:shadow-[0_35px_80px_-15px_rgba(0,0,0,0.22)]">
-            <div className="border-b border-neutral-300 bg-[#F4F4F4] px-4 py-2.5 flex items-center justify-between font-futura text-[9px] text-neutral-500 font-bold">
+          <div className="lg:col-span-3 bg-[#FAFAFA]/90 border border-neutral-300/80 rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-300 backdrop-blur-sm">
+            <div className="border-b border-neutral-300 bg-[#F4F4F4]/90 px-4 py-2.5 flex items-center justify-between font-futura text-[9px] text-neutral-500 font-bold">
               <span className="text-neutral-800 flex items-center gap-1.5 uppercase font-black">
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                 {selectedVideo.title}
@@ -289,8 +329,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* Media Controller Strips */}
-            <div className="bg-[#F4F4F4] border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-futura shrink-0">
+            {/* Media Control Strips */}
+            <div className="bg-[#F4F4F4]/90 border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-futura shrink-0">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
@@ -332,8 +372,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* About Column Container */}
-          <div className="lg:col-span-2 space-y-5 bg-[#F4F4F4] border border-neutral-300/60 p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] flex flex-col justify-between transition-all duration-300 hover:shadow-[0_25px_50px_-10px_rgba(0,0,0,0.12)]">
+          {/* About Column Container with Integrated Contact Channels */}
+          <div className="lg:col-span-2 space-y-5 bg-[#F4F4F4]/90 border border-neutral-300/60 p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm">
             <div className="space-y-5">
               <div className="border-b border-neutral-300 pb-2">
                 <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
@@ -352,29 +392,52 @@ export default function App() {
                   {selectedVideo.description}
                 </p>
               </div>
+
+              <div className="space-y-2 pt-2">
+                <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedVideo.techniques.map((tech, idx) => (
+                    <span key={idx} className="bg-white text-neutral-800 text-[9px] font-futura px-2.5 py-1 rounded-md border border-neutral-300 font-bold shadow-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-2 pt-4 border-t border-neutral-300/60">
-              <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedVideo.techniques.map((tech, idx) => (
-                  <span key={idx} className="bg-white text-neutral-800 text-[9px] font-futura px-2.5 py-1 rounded-md border border-neutral-300 font-bold shadow-sm">
-                    {tech}
-                  </span>
-                ))}
+            {/* INTEGRATED PROFESSIONAL CONTACT CHANNELS */}
+            <div className="pt-4 border-t border-neutral-300/60 space-y-3">
+              <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+              <div className="grid grid-cols-2 gap-3">
+                <a 
+                  href="mailto:hello@studio-x.com"
+                  className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[9px] tracking-widest py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+                >
+                  <Mail className="w-3.5 h-3.5 text-blue-600" /> Email Link
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[9px] tracking-widest py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+                >
+                  <Instagram className="w-3.5 h-3.5 text-pink-600" /> Instagram
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 3: RE-ENGINEERED HORIZONTAL SEQUENCER TIMELINE */}
+        <hr className="border-neutral-300/60" />
+
+        {/* SECTION 3: RE-ENGINEERED INFINITE HORIZONTAL SEQUENCER TIMELINE */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
               <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// HORIZONTAL OVERVIEW SEQUENCER</span>
               <h2 className="text-2xl font-black text-neutral-900 uppercase tracking-tight font-playfair">Selected Works</h2>
             </div>
-            <span className="hidden sm:inline-block font-futura text-[9px] text-blue-600 uppercase tracking-widest bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md font-bold animate-pulse">
+            <span className="hidden sm:inline-block font-futura text-[9px] text-blue-600 uppercase tracking-widest bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md font-bold">
               HOVER MOUSE HERE & USE WHEEL TO SCROLL
             </span>
           </div>
@@ -382,28 +445,34 @@ export default function App() {
           <div 
             ref={horizontalScrollRef}
             onScroll={handleHorizontalScroll}
-            className="w-full flex items-center gap-6 overflow-x-auto pb-14 pt-8 px-[38%] sm:px-[44%] snap-x snap-mandatory select-none scrollbar-none scroll-smooth"
+            className="w-full flex items-center gap-6 overflow-x-auto pb-14 pt-12 px-[35%] sm:px-[42%] snap-x snap-mandatory select-none scrollbar-none"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {VIDEO_WORKS.map((work, idx) => {
-              const isCenter = idx === activeScrollIndex;
+              const distanceFromCenter = Math.abs(idx - activeScrollIndex);
+              const isCenter = distanceFromCenter === 0;
+              
+              let scale = 0.60; 
+              if (isCenter) scale = 1.18;
+              else if (distanceFromCenter === 1) scale = 0.76;
+              
               const isWidescreen = work.aspectRatio.includes('16:9');
               
               return (
                 <div
-                  key={work.id}
-                  onClick={() => selectDeckVideo(work, idx)}
-                  className="snap-center shrink-0 w-[145px] sm:w-[180px] transition-all duration-500 transform-gpu"
+                  key={`${work.id}-${idx}`}
+                  onClick={() => selectDeckVideo(idx)}
+                  className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-500 transform-gpu"
                   style={{
-                    transform: `scale(${isCenter ? 1.16 : 0.86})`,
-                    opacity: isCenter ? 1 : 0.45
+                    transform: `scale(${scale})`,
+                    opacity: isCenter ? 1 : 0.4
                   }}
                 >
                   {/* MULTI LAYERED CAST SHADOW FOR AUTHENTIC FLOAT EFFECT */}
-                  <div className={`bg-[#F4F4F4] rounded-2xl overflow-hidden transition-all duration-300 flex flex-col border ${
-                    selectedVideo.id === work.id 
-                      ? 'border-neutral-900 shadow-[0_30px_60px_-10px_rgba(0,0,0,0.28),0_15px_30px_-15px_rgba(0,0,0,0.22)]' 
-                      : 'border-neutral-300 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.06)] hover:border-neutral-400 hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.1)]'
+                  <div className={`bg-[#F4F4F4]/95 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col border ${
+                    isCenter 
+                      ? 'border-neutral-900 shadow-[0_35px_65px_-10px_rgba(0,0,0,0.22),0_20px_35px_-15px_rgba(0,0,0,0.18)]' 
+                      : 'border-neutral-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.04)] hover:border-neutral-400'
                   }`}>
                     
                     <div className={`w-full bg-neutral-950 relative overflow-hidden shrink-0 ${
@@ -424,7 +493,7 @@ export default function App() {
                         className="w-full h-full object-cover opacity-85"
                       />
                       <div className="absolute top-2.5 left-2.5 bg-white/95 border border-neutral-300 px-1.5 py-0.5 rounded-md text-[8px] font-futura tracking-wider text-neutral-800 font-bold shadow-sm">
-                        _0{idx + 1}
+                        _0{(idx % ORIGINAL_WORKS.length) + 1}
                       </div>
                     </div>
                     
@@ -447,7 +516,7 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer id="contact-footer" className="border-t border-neutral-300 bg-[#F4F4F4] py-8 text-left px-6 shrink-0 mt-auto">
+      <footer id="contact-footer" className="border-t border-neutral-300 bg-[#F4F4F4]/90 py-8 text-left px-6 shrink-0 mt-auto relative z-10">
         <div className="max-w-[98vw] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-0.5">
             <h2 className="text-xl font-black tracking-tight text-neutral-950 uppercase font-playfair">Let's cut something iconic.</h2>
