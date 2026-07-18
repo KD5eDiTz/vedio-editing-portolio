@@ -7,7 +7,9 @@ import {
   VolumeX, 
   ExternalLink,
   Mail,
-  Instagram
+  Instagram,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface VideoProject {
@@ -112,6 +114,7 @@ export default function App() {
   const [duration, setDuration] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [colorGrade, setColorGrade] = useState<'raw' | 'cinematic'>('cinematic');
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   const [activeScrollIndex, setActiveScrollIndex] = useState<number>(0);
   const horizontalScrollRef = useRef<HTMLDivElement | null>(null);
@@ -136,8 +139,6 @@ export default function App() {
     const handleWheel = (e: WheelEvent) => {
       if (e.deltaY === 0) return;
       e.preventDefault();
-      
-      // Removed loop engines. Uses smooth interpolation increments
       el.scrollTo({
         left: el.scrollLeft + e.deltaY * 1.5,
         behavior: 'smooth'
@@ -210,22 +211,28 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#EAEAEA] text-[#1E1E24] font-inter selection:bg-black/10 min-h-screen antialiased flex flex-col overflow-x-hidden relative">
+    <div className={`transition-colors duration-500 min-h-screen antialiased flex flex-col overflow-x-hidden relative font-inter selection:bg-blue-500/20 ${
+      isDarkMode ? 'bg-[#121316] text-[#E3E4E6]' : 'bg-[#EAEAEA] text-[#1E1E24]'
+    }`}>
       
-      {/* Background loop texture animation */}
+      {/* Background Loop Texture Animation */}
       <video
         src="https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784357186/White_Background_oxmqqe.mp4"
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-[0.18] mix-blend-multiply fixed"
+        className={`absolute inset-0 w-full h-full object-cover pointer-events-none z-0 fixed transition-opacity duration-500 ${
+          isDarkMode ? 'opacity-[0.03] invert' : 'opacity-[0.18] mix-blend-multiply'
+        }`}
       />
 
       {/* Navigation */}
-      <nav className="w-full bg-[#F4F4F4]/60 backdrop-blur-md border-b border-neutral-300/80 px-6 py-4 z-50 shrink-0 relative">
+      <nav className={`w-full backdrop-blur-md border-b px-6 py-4 z-50 shrink-0 relative transition-colors duration-500 ${
+        isDarkMode ? 'bg-[#1A1C20]/60 border-neutral-800' : 'bg-[#F4F4F4]/60 border-neutral-300/80'
+      }`}>
         <div className="max-w-[98vw] mx-auto flex items-center justify-between">
-          <span className="font-futura text-xs font-black tracking-widest uppercase text-neutral-800">STUDIO // KD</span>
+          <span className={`font-futura text-xs font-black tracking-widest uppercase ${isDarkMode ? 'text-neutral-200' : 'text-neutral-800'}`}>STUDIO // KD</span>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
             <span className="font-futura text-[10px] text-blue-600 tracking-wider uppercase font-bold">LIVE ENVIRONMENT</span>
@@ -235,33 +242,59 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
-        {/* SECTION 1: PRO INTRO BANNER BOX */}
-        <section className="bg-[#F4F4F4]/90 border border-neutral-300/60 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl">
-          <div className="w-28 h-28 rounded-xl bg-[#EAEAEA] border border-neutral-300 flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] group">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:8px_8px]" />
-            <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
+        {/* SECTION 1: UPGRADED BANNER BOX (FIXED COOPY, INTUITIVE LAYOUT & DARK TOGGLE) */}
+        <section className={`border rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
+          isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
+        }`}>
+          <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+            {/* Photo frame placeholder */}
+            <div className={`w-24 h-24 rounded-xl border flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] transition-colors duration-500 ${
+              isDarkMode ? 'bg-[#22252A] border-neutral-700' : 'bg-[#EAEAEA] border-neutral-300'
+            }`}>
+              <div className={`absolute inset-0 bg-[size:8px_8px] ${
+                isDarkMode ? 'bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)]'
+              }`} />
+              <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
+            </div>
+
+            <div className="space-y-1 text-center sm:text-left">
+              <span className="font-futura text-[9px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// WORKSTATION INGESTION</span>
+              <h1 className="text-2xl md:text-4xl font-black tracking-tight uppercase leading-none font-inter">
+                Hi, I am{' '}
+                <span className="inline-block text-blue-600 border-r-2 border-blue-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit font-black">
+                  Video D Editor
+                </span>
+              </h1>
+            </div>
           </div>
 
-          <div className="space-y-1 text-center sm:text-left">
-            <span className="font-futura text-[9px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// WORKSTATION INGESTION</span>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-neutral-950 uppercase leading-none">
-              Hi. I am <br />
-              <span className="inline-block text-blue-600 border-r-2 border-blue-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit font-inter">
-                Video Editor
-              </span>
-            </h1>
-          </div>
+          {/* PREMIUM DESIGN MINIMALIST DARK/LIGHT MODE UTILITY SWITCH */}
+          <button 
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex items-center justify-center shadow-sm ${
+              isDarkMode 
+                ? 'bg-[#22252A] border-neutral-700 text-amber-400 hover:bg-[#2B2F36]' 
+                : 'bg-white border-neutral-300 text-neutral-700 hover:bg-neutral-50'
+            }`}
+            aria-label="Toggle workspace lighting theme"
+          >
+            {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
         </section>
 
-        <hr className="border-neutral-300/60" />
+        <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
         {/* SECTION 2: WORKSPACE MONITORS ROW */}
         <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
           
           {/* Main Monitor Container */}
-          <div className="lg:col-span-3 bg-[#FAFAFA]/90 border border-neutral-300/80 rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-300 backdrop-blur-sm">
-            <div className="border-b border-neutral-300 bg-[#F4F4F4]/90 px-4 py-2.5 flex items-center justify-between font-futura text-[9px] text-neutral-500 font-bold">
-              <span className="text-neutral-800 flex items-center gap-1.5 uppercase font-black">
+          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
+            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'
+          }`}>
+            <div className={`border-b px-4 py-2.5 flex items-center justify-between font-futura text-[9px] font-bold transition-colors duration-500 ${
+              isDarkMode ? 'border-neutral-800 bg-[#16171A] text-neutral-400' : 'border-neutral-300 bg-[#F4F4F4]/90 text-neutral-500'
+            }`}>
+              <span className={`flex items-center gap-1.5 uppercase font-black ${isDarkMode ? 'text-neutral-200' : 'text-neutral-800'}`}>
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                 {selectedVideo.title}
               </span>
@@ -303,17 +336,23 @@ export default function App() {
             </div>
 
             {/* Media Control Deck */}
-            <div className="bg-[#F4F4F4]/90 border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-futura shrink-0">
+            <div className={`border-t p-3 flex items-center justify-between gap-4 font-futura shrink-0 transition-colors duration-500 ${
+              isDarkMode ? 'border-neutral-800 bg-[#16171A]' : 'border-neutral-300 bg-[#F4F4F4]/90'
+            }`}>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="p-2 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-md text-neutral-800 cursor-pointer shadow-sm transition-colors"
+                  className={`p-2 border rounded-md cursor-pointer shadow-sm transition-colors ${
+                    isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
+                  }`}
                 >
                   {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
                 </button>
                 <button
                   onClick={() => setIsMuted(!isMuted)}
-                  className="p-2 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-md text-neutral-800 cursor-pointer shadow-sm transition-colors"
+                  className={`p-2 border rounded-md cursor-pointer shadow-sm transition-colors ${
+                    isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
+                  }`}
                 >
                   {isMuted ? <VolumeX className="w-3.5 h-3.5 text-neutral-500" /> : <Volume2 className="w-3.5 h-3.5 text-neutral-900" />}
                 </button>
@@ -335,33 +374,41 @@ export default function App() {
                   step="0.02"
                   value={currentTime}
                   onChange={handleScrub}
-                  className="w-full h-1 bg-neutral-300 rounded-lg appearance-none cursor-ew-resize accent-neutral-800 outline-none"
+                  className={`w-full h-1 rounded-lg appearance-none cursor-ew-resize outline-none transition-colors ${
+                    isDarkMode ? 'bg-neutral-700 accent-neutral-200' : 'bg-neutral-300 accent-neutral-800'
+                  }`}
                 />
               </div>
 
-              <div className="text-[10px] text-neutral-800 bg-white border border-neutral-300 px-2 py-0.5 rounded-md tracking-widest font-bold shadow-sm">
+              <div className={`text-[10px] border px-2 py-0.5 rounded-md tracking-widest font-bold shadow-sm transition-colors ${
+                isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200' : 'bg-white border-neutral-300 text-neutral-800'
+              }`}>
                 {formatTimecode(currentTime, selectedVideo.fps)}
               </div>
             </div>
           </div>
 
           {/* About Column Container */}
-          <div className="lg:col-span-2 space-y-5 bg-[#F4F4F4]/90 border border-neutral-300/60 p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm">
+          <div className={`border p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
+            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
+          }`}>
             <div className="space-y-5">
-              <div className="border-b border-neutral-300 pb-2">
+              <div className={`border-b pb-2 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
                 <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
-                <h3 className="text-2xl font-black text-blue-900 uppercase font-playfair tracking-tight mt-1">
+                <h3 className="text-2xl font-black text-blue-900 uppercase tracking-tight mt-1 font-playfair">
                   {selectedVideo.title}
                 </h3>
               </div>
 
-              <div className="font-inter text-xs text-neutral-700 space-y-2.5">
+              <div className="font-inter text-xs space-y-2.5">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
                   <span className="font-futura font-bold uppercase tracking-wider text-[9px] text-neutral-400">Pacing Class:</span>
-                  <span className="text-neutral-800 font-bold font-inter">{selectedVideo.category}</span>
+                  <span className={`font-bold font-inter ${isDarkMode ? 'text-neutral-200' : 'text-neutral-800'}`}>{selectedVideo.category}</span>
                 </div>
-                <p className="font-inter font-light border-t border-neutral-300/50 pt-2.5 text-neutral-800 leading-relaxed text-sm">
+                <p className={`font-inter font-light border-t pt-2.5 leading-relaxed text-sm transition-colors ${
+                  isDarkMode ? 'text-neutral-400 border-neutral-800' : 'text-neutral-800 border-neutral-300/50'
+                }`}>
                   {selectedVideo.description}
                 </p>
               </div>
@@ -370,7 +417,9 @@ export default function App() {
                 <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
                 <div className="flex flex-wrap gap-1.5">
                   {selectedVideo.techniques.map((tech, idx) => (
-                    <span key={idx} className="bg-white text-neutral-800 text-[9px] font-futura px-2.5 py-1 rounded-md border border-neutral-300 font-bold shadow-sm">
+                    <span key={idx} className={`text-[9px] font-futura px-2.5 py-1 rounded-md border font-bold shadow-sm transition-colors ${
+                      isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-300' : 'bg-white border-neutral-300 text-neutral-800'
+                    }`}>
                       {tech}
                     </span>
                   ))}
@@ -380,16 +429,18 @@ export default function App() {
           </div>
         </section>
 
-        <hr className="border-neutral-300/60" />
+        <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
         {/* SECTION 3: RE-ENGINEERED FINITE SMOOTH SCROLLER TIMELINE */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
               <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// HORIZONTAL OVERVIEW SEQUENCER</span>
-              <h2 className="text-2xl font-black text-neutral-900 uppercase tracking-tight font-playfair">Selected Works</h2>
+              <h2 className="text-2xl font-black uppercase tracking-tight font-playfair">Selected Works</h2>
             </div>
-            <span className="hidden sm:inline-block font-futura text-[9px] text-blue-600 uppercase tracking-widest bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md font-bold">
+            <span className={`hidden sm:inline-block font-futura text-[9px] uppercase tracking-widest border px-2.5 py-1 rounded-md font-bold transition-all ${
+              isDarkMode ? 'bg-[#1A1C20] border-neutral-800 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
+            }`}>
               HOVER MOUSE HERE & USE WHEEL TO SCROLL
             </span>
           </div>
@@ -404,7 +455,6 @@ export default function App() {
               const distanceFromCenter = Math.abs(idx - activeScrollIndex);
               const isCenter = distanceFromCenter === 0;
               
-              // Dynamic scale calculations: cards shrink aggressively further from center frame
               let scale = 0.50; 
               if (isCenter) scale = 1.18;
               else if (distanceFromCenter === 1) scale = 0.70;
@@ -415,17 +465,16 @@ export default function App() {
                 <div
                   key={`${work.id}-${idx}`}
                   onClick={() => selectDeckVideo(idx)}
-                  // Replaced duration-300/500 with slow cinematic cubic bezier properties
                   className="snap-center shrink-0 w-[145px] sm:w-[185px] transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1) transform-gpu"
                   style={{
                     transform: `scale(${scale})`,
                     opacity: isCenter ? 1 : 0.35
                   }}
                 >
-                  <div className={`bg-[#F4F4F4]/95 rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border ${
+                  <div className={`rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border ${
                     isCenter 
-                      ? 'border-neutral-900 shadow-[0_35px_65px_-10px_rgba(0,0,0,0.22),0_20px_35px_-15px_rgba(0,0,0,0.18)]' 
-                      : 'border-neutral-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.04)] hover:border-neutral-400'
+                      ? (isDarkMode ? 'border-neutral-400 shadow-[0_35px_65px_-10px_rgba(0,0,0,0.6)] bg-[#1A1C20]' : 'border-neutral-900 shadow-[0_35px_65px_-10px_rgba(0,0,0,0.22)] bg-[#F4F4F4]/95') 
+                      : (isDarkMode ? 'border-neutral-800 shadow-none bg-[#16171A] hover:border-neutral-700' : 'border-neutral-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.04)] hover:border-neutral-400')
                   }`}>
                     
                     <div className={`w-full bg-neutral-950 relative overflow-hidden shrink-0 ${
@@ -450,13 +499,13 @@ export default function App() {
                       </div>
                     </div>
                     
-                    <div className="p-3 text-left bg-[#F4F4F4]">
-                      <h3 className="text-xs font-black text-neutral-900 uppercase tracking-wide truncate font-playfair">
+                    <div className="p-3 text-left">
+                      <h3 className={`text-xs font-black uppercase tracking-wide truncate font-playfair ${isDarkMode ? 'text-neutral-200' : 'text-neutral-900'}`}>
                         {work.title}
                       </h3>
-                      <div className="flex justify-between items-center mt-1 font-futura text-[8px] text-neutral-400 font-bold">
+                      <div className="flex justify-between items-center mt-1 font-futura text-[8px] font-bold">
                         <span className="uppercase tracking-widest text-blue-600">{work.category}</span>
-                        <span>{work.duration}</span>
+                        <span className={isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}>{work.duration}</span>
                       </div>
                     </div>
 
@@ -467,45 +516,45 @@ export default function App() {
           </div>
         </section>
 
-        <hr className="border-neutral-300/60" />
+        <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
         {/* SECTION 4: HOW TO WORK TOGETHER WITH CONTACT INTEGRATION */}
-        <section className="bg-[#F4F4F4]/90 border border-neutral-300/60 rounded-2xl p-6 md:p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 text-left">
-          <div className="border-b border-neutral-300 pb-3">
+        <section className={`border rounded-2xl p-6 md:p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 text-left transition-all duration-500 ${
+          isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
+        }`}>
+          <div className={`border-b pb-3 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
             <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// COLLABORATION WORKFLOW</span>
-            <h2 className="text-2xl font-black text-neutral-950 uppercase font-playfair tracking-tight mt-1">
+            <h2 className="text-2xl font-black uppercase tracking-tight font-playfair mt-1">
               How to work Together
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs text-neutral-700">
-            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
-              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">01 // BRIEFING</span>
-              <p className="font-sans font-light text-neutral-800 leading-relaxed">
-                Send your raw footage assets along with your tracking references and stylistic project targets.
-              </p>
-            </div>
-            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
-              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">02 // PIPELINE CUT</span>
-              <p className="font-sans font-light text-neutral-800 leading-relaxed">
-                I map the sequences out using tailored velocity hooks, atmospheric dynamic color LUT paths, and custom multi-layered sound design tracks.
-              </p>
-            </div>
-            <div className="space-y-1.5 bg-white/50 border border-neutral-200 p-4 rounded-xl">
-              <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">03 // DELIVERY</span>
-              <p className="font-sans font-light text-neutral-800 leading-relaxed">
-                Review the master draft edit feeds and secure high-fidelity files ready for publication pipelines.
-              </p>
-            </div>
+            {[
+              { step: '01 // BRIEFING', desc: 'Send your raw footage assets along with your tracking references and stylistic project targets.' },
+              { step: '02 // PIPELINE CUT', desc: 'I map the sequences out using tailored velocity hooks, atmospheric dynamic color LUT paths, and custom multi-layered sound design tracks.' },
+              { step: '03 // DELIVERY', desc: 'Review the master draft edit feeds and secure high-fidelity files ready for publication pipelines.' }
+            ].map((item, i) => (
+              <div key={i} className={`space-y-1.5 border p-4 rounded-xl transition-colors ${
+                isDarkMode ? 'bg-[#16171A]/40 border-neutral-800' : 'bg-white/50 border-neutral-200'
+              }`}>
+                <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">{item.step}</span>
+                <p className={`font-sans font-light leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-800'}`}>
+                  {item.desc}
+                </p>
+              </div>
+            ))}
           </div>
 
-          {/* Secure Correspondence Buttons relocated here */}
+          {/* Secure Correspondence Buttons */}
           <div className="pt-2 space-y-3">
             <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
               <a 
                 href="mailto:hello@studio-x.com"
-                className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+                className={`border font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer ${
+                  isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
+                }`}
               >
                 <Mail className="w-4 h-4 text-blue-600" /> Email Link
               </a>
@@ -513,7 +562,9 @@ export default function App() {
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="bg-white border border-neutral-300 hover:border-neutral-400 text-neutral-800 font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer"
+                className={`border font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer ${
+                  isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
+                }`}
               >
                 <Instagram className="w-4 h-4 text-pink-600" /> Instagram
               </a>
@@ -524,14 +575,18 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer id="contact-footer" className="border-t border-neutral-300 bg-[#F4F4F4]/90 py-8 text-left px-6 shrink-0 mt-auto relative z-10">
+      <footer id="contact-footer" className={`border-t py-8 text-left px-6 shrink-0 mt-auto relative z-10 transition-colors duration-500 ${
+        isDarkMode ? 'border-neutral-800 bg-[#1A1C20]/90' : 'border-neutral-300 bg-[#F4F4F4]/90'
+      }`}>
         <div className="max-w-[98vw] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-0.5">
-            <h2 className="text-xl font-black tracking-tight text-neutral-950 uppercase font-playfair">Let's cut something iconic.</h2>
+            <h2 className="text-xl font-black tracking-tight uppercase font-playfair">Let's cut something iconic.</h2>
             <p className="text-[9px] text-neutral-400 font-futura tracking-wide uppercase font-bold">// ALLOCATION SLOTS RESERVED FOR WORLDWIDE COLLABORATIONS</p>
           </div>
           <div className="font-futura text-[10px] text-neutral-500 flex items-center gap-6 w-full md:w-auto justify-between border-t border-neutral-300/50 md:border-t-0 pt-4 md:pt-0 font-bold">
-            <a href="mailto:hello@studio-x.com" className="text-neutral-900 hover:text-neutral-600 transition-colors flex items-center gap-1 font-black uppercase tracking-widest text-xs font-futura">
+            <a href="mailto:hello@studio-x.com" className={`hover:text-neutral-600 transition-colors flex items-center gap-1 font-black uppercase tracking-widest text-xs font-futura ${
+              isDarkMode ? 'text-neutral-200' : 'text-neutral-900'
+            }`}>
               hello@studio-x.com <ExternalLink className="w-3 h-3" />
             </a>
             <span className="text-[9px] text-neutral-400 font-futura">© 2026 STUDIO—KD</span>
