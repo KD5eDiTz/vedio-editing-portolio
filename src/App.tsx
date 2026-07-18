@@ -111,9 +111,8 @@ export default function App() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [colorGrade, setColorGrade] = useState<'raw' | 'cinematic'>('cinematic');
 
-  // Track dynamic centers for scroll wheel transformation physics
   const [activeScrollIndex, setActiveScrollIndex] = useState<number>(0);
-  const leftScrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const horizontalScrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -127,18 +126,17 @@ export default function App() {
     }
   }, [selectedVideo, isPlaying, isMuted]);
 
-  // Handle high-performance smooth wheel positioning updates
-  const handleTileContainerScroll = () => {
-    if (!leftScrollContainerRef.current) return;
-    const container = leftScrollContainerRef.current;
-    const containerCenter = container.scrollTop + container.clientHeight / 2;
+  const handleHorizontalScroll = () => {
+    if (!horizontalScrollRef.current) return;
+    const container = horizontalScrollRef.current;
+    const containerCenter = container.scrollLeft + container.clientWidth / 2;
     
     let closestIndex = 0;
     let minDistance = Infinity;
 
     Array.from(container.children).forEach((child, idx) => {
       const htmlChild = child as HTMLElement;
-      const childCenter = htmlChild.offsetTop + htmlChild.clientHeight / 2;
+      const childCenter = htmlChild.offsetLeft + htmlChild.clientWidth / 2;
       const distance = Math.abs(containerCenter - childCenter);
       
       if (distance < minDistance) {
@@ -179,12 +177,11 @@ export default function App() {
     setIsPlaying(false);
     setCurrentTime(0);
     
-    // Automatically center clicked item in hidden scroll wheel layout
-    if (leftScrollContainerRef.current) {
-      const targetElement = leftScrollContainerRef.current.children[idx] as HTMLElement;
+    if (horizontalScrollRef.current) {
+      const targetElement = horizontalScrollRef.current.children[idx] as HTMLElement;
       if (targetElement) {
-        leftScrollContainerRef.current.scrollTo({
-          top: targetElement.offsetTop - leftScrollContainerRef.current.clientHeight / 2 + targetElement.clientHeight / 2,
+        horizontalScrollRef.current.scrollTo({
+          left: targetElement.offsetLeft - horizontalScrollRef.current.clientWidth / 2 + targetElement.clientWidth / 2,
           behavior: 'smooth'
         });
       }
@@ -192,110 +189,56 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#EAEAEA] text-[#1E1E24] font-sans selection:bg-black/10 min-h-screen relative overflow-hidden antialiased flex flex-col">
+    <div className="bg-[#EAEAEA] text-[#1E1E24] font-inter selection:bg-black/10 min-h-screen antialiased flex flex-col overflow-x-hidden">
       
-      {/* Premium Minimal Navigation Banner */}
-      <nav className="w-full bg-[#F4F4F4]/80 backdrop-blur-md border-b border-neutral-300 px-6 py-4 z-50 shrink-0">
+      {/* Top Branding Navigation */}
+      <nav className="w-full bg-[#F4F4F4]/60 backdrop-blur-md border-b border-neutral-300/80 px-6 py-4 z-50 shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <span className="font-mono text-xs font-black tracking-widest uppercase text-neutral-800">STUDIO // KD</span>
+          <span className="font-futura text-xs font-black tracking-widest uppercase text-neutral-800">STUDIO // KD</span>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-neutral-900 animate-pulse" />
-            <span className="font-mono text-[10px] text-neutral-600 tracking-wider uppercase font-bold">READY TO CUT</span>
+            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="font-futura text-[10px] text-blue-600 tracking-wider uppercase font-bold">LIVE ENVIRONMENT</span>
           </div>
         </div>
       </nav>
 
-      {/* 3-COLUMN MASTER split WORKSTATION WINDOW DESIGN MATRIX */}
-      <div className="flex-1 w-full max-w-[1600px] mx-auto flex flex-col lg:flex-row items-stretch overflow-hidden">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10 space-y-8 md:space-y-12">
         
-        {/* COLUMN 1: LEFT SIDE - PREMIUM HIDDEN SCROLL WHEEL GRID (DESKTOP INTERACTIVE) */}
-        <div className="w-full lg:w-[32%] px-4 py-6 lg:py-12 border-b lg:border-b-0 lg:border-r border-neutral-300 flex flex-col order-3 lg:order-1">
-          <div className="mb-4 shrink-0 px-2">
-            <span className="font-mono text-[9px] text-neutral-500 tracking-[0.2em] uppercase block font-bold">// TAPE DECK CONTROLLER</span>
-            <h2 className="text-xl font-black text-neutral-900 uppercase tracking-tight">Selected Works</h2>
+        {/* SECTION 1: TOP PROFILE INTRO WITH TYPE ANIMATION & STYLED TEXT */}
+        <section className="bg-[#F4F4F4] border border-neutral-300/70 rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-[0_15px_35px_rgba(0,0,0,0.06)]">
+          <div className="w-28 h-28 rounded-xl bg-[#EAEAEA] border border-neutral-300 flex items-center justify-center relative overflow-hidden shrink-0 shadow-inner group">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:8px_8px]" />
+            <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
           </div>
 
-          {/* Scrolling Chamber: Custom hidden scrollbar wrapper tracking scroll animations */}
-          <div 
-            ref={leftScrollContainerRef}
-            onScroll={handleTileContainerScroll}
-            className="flex-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto pb-4 lg:pb-32 pt-4 px-2 snap-x lg:snap-y snap-mandatory select-none scrollbar-none"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {VIDEO_WORKS.map((work, idx) => {
-              const isCenter = idx === activeScrollIndex;
-              const isWidescreen = work.aspectRatio.includes('16:9');
-              
-              return (
-                <div
-                  key={work.id}
-                  onClick={() => selectDeckVideo(work, idx)}
-                  className="snap-center shrink-0 w-[180px] sm:w-[220px] lg:w-full cursor-pointer transition-all duration-500 transform-gpu"
-                  style={{
-                    // Dynamic scaling physics: Center scales large, outer tiers shrink smoothly on desktop
-                    transform: `scale(${isCenter ? 1.03 : 0.94})`,
-                    opacity: isCenter ? 1 : 0.65
-                  }}
-                >
-                  <div className={`bg-[#F4F4F4] border rounded-md overflow-hidden transition-all duration-300 flex flex-col ${
-                    selectedVideo.id === work.id 
-                      ? 'border-neutral-900 shadow-2xl shadow-black/30' 
-                      : 'border-neutral-300 shadow-lg shadow-black/5 hover:border-neutral-400'
-                  }`}>
-                    {/* Portrait Adaptive Preview Windows */}
-                    <div className={`w-full bg-neutral-900 relative overflow-hidden shrink-0 ${
-                      isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
-                    }`}>
-                      <video
-                        src={work.videoUrl}
-                        muted
-                        loop
-                        playsInline
-                        autoPlay
-                        className={`w-full h-full object-cover opacity-80 ${work.cinematicFilter}`}
-                      />
-                      <div className="absolute top-2 left-2 bg-white/90 border border-neutral-300 px-1.5 py-0.5 rounded text-[8px] font-mono tracking-wider text-neutral-800 font-bold">
-                        _0{idx + 1}
-                      </div>
-                    </div>
-                    
-                    <div className="p-3 text-left bg-[#F4F4F4]">
-                      <div className="flex justify-between items-start gap-2">
-                        <h3 className="text-xs font-black text-neutral-900 uppercase tracking-wide leading-tight line-clamp-1">
-                          {work.title}
-                        </h3>
-                        <span className="font-mono text-[8px] text-neutral-500 shrink-0 font-bold">
-                          {work.duration}
-                        </span>
-                      </div>
-                      <p className="text-[8px] text-neutral-400 font-mono tracking-widest uppercase mt-0.5">{work.category}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="space-y-1 text-center sm:text-left">
+            <span className="font-futura text-[9px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// WORKSTATION INGESTION</span>
+            {/* INTER / BLUE COLOR TYPING COMBINATION */}
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-neutral-950 uppercase leading-none">
+              Hi. I am <br />
+              <span className="inline-block text-blue-600 border-r-2 border-blue-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit font-inter">
+                Video Editor
+              </span>
+            </h1>
           </div>
-        </div>
+        </section>
 
-        {/* COLUMN 2: MIDDLE - THE PREMIUM DEDICATED MAIN VIDEO VIEWER & CONTEXT PANEL */}
-        <div className="flex-1 px-4 lg:px-8 py-6 lg:py-12 flex flex-col justify-start border-b lg:border-b-0 lg:border-r border-neutral-300 order-2 overflow-y-auto">
-          <div className="mb-4 shrink-0">
-            <span className="font-mono text-[9px] text-neutral-500 tracking-[0.2em] uppercase block font-bold">// BROADCAST MONITOR</span>
-            <h2 className="text-xl font-black text-neutral-900 uppercase tracking-tight">Main Monitor Feed</h2>
-          </div>
+        <hr className="border-neutral-300/80" />
 
-          {/* Premium Video Monitor Frame */}
-          <div className="w-full bg-[#FAFAFA] border border-neutral-300 rounded-md shadow-2xl shadow-black/15 overflow-hidden flex flex-col relative shrink-0">
-            <div className="border-b border-neutral-300 bg-[#F4F4F4] px-4 py-2.5 flex items-center justify-between font-mono text-[9px] text-neutral-500 font-bold">
+        {/* SECTION 2: MIDDLE REEL DISPLAY STATION */}
+        <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+          
+          {/* Main Video Screen Container */}
+          <div className="lg:col-span-3 bg-[#FAFAFA] border border-neutral-300/80 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col relative">
+            <div className="border-b border-neutral-300 bg-[#F4F4F4] px-4 py-2.5 flex items-center justify-between font-futura text-[9px] text-neutral-500 font-bold">
               <span className="text-neutral-800 flex items-center gap-1.5 uppercase font-black">
-                <span className="h-1.5 w-1.5 rounded-full bg-neutral-900 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                 {selectedVideo.title}
               </span>
-              <span className="tracking-widest uppercase">{selectedVideo.aspectRatio}</span>
+              <span className="tracking-widest uppercase text-neutral-400">{selectedVideo.aspectRatio}</span>
             </div>
 
-            {/* Main Player Bounding Box */}
-            <div className="relative bg-neutral-900 flex items-center justify-center group aspect-[9/16] lg:aspect-video max-h-[60vh] lg:max-h-[500px] w-full mx-auto">
+            <div className="relative bg-neutral-950 flex items-center justify-center group aspect-[9/16] md:aspect-video max-h-[55vh] lg:max-h-[465px] w-full mx-auto">
               <video
                 ref={videoRef}
                 src={selectedVideo.videoUrl}
@@ -324,13 +267,13 @@ export default function App() {
                 )}
               </AnimatePresence>
 
-              <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur border border-neutral-300 px-2 py-0.5 rounded-sm font-mono text-[8px] text-neutral-800 tracking-wider font-bold">
+              <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur border border-neutral-300 px-2 py-0.5 rounded-sm font-futura text-[8px] text-neutral-800 tracking-wider font-bold">
                 LUT: {colorGrade.toUpperCase()}
               </div>
             </div>
 
-            {/* Custom Control Deck Media Bar */}
-            <div className="bg-[#F4F4F4] border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-mono">
+            {/* Deck Bar Strip Controls */}
+            <div className="bg-[#F4F4F4] border-t border-neutral-300 p-3 flex items-center justify-between gap-4 font-futura">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
@@ -354,8 +297,7 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Media Timeline Timeline Bar */}
-              <div className="flex-1 hidden sm:flex items-center gap-2 text-[9px] text-neutral-400">
+              <div className="flex-1 hidden sm:flex items-center gap-2">
                 <input
                   type="range"
                   min="0"
@@ -373,85 +315,139 @@ export default function App() {
             </div>
           </div>
 
-          {/* DYNAMIC METADATA ABOUT FIELD */}
-          <div className="mt-8 text-left space-y-6">
-            <div className="border-b border-neutral-300 pb-3">
-              <span className="font-mono text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// CONTEXT SYNOPSIS</span>
-              <h3 className="text-xl font-black text-neutral-900 uppercase font-display tracking-tight mt-0.5">{selectedVideo.title}</h3>
-            </div>
-
-            <div className="bg-[#F4F4F4] border border-neutral-300 rounded p-4 font-mono text-xs text-neutral-700 space-y-3 shadow-sm">
-              <div className="flex items-center gap-2 text-neutral-900">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-950" />
-                <span className="font-bold uppercase tracking-wider text-[10px] text-neutral-500">Retention Focus:</span>
-                <span className="font-bold">{selectedVideo.category}</span>
+          {/* Dynamic Details Frame Right to Video Viewer */}
+          <div className="lg:col-span-2 space-y-5 bg-[#F4F4F4] border border-neutral-300/70 p-6 rounded-xl shadow-[0_15px_35px_rgba(0,0,0,0.06)] h-full flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="border-b border-neutral-300 pb-2">
+                <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// RECORD INDEX LOG</span>
+                {/* PLAYFAIR DISPLAY SERIF INTEGRATION */}
+                <h3 className="text-2xl font-black text-blue-900 uppercase font-playfair tracking-tight mt-1">
+                  {selectedVideo.title}
+                </h3>
               </div>
-              <p className="font-sans font-light leading-relaxed border-t border-neutral-300/60 pt-2 text-neutral-800">
-                {selectedVideo.description}
-              </p>
+
+              <div className="font-inter text-xs text-neutral-700 space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                  <span className="font-futura font-bold uppercase tracking-wider text-[9px] text-neutral-400">Pacing Class:</span>
+                  <span className="text-neutral-800 font-bold font-inter">{selectedVideo.category}</span>
+                </div>
+                <p className="font-inter font-light border-t border-neutral-300/50 pt-2.5 text-neutral-800 leading-relaxed text-sm">
+                  {selectedVideo.description}
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-2.5">
-              <span className="font-mono text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PRODUCTION STRATEGY BADGES</span>
+            <div className="space-y-2 pt-4 border-t border-neutral-300/60">
+              <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
               <div className="flex flex-wrap gap-1.5">
                 {selectedVideo.techniques.map((tech, idx) => (
-                  <span key={idx} className="bg-white text-neutral-800 text-[9px] font-mono px-2.5 py-1 rounded-sm border border-neutral-300 font-bold shadow-sm">
+                  <span key={idx} className="bg-white text-neutral-800 text-[9px] font-futura px-2.5 py-1 rounded border border-neutral-300 font-bold shadow-sm">
                     {tech}
                   </span>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* COLUMN 3: RIGHT SIDE - PERSONAL RESUME BIOGRAPHY PANEL */}
-        <div className="w-full lg:w-[28%] px-6 py-6 lg:py-12 bg-[#F4F4F4] lg:border-l border-neutral-300 flex flex-col justify-start text-left order-1 lg:order-3 shrink-0 overflow-y-auto">
-          <div className="space-y-8">
-            {/* Minimalist Grid Placeholder for Photo Frame */}
-            <div className="w-32 h-32 rounded-md bg-[#EAEAEA] border border-neutral-300 flex items-center justify-center relative overflow-hidden shadow-lg shadow-black/5 group">
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
-              <span className="font-mono text-[10px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
+        <hr className="border-neutral-300/80" />
+
+        {/* SECTION 3: BOTTOM HORIZONTAL WAVE PREVIEW DECK */}
+        <section className="space-y-4">
+          <div className="px-1 flex items-center justify-between">
+            <div className="space-y-0.5 text-left">
+              <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// HORIZONTAL SEQUENCER</span>
+              <h2 className="text-2xl font-black text-neutral-900 uppercase tracking-tight font-playfair">Selected Works</h2>
             </div>
+            <span className="hidden sm:inline-block font-futura text-[9px] text-neutral-500 uppercase tracking-widest bg-neutral-300/40 border border-neutral-300 px-2 py-0.5 rounded font-bold">
+              SCROLL THROUGH DECK TAPE
+            </span>
+          </div>
 
-            <div className="space-y-3">
-              <span className="font-mono text-[10px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// EXECUTIVE ALLOCATION</span>
-             <h1 className="text-3xl lg:text-4xl font-black tracking-tighter text-neutral-950 uppercase leading-none">
-  Hi. I am <br />
-  <span className="inline-block text-neutral-600 border-r-2 border-neutral-600 animate-[typing_3.5s_steps(30)_infinite,blink_0.75s_step-end_infinite] overflow-hidden whitespace-nowrap pr-1 max-w-fit">
-    Video Editor
-  </span>
-</h1>
-              <p className="text-xs text-neutral-600 font-sans leading-relaxed font-light">
-                Specialized in visual architecture, high-velocity sequence flow pacing, color LUT mapping, and advanced multi-channel sound design dynamics.
-              </p>
-            </div>
+          <div 
+            ref={horizontalScrollRef}
+            onScroll={handleHorizontalScroll}
+            className="w-full flex items-center gap-5 overflow-x-auto pb-12 pt-8 px-[35%] sm:px-[42%] snap-x snap-mandatory select-none scrollbar-none"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {VIDEO_WORKS.map((work, idx) => {
+              const isCenter = idx === activeScrollIndex;
+              const isWidescreen = work.aspectRatio.includes('16:9');
+              
+              return (
+                <div
+                  key={work.id}
+                  onClick={() => selectDeckVideo(work, idx)}
+                  className="snap-center shrink-0 w-[140px] sm:w-[170px] transition-all duration-500 transform-gpu"
+                  style={{
+                    transform: `scale(${isCenter ? 1.15 : 0.88})`,
+                    opacity: isCenter ? 1 : 0.55
+                  }}
+                >
+                  {/* ROUNDED-XL / DROP-SHADOW ADJUSTMENT PATCH */}
+                  <div className={`bg-[#F4F4F4] rounded-xl overflow-hidden transition-all duration-300 flex flex-col border ${
+                    selectedVideo.id === work.id 
+                      ? 'border-neutral-900 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]' 
+                      : 'border-neutral-300 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.05)] hover:border-neutral-400'
+                  }`}>
+                    
+                    <div className={`w-full bg-neutral-950 relative overflow-hidden shrink-0 ${
+                      isWidescreen ? 'aspect-video' : 'aspect-[9/16]'
+                    }`}>
+                      <video
+                        src={work.videoUrl}
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
+                        onTimeUpdate={(e) => {
+                          const vid = e.currentTarget;
+                          if (vid.currentTime >= 5) {
+                            vid.currentTime = 0;
+                          }
+                        }}
+                        className="w-full h-full object-cover opacity-85"
+                      />
+                      <div className="absolute top-2 left-2 bg-white/95 border border-neutral-300 px-1.5 py-0.5 rounded text-[8px] font-futura tracking-wider text-neutral-800 font-bold shadow-sm">
+                        _0{idx + 1}
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 text-left bg-[#F4F4F4]">
+                      {/* CARD ENTRIES USE PREMIUM PLAYFAIR BRANDING TITLE */}
+                      <h3 className="text-xs font-black text-neutral-900 uppercase tracking-wide truncate font-playfair">
+                        {work.title}
+                      </h3>
+                      <div className="flex justify-between items-center mt-1 font-futura text-[8px] text-neutral-400 font-bold">
+                        <span className="uppercase tracking-widest text-blue-600">{work.category}</span>
+                        <span>{work.duration}</span>
+                      </div>
+                    </div>
 
-            <div className="border-t border-neutral-300 pt-6 space-y-4 font-mono text-[10px]">
-              <span className="text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE STATUS</span>
-              <div className="space-y-2.5 text-neutral-700">
-                <div className="flex justify-between border-b border-neutral-300/60 pb-1.5">
-                  <span className="uppercase font-bold text-neutral-500">OPERATIONS:</span>
-                  <span className="text-neutral-900 font-bold">FREELANCE / CONTRACT</span>
+                  </div>
                 </div>
-                <div className="flex justify-between border-b border-neutral-300/60 pb-1.5">
-                  <span className="uppercase font-bold text-neutral-500">LOCATION:</span>
-                  <span className="text-neutral-900 font-bold">GLOBAL INGESTION</span>
-                </div>
-              </div>
-            </div>
+              );
+            })}
+          </div>
+        </section>
+      </main>
 
-            <div className="pt-4">
-              <a 
-                href="mailto:hello@studio-x.com"
-                className="w-full bg-neutral-950 hover:bg-neutral-800 text-white font-mono text-[10px] tracking-widest py-3 px-4 rounded-md flex items-center justify-center gap-2 font-black transition-all text-center uppercase shadow-md shadow-black/10 cursor-pointer"
-              >
-                Initiate Timeline Request <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
+      {/* FOOTER */}
+      <footer id="contact-footer" className="border-t border-neutral-300 bg-[#F4F4F4] py-8 text-left px-6 shrink-0 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-0.5">
+            <h2 className="text-xl font-black tracking-tight text-neutral-950 uppercase font-playfair">Let's cut something iconic.</h2>
+            <p className="text-[9px] text-neutral-400 font-futura tracking-wide uppercase font-bold">// ALLOCATION SLOTS RESERVED FOR WORLDWIDE COLLABORATIONS</p>
+          </div>
+          <div className="font-futura text-[10px] text-neutral-500 flex items-center gap-6 w-full md:w-auto justify-between border-t border-neutral-300/50 md:border-t-0 pt-4 md:pt-0 font-bold">
+            <a href="mailto:hello@studio-x.com" className="text-neutral-900 hover:text-neutral-600 transition-colors flex items-center gap-1 font-black uppercase tracking-widest text-xs font-futura">
+              hello@studio-x.com <ExternalLink className="w-3 h-3" />
+            </a>
+            <span className="text-[9px] text-neutral-400 font-futura">© 2026 STUDIO—KD</span>
           </div>
         </div>
-
-      </div>
+      </footer>
     </div>
   );
 }
