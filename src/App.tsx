@@ -107,7 +107,6 @@ const VIDEO_WORKS: VideoProject[] = [
   }
 ];
 
-// Robust React Custom Typewriter Hook Engine
 function TypewriterEffect({ text, isDark }: { text: string; isDark: boolean }) {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -120,7 +119,7 @@ function TypewriterEffect({ text, isDark }: { text: string; isDark: boolean }) {
       if (!isDeleting) {
         setDisplayText(fullText.substring(0, displayText.length + 1));
         if (displayText === fullText) {
-          setTimeout(() => setIsDeleting(true), 2500); // Wait on complete string
+          setTimeout(() => setIsDeleting(true), 2500);
         }
       } else {
         setDisplayText(fullText.substring(0, displayText.length - 1));
@@ -168,7 +167,6 @@ export default function App() {
     }
   }, [selectedVideo, isPlaying, isMuted]);
 
-  // SMOOTH DAMPENED WHEEL SCROLL LOGIC
   useEffect(() => {
     const el = horizontalScrollRef.current;
     if (!el) return;
@@ -254,7 +252,7 @@ export default function App() {
       isDarkMode ? 'bg-[#121316] text-[#E3E4E6]' : 'bg-[#EAEAEA] text-[#1E1E24]'
     }`}>
       
-      {/* Background Loop Texture Animation */}
+      {/* Background Loop */}
       <video
         src="https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784357186/White_Background_oxmqqe.mp4"
         autoPlay
@@ -281,12 +279,11 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
-        {/* SECTION 1: FULLY OPTIMIZED INTRO BANNER BOX */}
+        {/* SECTION 1: HERO BANNER BOX */}
         <section className={`border rounded-2xl p-6 flex flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
           isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
         }`}>
           <div className="flex flex-row items-center gap-6 w-full sm:w-auto">
-            {/* Photo frame placeholder */}
             <div className={`w-20 h-20 md:w-24 md:h-24 rounded-xl border flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] transition-colors duration-500 ${
               isDarkMode ? 'bg-[#22252A] border-neutral-700' : 'bg-[#EAEAEA] border-neutral-300'
             }`}>
@@ -296,7 +293,6 @@ export default function App() {
               <span className="font-futura text-[9px] text-neutral-400 font-black tracking-widest uppercase relative z-10">MY PHOTO</span>
             </div>
 
-            {/* FIXED NAME ALIGNMENT BLOCK */}
             <div className="flex flex-col items-start justify-center space-y-1.5 text-left">
               <span className="font-futura text-[9px] text-neutral-400 tracking-[0.25em] uppercase block font-bold">// WORKSTATION INGESTION</span>
               <h1 className={`text-2xl md:text-4xl font-black tracking-tight uppercase flex flex-wrap items-center gap-x-2 leading-none ${
@@ -323,11 +319,11 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 2: ADAPTIVE GRID MONITORS ROW */}
-        <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        {/* SECTION 2: ADAPTIVE 50/50 WORKSPACE VIEWPORT GRID */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
-          {/* Main Video Monitor Container - FIXED ASPECT HANDLING TO PREVENT OVER-STRETCH */}
-          <div className={`lg:col-span-3 border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
+          {/* Main Video Monitor Container */}
+          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col justify-between relative transition-all duration-500 backdrop-blur-sm ${
             isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'
           }`}>
             <div className={`border-b px-4 py-2.5 flex items-center justify-between font-futura text-[9px] font-bold transition-colors duration-500 ${
@@ -340,10 +336,7 @@ export default function App() {
               <span className="tracking-widest uppercase text-neutral-400">{selectedVideo.aspectRatio}</span>
             </div>
 
-            {/* FIXED CONTROLLER ATTACHMENT ASPECT BALANCING LAYER */}
-            <div className={`relative bg-neutral-950 flex items-center justify-center group w-full mx-auto transition-all duration-500 ${
-              isWidescreen ? 'aspect-video max-h-[520px]' : 'aspect-[9/16] max-h-[650px] max-w-[365px]'
-            }`}>
+            <div className="relative bg-neutral-950 flex items-center justify-center group w-full mx-auto flex-grow aspect-video max-h-[520px]">
               <video
                 ref={videoRef}
                 src={selectedVideo.videoUrl}
@@ -377,7 +370,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Media Control Deck - NOW FULLY POSITION PIPED TO THE BASE WITHOUT GAPS */}
             <div className={`border-t p-3 flex items-center justify-between gap-4 font-futura shrink-0 transition-colors duration-500 w-full ${
               isDarkMode ? 'border-neutral-800 bg-[#16171A]' : 'border-neutral-300 bg-[#F4F4F4]/90'
             }`}>
@@ -430,8 +422,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* About Column Container - DYNAMIC DESKTOP SCALING ONLY */}
-          <div className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 lg:min-h-[450px] ${
+          {/* About Column Container - EXTENDED HORIZONTALLY TO A BALANCED RECTANGLE */}
+          <div className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
             isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
           }`}>
             <div className="space-y-5 lg:space-y-6 text-left">
@@ -473,7 +465,7 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 3: SMOOTH HORIZONTAL SEQUENCER TIMELINE */}
+        {/* SECTION 3: DECK TIMELINE TAPE CONTAINER */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
@@ -561,40 +553,39 @@ export default function App() {
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
         {/* SECTION 4: HOW TO WORK TOGETHER WITH CONTACT INTEGRATION */}
-        <section className={`border rounded-2xl p-6 md:p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 text-left transition-all duration-500 ${
+        <section className={`border rounded-2xl p-6 md:p-8 lg:p-10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 lg:space-y-8 text-left transition-all duration-500 ${
           isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
         }`}>
-          <div className={`border-b pb-3 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
-            <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// COLLABORATION WORKFLOW</span>
-            <h2 className="text-2xl font-black uppercase tracking-tight font-playfair mt-1">
+          <div className={`border-b pb-3 lg:pb-4 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
+            <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// COLLABORATION WORKFLOW</span>
+            <h2 className="text-2xl lg:text-3xl font-black uppercase tracking-tight font-playfair mt-1">
               How to work Together
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs text-neutral-700">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs lg:text-sm text-neutral-700">
             {[
               { step: '01 // BRIEFING', desc: 'Send your raw footage assets along with your tracking references and stylistic project targets.' },
               { step: '02 // PIPELINE CUT', desc: 'I map the sequences out using tailored velocity hooks, atmospheric dynamic color LUT paths, and custom multi-layered sound design tracks.' },
               { step: '03 // DELIVERY', desc: 'Review the master draft edit feeds and secure high-fidelity files ready for publication pipelines.' }
             ].map((item, i) => (
-              <div key={i} className={`space-y-1.5 border p-4 rounded-xl transition-colors ${
+              <div key={i} className={`space-y-1.5 lg:space-y-3 border p-4 lg:p-6 rounded-xl transition-colors ${
                 isDarkMode ? 'bg-[#16171A]/40 border-neutral-800' : 'bg-white/50 border-neutral-200'
               }`}>
-                <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px]">{item.step}</span>
-                <p className={`font-sans font-light leading-relaxed ${isDarkMode ? 'text-neutral-400' : 'text-neutral-800'}`}>
+                <span className="text-blue-600 font-futura font-black block tracking-wider text-[10px] lg:text-xs">{item.step}</span>
+                <p className={`font-sans font-light lg:font-normal leading-relaxed text-xs lg:text-base transition-colors ${isDarkMode ? 'text-neutral-400 lg:text-neutral-300' : 'text-neutral-800 lg:text-neutral-700'}`}>
                   {item.desc}
                 </p>
               </div>
             ))}
           </div>
 
-          {/* Secure Correspondence Buttons */}
-          <div className="pt-2 space-y-3">
-            <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
+          <div className="pt-2 lg:pt-4 space-y-3 lg:space-y-4">
+            <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 max-w-2xl">
               <a 
                 href="mailto:hello@studio-x.com"
-                className={`border font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer ${
+                className={`border font-futura text-[10px] lg:text-xs tracking-widest py-3 lg:py-3.5 px-4 lg:px-6 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-md cursor-pointer ${
                   isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
                 }`}
               >
@@ -604,7 +595,7 @@ export default function App() {
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className={`border font-futura text-[10px] tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-sm cursor-pointer ${
+                className={`border font-futura text-[10px] lg:text-xs tracking-widest py-3 lg:py-3.5 px-4 lg:px-6 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-md cursor-pointer ${
                   isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
                 }`}
               >
