@@ -317,13 +317,18 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 2: ADAPTIVE WORKSPACE WINDOWS ROW */}
+        {/* SECTION 2: ADAPTIVE WORKSPACE WINDOWS ROW - WITH SPRING POP ENTRANCE */}
         <section className={`flex flex-col items-stretch gap-8 ${isWidescreen ? 'lg:grid lg:grid-cols-5' : 'lg:flex lg:flex-row'}`}>
           
           {/* Main Video Monitor Box */}
-          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
-            isWidescreen ? 'lg:col-span-3' : 'w-full lg:w-[45%] shrink-0'
-          } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'}`}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 80, damping: 14, delay: 0.1 }}
+            className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-colors duration-500 backdrop-blur-sm ${
+              isWidescreen ? 'lg:col-span-3' : 'w-full lg:w-[45%] shrink-0'
+            } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'}`}
+          >
             <div className={`border-b px-4 py-2.5 flex items-center justify-between font-futura text-[9px] font-bold transition-colors duration-500 ${
               isDarkMode ? 'border-neutral-800 bg-[#16171A] text-neutral-400' : 'border-neutral-300 bg-[#F4F4F4]/90 text-neutral-500'
             }`}>
@@ -420,12 +425,17 @@ export default function App() {
                 {formatTimecode(currentTime, selectedVideo.fps)}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* About Column Container */}
-          <div className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
-            isWidescreen ? 'lg:col-span-2 lg:min-h-[450px]' : 'flex-1 w-full'
-          } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'}`}>
+          {/* About Column Container - STAGGERED SPRING ENTRANCE */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 80, damping: 14, delay: 0.2 }}
+            className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
+              isWidescreen ? 'lg:col-span-2 lg:min-h-[450px]' : 'flex-1 w-full'
+            } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'}`}
+          >
             <div className="space-y-5 lg:space-y-6 text-left">
               <div className={`border-b pb-2 lg:pb-3 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
                 <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
@@ -460,7 +470,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
