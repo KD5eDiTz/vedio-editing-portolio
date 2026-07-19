@@ -430,37 +430,37 @@ export default function App() {
             </div>
           </div>
 
-          {/* About Column Container */}
-          <div className={`border p-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 lg:min-h-[450px] ${
+          {/* About Column Container - DYNAMIC DESKTOP SCALING ONLY */}
+          <div className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 lg:min-h-[450px] ${
             isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
           }`}>
-            <div className="space-y-5 text-left">
-              <div className={`border-b pb-2 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
-                <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
-                <h3 className="text-2xl font-black text-blue-900 uppercase tracking-tight mt-1 font-playfair">
+            <div className="space-y-5 lg:space-y-6 text-left">
+              <div className={`border-b pb-2 lg:pb-3 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
+                <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
+                <h3 className="text-2xl lg:text-3xl font-black text-blue-900 uppercase tracking-tight mt-1 font-playfair">
                   {selectedVideo.title}
                 </h3>
               </div>
 
-              <div className="font-inter text-xs space-y-2.5">
+              <div className="font-inter space-y-2.5 lg:space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                  <span className="font-futura font-bold uppercase tracking-wider text-[9px] text-neutral-400">Pacing Class:</span>
-                  <span className={`font-bold font-inter ${isDarkMode ? 'text-neutral-200' : 'text-neutral-800'}`}>{selectedVideo.category}</span>
+                  <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-blue-600 shrink-0" />
+                  <span className="font-futura font-bold uppercase tracking-wider text-[9px] lg:text-[11px] text-neutral-400">Pacing Class:</span>
+                  <span className={`text-xs lg:text-base font-bold font-inter ${isDarkMode ? 'text-neutral-100' : 'text-neutral-800'}`}>{selectedVideo.category}</span>
                 </div>
-                <p className={`font-inter font-light border-t pt-2.5 leading-relaxed text-sm transition-colors ${
-                  isDarkMode ? 'text-neutral-400 border-neutral-800' : 'text-neutral-800 border-neutral-300/50'
+                <p className={`font-inter font-light lg:font-normal border-t pt-2.5 lg:pt-4 leading-relaxed text-xs lg:text-base transition-colors ${
+                  isDarkMode ? 'text-neutral-400 lg:text-neutral-300 border-neutral-800' : 'text-neutral-800 lg:text-neutral-700 border-neutral-300/50'
                 }`}>
                   {selectedVideo.description}
                 </p>
               </div>
 
-              <div className="space-y-2 pt-2">
-                <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-2 lg:space-y-3 pt-2 lg:pt-4">
+                <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-wider block uppercase font-bold">// PIPELINE TAGGED PARAMETERS</span>
+                <div className="flex flex-wrap gap-1.5 lg:gap-2">
                   {selectedVideo.techniques.map((tech, idx) => (
-                    <span key={idx} className={`text-[9px] font-futura px-2.5 py-1 rounded-md border font-bold shadow-sm transition-colors ${
-                      isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-300' : 'bg-white border-neutral-300 text-neutral-800'
+                    <span key={idx} className={`text-[9px] lg:text-xs font-futura px-2.5 py-1 lg:px-3.5 lg:py-2 rounded-md lg:rounded-lg border font-bold lg:font-black shadow-sm transition-colors ${
+                      isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-300 lg:text-neutral-200' : 'bg-white border-neutral-300 text-neutral-800'
                     }`}>
                       {tech}
                     </span>
