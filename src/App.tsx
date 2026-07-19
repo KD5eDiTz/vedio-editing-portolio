@@ -106,6 +106,7 @@ const VIDEO_WORKS: VideoProject[] = [
   }
 ];
 
+// Unified Typewriter Engine
 function TypewriterEffect({ text, isDark }: { text: string; isDark: boolean }) {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -142,6 +143,22 @@ function TypewriterEffect({ text, isDark }: { text: string; isDark: boolean }) {
   );
 }
 
+// Global Reusable Viewport Spring Setup Configuration
+const scrollBounceVariants = {
+  hidden: { opacity: 0, y: 45, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 90,
+      damping: 14,
+      mass: 0.8
+    }
+  }
+};
+
 export default function App() {
   const [selectedVideo, setSelectedVideo] = useState<VideoProject>(VIDEO_WORKS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -166,6 +183,7 @@ export default function App() {
     }
   }, [selectedVideo, isPlaying, isMuted]);
 
+  // Smooth mouse wheel scroller layout dampener
   useEffect(() => {
     const el = horizontalScrollRef.current;
     if (!el) return;
@@ -251,7 +269,7 @@ export default function App() {
       isDarkMode ? 'bg-[#121316] text-[#E3E4E6]' : 'bg-[#EAEAEA] text-[#1E1E24]'
     }`}>
       
-      {/* Background Loop */}
+      {/* Background Loop Frame */}
       <video
         src="https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784357186/White_Background_oxmqqe.mp4"
         autoPlay
@@ -263,7 +281,7 @@ export default function App() {
         }`}
       />
 
-      {/* Navigation */}
+      {/* Header Bar Area */}
       <nav className={`w-full backdrop-blur-md border-b px-6 py-4 z-50 shrink-0 relative transition-colors duration-500 ${
         isDarkMode ? 'bg-[#1A1C20]/60 border-neutral-800' : 'bg-[#F4F4F4]/60 border-neutral-300/80'
       }`}>
@@ -278,10 +296,16 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
-        {/* SECTION 1: HERO INTRO */}
-        <section className={`border rounded-2xl p-6 flex flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
-          isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
-        }`}>
+        {/* SECTION 1: HERO INTRO - VIEWPORT MULTI-TRIGGER BOUNCE */}
+        <motion.section 
+          variants={scrollBounceVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+          className={`border rounded-2xl p-6 flex flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
+            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
+          }`}
+        >
           <div className="flex flex-row items-center gap-6 w-full sm:w-auto">
             <div className={`w-20 h-20 md:w-24 md:h-24 rounded-xl border flex items-center justify-center relative overflow-hidden shrink-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.05)] transition-colors duration-500 ${
               isDarkMode ? 'bg-[#22252A] border-neutral-700' : 'bg-[#EAEAEA] border-neutral-300'
@@ -313,18 +337,19 @@ export default function App() {
           >
             {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
-        </section>
+        </motion.section>
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 2: ADAPTIVE WORKSPACE WINDOWS ROW - WITH SPRING POP ENTRANCE */}
+        {/* SECTION 2: ADAPTIVE WORKSPACE WINDOWS ROW - MULTI-TRIGGER BOUNCE */}
         <section className={`flex flex-col items-stretch gap-8 ${isWidescreen ? 'lg:grid lg:grid-cols-5' : 'lg:flex lg:flex-row'}`}>
           
           {/* Main Video Monitor Box */}
           <motion.div 
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: "spring", stiffness: 80, damping: 14, delay: 0.1 }}
+            variants={scrollBounceVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
             className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-colors duration-500 backdrop-blur-sm ${
               isWidescreen ? 'lg:col-span-3' : 'w-full lg:w-[45%] shrink-0'
             } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'}`}
@@ -427,11 +452,12 @@ export default function App() {
             </div>
           </motion.div>
 
-          {/* About Column Container - STAGGERED SPRING ENTRANCE */}
+          {/* About Column Container */}
           <motion.div 
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: "spring", stiffness: 80, damping: 14, delay: 0.2 }}
+            variants={scrollBounceVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
             className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
               isWidescreen ? 'lg:col-span-2 lg:min-h-[450px]' : 'flex-1 w-full'
             } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'}`}
@@ -475,8 +501,14 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 3: SMOOTH HORIZONTAL SEQUENCER TIMELINE */}
-        <section className="space-y-4">
+        {/* SECTION 3: RE-ENGINEERED SMOOTH SCROLLER TIMELINE */}
+        <motion.section 
+          variants={scrollBounceVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className="space-y-4"
+        >
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
               <span className="font-futura text-[9px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// HORIZONTAL OVERVIEW SEQUENCER</span>
@@ -558,14 +590,20 @@ export default function App() {
               );
             })}
           </div>
-        </section>
+        </motion.section>
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 4: HOW TO WORK TOGETHER WITH CONTACT INTEGRATION */}
-        <section className={`border rounded-2xl p-6 md:p-8 lg:p-10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 lg:space-y-8 text-left transition-all duration-500 ${
-          isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
-        }`}>
+        {/* SECTION 4: HOW TO WORK TOGETHER WITH CONTACT INTEGRATION - RESPONSIVE OPTIMIZED WITH SCROLL BOUNCE ANIMATION */}
+        <motion.section 
+          variants={scrollBounceVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className={`border rounded-2xl p-6 md:p-8 lg:p-10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-sm space-y-6 lg:space-y-8 text-left transition-all duration-500 ${
+            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
+          }`}
+        >
           <div className={`border-b pb-3 lg:pb-4 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
             <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// COLLABORATION WORKFLOW</span>
             <h2 className="text-2xl lg:text-3xl font-black uppercase tracking-tight font-playfair mt-1">
@@ -590,11 +628,10 @@ export default function App() {
             ))}
           </div>
 
-          {/* Secure Correspondence Buttons */}
           <div className="pt-2 lg:pt-4 space-y-3 lg:space-y-4">
-            <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+            <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
             <p className={`text-xs lg:text-sm font-sans font-normal ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-              Click this to contact me via gmail or instagram
+              Click this to contact me via gmail
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 max-w-2xl">
               <a 
@@ -617,7 +654,7 @@ export default function App() {
               </a>
             </div>
           </div>
-        </section>
+        </motion.section>
 
       </main>
 
