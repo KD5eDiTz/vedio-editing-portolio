@@ -5,7 +5,6 @@ import {
   Pause, 
   Volume2, 
   VolumeX, 
-  ExternalLink,
   Mail,
   Instagram,
   Sun,
@@ -279,7 +278,7 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-[96vw] mx-auto px-2 md:px-4 py-6 md:py-8 space-y-10 md:space-y-14 relative z-10">
         
-        {/* SECTION 1: HERO BANNER BOX */}
+        {/* SECTION 1: HERO INTRO */}
         <section className={`border rounded-2xl p-6 flex flex-row items-center justify-between gap-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-all duration-500 ${
           isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
         }`}>
@@ -311,7 +310,6 @@ export default function App() {
                 ? 'bg-[#22252A] border-neutral-700 text-amber-400 hover:bg-[#2B2F36]' 
                 : 'bg-white border-neutral-300 text-neutral-700 hover:bg-neutral-50'
             }`}
-            aria-label="Toggle workspace lighting theme"
           >
             {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -319,13 +317,13 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 2: ADAPTIVE 50/50 WORKSPACE VIEWPORT GRID */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        {/* SECTION 2: ADAPTIVE WORKSPACE WINDOWS ROW */}
+        <section className={`flex flex-col items-stretch gap-8 ${isWidescreen ? 'lg:grid lg:grid-cols-5' : 'lg:flex lg:flex-row'}`}>
           
-          {/* Main Video Monitor Container */}
-          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col justify-between relative transition-all duration-500 backdrop-blur-sm ${
-            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'
-          }`}>
+          {/* Main Video Monitor Box */}
+          <div className={`border rounded-2xl shadow-[0_30px_70px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col relative transition-all duration-500 backdrop-blur-sm ${
+            isWidescreen ? 'lg:col-span-3' : 'w-full lg:w-[45%] shrink-0'
+          } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#FAFAFA]/90 border-neutral-300/80'}`}>
             <div className={`border-b px-4 py-2.5 flex items-center justify-between font-futura text-[9px] font-bold transition-colors duration-500 ${
               isDarkMode ? 'border-neutral-800 bg-[#16171A] text-neutral-400' : 'border-neutral-300 bg-[#F4F4F4]/90 text-neutral-500'
             }`}>
@@ -336,7 +334,9 @@ export default function App() {
               <span className="tracking-widest uppercase text-neutral-400">{selectedVideo.aspectRatio}</span>
             </div>
 
-            <div className="relative bg-neutral-950 flex items-center justify-center group w-full mx-auto flex-grow aspect-video max-h-[520px]">
+            <div className={`relative bg-neutral-950 flex items-center justify-center group w-full mx-auto transition-all duration-500 ${
+              isWidescreen ? 'aspect-video max-h-[520px]' : 'aspect-[9/16] max-h-[650px] max-w-[365px]'
+            }`}>
               <video
                 ref={videoRef}
                 src={selectedVideo.videoUrl}
@@ -422,10 +422,10 @@ export default function App() {
             </div>
           </div>
 
-          {/* About Column Container - EXTENDED HORIZONTALLY TO A BALANCED RECTANGLE */}
+          {/* About Column Container */}
           <div className={`border p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.06)] flex flex-col justify-between backdrop-blur-sm transition-all duration-500 ${
-            isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'
-          }`}>
+            isWidescreen ? 'lg:col-span-2 lg:min-h-[450px]' : 'flex-1 w-full'
+          } ${isDarkMode ? 'bg-[#1A1C20]/90 border-neutral-800/80' : 'bg-[#F4F4F4]/90 border-neutral-300/60'}`}>
             <div className="space-y-5 lg:space-y-6 text-left">
               <div className={`border-b pb-2 lg:pb-3 transition-colors ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300'}`}>
                 <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-[0.2em] uppercase block font-bold">// ABOUT THE VIDEO</span>
@@ -465,7 +465,7 @@ export default function App() {
 
         <hr className={`transition-colors duration-500 ${isDarkMode ? 'border-neutral-800' : 'border-neutral-300/60'}`} />
 
-        {/* SECTION 3: DECK TIMELINE TAPE CONTAINER */}
+        {/* SECTION 3: SMOOTH HORIZONTAL SEQUENCER TIMELINE */}
         <section className="space-y-4">
           <div className="px-1 flex items-center justify-between">
             <div className="space-y-0.5 text-left">
@@ -580,16 +580,20 @@ export default function App() {
             ))}
           </div>
 
+          {/* Secure Correspondence Buttons */}
           <div className="pt-2 lg:pt-4 space-y-3 lg:space-y-4">
-            <span className="font-futura text-[9px] lg:text-[10px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+            <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
+            <p className={`text-xs lg:text-sm font-sans font-normal ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
+              Click this to contact me via gmail
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 max-w-2xl">
               <a 
-                href="mailto:hello@studio-x.com"
+                href="mailto:kdeditzauthentic@gmail.com"
                 className={`border font-futura text-[10px] lg:text-xs tracking-widest py-3 lg:py-3.5 px-4 lg:px-6 rounded-xl flex items-center justify-center gap-2 font-black transition-all uppercase shadow-md cursor-pointer ${
                   isDarkMode ? 'bg-[#22252A] border-neutral-700 text-neutral-200 hover:bg-[#2B2F36]' : 'bg-white border-neutral-300 text-neutral-800 hover:bg-neutral-100'
                 }`}
               >
-                <Mail className="w-4 h-4 text-blue-600" /> Email Link
+                <Mail className="w-4 h-4 text-blue-600" /> kdeditzauthentic@gmail.com
               </a>
               <a 
                 href="https://instagram.com" 
@@ -617,11 +621,9 @@ export default function App() {
             <p className="text-[9px] text-neutral-400 font-futura tracking-wide uppercase font-bold">// ALLOCATION SLOTS RESERVED FOR WORLDWIDE COLLABORATIONS</p>
           </div>
           <div className="font-futura text-[10px] text-neutral-500 flex items-center gap-6 w-full md:w-auto justify-between border-t border-neutral-300/50 md:border-t-0 pt-4 md:pt-0 font-bold">
-            <a href="mailto:hello@studio-x.com" className={`hover:text-neutral-600 transition-colors flex items-center gap-1 font-black uppercase tracking-widest text-xs font-futura ${
-              isDarkMode ? 'text-neutral-200' : 'text-neutral-900'
-            }`}>
-              hello@studio-x.com <ExternalLink className="w-3 h-3" />
-            </a>
+            <span className={`font-futura text-xs tracking-widest uppercase ${isDarkMode ? 'text-neutral-200' : 'text-neutral-900'}`}>
+              Video D Editor
+            </span>
             <span className="text-[9px] text-neutral-400 font-futura">© 2026 STUDIO—KD</span>
           </div>
         </div>
