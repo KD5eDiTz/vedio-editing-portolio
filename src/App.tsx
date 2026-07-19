@@ -584,7 +584,7 @@ export default function App() {
           <div className="pt-2 lg:pt-4 space-y-3 lg:space-y-4">
             <span className="font-futura text-[9px] text-neutral-400 tracking-wider block uppercase font-bold">// SECURE CORRESPONDENCE PIPELINE</span>
             <p className={`text-xs lg:text-sm font-sans font-normal ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>
-              Click this to contact me via gmail
+              Click this to contact me via gmail or instagram
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 max-w-2xl">
               <a 
