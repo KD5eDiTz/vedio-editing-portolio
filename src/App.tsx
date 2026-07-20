@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useSpring } from 'motion/react';
-import { Play, Pause, Volume2, VolumeX, ArrowUpRight, Mail, Instagram } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, ArrowUpRight, Mail, Instagram, Music, Keyboard } from 'lucide-react';
+import Lenis from '@studio-freight/lenis';
 
 interface Project {
   id: string;
@@ -74,17 +75,74 @@ export default function App() {
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true);
-  
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(false);
+  const [showThemeTooltip, setShowThemeTooltip] = useState<boolean>(false);
 
-  // Smooth Hardware-Accelerated Mouse Tracking Setup
-  const mouseX = useSpring(0, { stiffness: 200, damping: 25 });
-  const mouseY = useSpring(0, { stiffness: 200, damping: 25 });
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+
+  // Hardware-Accelerated Mouse Tracking
+  const mouseX = useSpring(0, { stiffness: 220, damping: 24 });
+  const mouseY = useSpring(0, { stiffness: 220, damping: 24 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     mouseX.set(e.clientX + 20);
     mouseY.set(e.clientY + 20);
   };
+
+  // Lenis Inertia Smooth Scrolling Engine Setup
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenisRef.current = lenis;
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
+  // Keyboard Shortcuts Handler (T: Top, B: Bottom, S: Sound Toggle)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing inside an input field
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
+
+      const key = e.key.toLowerCase();
+      if (key === 't') {
+        lenisRef.current?.scrollTo(0);
+      } else if (key === 'b') {
+        lenisRef.current?.scrollTo(document.body.scrollHeight);
+      } else if (key === 's') {
+        setIsBgmPlaying((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Background Music Controller Sync
+  useEffect(() => {
+    if (bgmRef.current) {
+      if (isBgmPlaying) {
+        bgmRef.current.play().catch(() => setIsBgmPlaying(false));
+      } else {
+        bgmRef.current.pause();
+      }
+    }
+  }, [isBgmPlaying]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -103,7 +161,14 @@ export default function App() {
       className="bg-[#0D0D0E] text-[#ECECEC] font-sans min-h-screen selection:bg-white selection:text-black antialiased relative overflow-x-hidden"
     >
       
-      {/* Background Subtle Grid Lines */}
+      {/* Background Audio Element (Lo-Fi Ambient Loop) */}
+      <audio 
+        ref={bgmRef} 
+        src="https://res.cloudinary.com/na4u8vzm/video/upload/v1784357186/White_Background_oxmqqe.mp4" 
+        loop 
+      />
+
+      {/* Background Grid Lines Pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem] z-0" />
 
       {/* CURSOR-FOLLOWING FLOATING VIDEO HOVER PREVIEW */}
@@ -118,7 +183,7 @@ export default function App() {
               x: mouseX,
               y: mouseY,
             }}
-            className="fixed top-0 left-0 w-48 sm:w-64 aspect-[9/16] md:aspect-video rounded-xl overflow-hidden pointer-events-none z-50 border border-white/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.75)] bg-neutral-900 hidden sm:block"
+            className="fixed top-0 left-0 w-48 sm:w-64 aspect-video rounded-xl overflow-hidden pointer-events-none z-50 border border-white/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.75)] bg-neutral-900 hidden sm:block"
           >
             <video
               src={hoveredProject.videoUrl}
@@ -136,18 +201,73 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Header */}
+      {/* Header Bar */}
       <header className="fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-6 flex justify-between items-center backdrop-blur-md bg-[#0D0D0E]/80 border-b border-white/5">
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-mono text-xs tracking-widest uppercase text-neutral-400 font-bold">VIDEO D EDITOR // STUDIO</span>
         </div>
-        <a 
-          href="mailto:kdeditzauthentic@gmail.com"
-          className="text-xs font-mono tracking-wider uppercase border border-white/20 hover:border-white px-4 py-2 rounded-full transition-all duration-300 hover:bg-white hover:text-black font-semibold"
-        >
-          Get In Touch
-        </a>
+
+        <div className="flex items-center gap-6">
+          {/* THEME CONTROL & KEYBOARD SHORTCUT TOOLTIP TRIGGER */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setShowThemeTooltip(true)}
+            onMouseLeave={() => setShowThemeTooltip(false)}
+          >
+            <button className="font-mono text-xs tracking-wider uppercase text-neutral-400 hover:text-white flex items-center gap-1.5 py-1 transition-colors">
+              <Keyboard className="w-3.5 h-3.5" />
+              <span>THEME [A]</span>
+            </button>
+
+            <AnimatePresence>
+              {showThemeTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute right-0 top-8 w-64 p-4 bg-[#141416] border border-white/15 rounded-xl shadow-2xl z-50 font-mono text-xs space-y-2.5 text-left"
+                >
+                  <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-bold block border-b border-white/10 pb-1">
+                    // KEYBOARD SHORTCUTS
+                  </span>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span>Scroll To Top</span>
+                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press T</kbd>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span>Scroll To Bottom</span>
+                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press B</kbd>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span>Pause / Resume BGM</span>
+                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press S</kbd>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* BGM MUSIC TOGGLE BUTTON */}
+          <button
+            onClick={() => setIsBgmPlaying(!isBgmPlaying)}
+            className={`font-mono text-xs tracking-wider uppercase flex items-center gap-2 border px-3.5 py-1.5 rounded-full transition-all duration-300 ${
+              isBgmPlaying 
+                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400' 
+                : 'border-white/10 text-neutral-400 hover:border-white/30 hover:text-white'
+            }`}
+          >
+            <Music className={`w-3.5 h-3.5 ${isBgmPlaying ? 'animate-spin' : ''}`} />
+            <span>SOUND [{isBgmPlaying ? 'ON' : 'OFF'}]</span>
+          </button>
+
+          <a 
+            href="mailto:kdeditzauthentic@gmail.com"
+            className="text-xs font-mono tracking-wider uppercase border border-white/20 hover:border-white px-4 py-2 rounded-full transition-all duration-300 hover:bg-white hover:text-black font-semibold hidden sm:inline-block"
+          >
+            Get In Touch
+          </a>
+        </div>
       </header>
 
       {/* Hero Header Section */}
@@ -270,7 +390,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* Work List (Interactive Hover List with Cursor Tooltip triggers) */}
+        {/* Work List */}
         <section className="space-y-8 pt-12">
           <div className="border-b border-white/10 pb-4 flex justify-between items-end">
             <div>
@@ -317,7 +437,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* Workflow Section: "How To Work Together" */}
+        {/* Workflow Section */}
         <section className="bg-[#141416] border border-white/10 rounded-2xl p-8 md:p-12 space-y-10">
           <div className="border-b border-white/10 pb-6">
             <span className="font-mono text-xs text-neutral-500 tracking-widest uppercase block">// PROCESS</span>
@@ -350,7 +470,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Direct Contact Callout */}
+          {/* Contact Block */}
           <div className="pt-6 border-t border-white/10 space-y-4">
             <p className="text-sm font-mono text-neutral-300">Click this to contact me via Gmail:</p>
             <div className="flex flex-wrap gap-4">
