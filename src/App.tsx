@@ -387,36 +387,38 @@ function Header({
 }
 
 /* =========================================================
-   HERO — Apple Cursive Wipe & Bouncy Triggers
+   HERO — Massive Apple Animation & Perfect Toggle Logic
 ========================================================= */
 function Hero() {
-  const heroRef = useRef<HTMLDivElement | null>(null);
-  const [useYokoso, setUseYokoso] = useState(false);
-
-  const { scrollYProgress } = useScroll({ 
-    target: heroRef, 
-    offset: ['start start', 'end start'] 
-  });
+  // We use wordIndex to perfectly alternate between 0 (Hello) and 1 (Yokoso)
+  const [wordIndex, setWordIndex] = useState(0);
+  const hasScrolledPast = useRef(false);
   
+  const { scrollYProgress } = useScroll();
+  
+  // The logic now ONLY changes the word when you return to the absolute top
   useEffect(() => {
     return scrollYProgress.on('change', (latest) => {
-      if (latest > 0.6 && !useYokoso) {
-        setUseYokoso(true);
-      } else if (latest < 0.2 && useYokoso) {
-        setUseYokoso(false);
+      if (latest > 0.3) {
+        // User has scrolled down significantly
+        hasScrolledPast.current = true;
+      } else if (latest < 0.05 && hasScrolledPast.current) {
+        // User has returned to the top. Toggle the word and reset the lock.
+        setWordIndex((prev) => (prev === 0 ? 1 : 0));
+        hasScrolledPast.current = false;
       }
     });
-  }, [scrollYProgress, useYokoso]);
+  }, [scrollYProgress]);
+
+  const isYokoso = wordIndex === 1;
 
   return (
     <section
       id="hero"
-      ref={heroRef}
-      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-screen flex flex-col justify-center overflow-visible scroll-mt-20"
+      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-[90vh] flex flex-col justify-center overflow-visible scroll-mt-20"
     >
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-4 md:space-y-6">
         
-        {/* Re-triggering Eyebrow */}
         <motion.div 
           initial="hidden" 
           whileInView="visible" 
@@ -426,17 +428,17 @@ function Hero() {
           <Eyebrow>{PROFILE.role}</Eyebrow>
         </motion.div>
 
-        {/* APPLE WRITING ANIMATION (Mask Wipe + Blur) */}
-        <div className="relative min-h-[160px] md:min-h-[220px] flex items-center overflow-visible pr-8">
+        {/* APPLE WRITING ANIMATION (Massive Size + 3.5s Draw) */}
+        <div className="relative min-h-[140px] sm:min-h-[200px] md:min-h-[280px] flex items-center overflow-visible pr-8">
           <AnimatePresence mode="wait">
             <motion.h1
-              key={useYokoso ? 'yokoso' : 'hello'}
+              key={isYokoso ? 'yokoso' : 'hello'}
               initial={{ 
                 WebkitMaskPosition: "100% 0", 
                 maskPosition: "100% 0", 
-                filter: 'blur(12px)', 
+                filter: 'blur(15px)', 
                 opacity: 0, 
-                scale: 0.95 
+                scale: 0.98 
               }}
               animate={{ 
                 WebkitMaskPosition: "0% 0", 
@@ -447,16 +449,18 @@ function Hero() {
               }}
               exit={{ 
                 opacity: 0, 
-                filter: 'blur(12px)', 
-                transition: { duration: 0.3 } 
+                filter: 'blur(15px)', 
+                transition: { duration: 0.4 } 
               }}
+              /* 3.5s Slow, Buttery easing curve */
               transition={{ 
-                duration: 2.2, 
-                ease: [0.16, 1, 0.3, 1] 
+                duration: 3.5, 
+                ease: [0.25, 1, 0.4, 1] 
               }}
-              className="apple-glass-text font-bold leading-tight"
+              className="apple-glass-text font-bold leading-none whitespace-nowrap"
               style={{ 
-                fontSize: 'clamp(5.5rem, 17vw, 13.5rem)',
+                /* Made significantly larger to match reference */
+                fontSize: 'clamp(6rem, 25vw, 18rem)',
                 WebkitMaskImage: 'linear-gradient(to right, black 45%, rgba(0,0,0,0) 55%)',
                 maskImage: 'linear-gradient(to right, black 45%, rgba(0,0,0,0) 55%)',
                 WebkitMaskSize: '220% 100%',
@@ -465,7 +469,7 @@ function Hero() {
                 maskRepeat: 'no-repeat',
               }}
             >
-              {useYokoso ? 'Yōkoso' : 'Hello'}
+              {isYokoso ? 'Yōkoso' : 'Hello'}
             </motion.h1>
           </AnimatePresence>
         </div>
@@ -475,11 +479,11 @@ function Hero() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.1 }}
-          className="font-mono text-base sm:text-xl md:text-2xl font-semibold tracking-wide flex flex-wrap items-center gap-3 pt-2"
+          className="font-mono text-sm sm:text-lg md:text-2xl font-semibold tracking-wide flex flex-wrap items-center gap-2 sm:gap-3 pt-2"
           style={{ color: 'var(--text-secondary)' }}
         >
           <motion.span variants={wordVariant} style={{ color: 'var(--text-primary)' }}>
-            {useYokoso ? 'Watashino' : 'Welcome to my'}
+            {isYokoso ? 'Watashino' : 'Welcome to my'}
           </motion.span>
 
           <motion.span variants={wordVariant} className="relative inline-block font-bold" style={{ color: 'var(--text-primary)' }}>
@@ -500,8 +504,8 @@ function Hero() {
             transition={{ type: 'spring', damping: 12, stiffness: 120, delay: 0.9 }}
             className="text-emerald-400 font-bold tracking-wider uppercase bg-emerald-950/60 border border-emerald-500/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
           >
-            <Sparkles className="w-4 h-4 text-emerald-400 animate-spin" />
-            Editing Society
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 animate-spin" />
+            <span className="text-[10px] sm:text-base">Editing Society</span>
           </motion.span>
         </motion.div>
 
@@ -511,7 +515,7 @@ function Hero() {
           whileInView="visible"
           viewport={{ once: false, amount: 0.1 }}
           variants={fadeUp}
-          className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed font-normal"
+          className="mt-6 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed font-normal"
           style={{ color: 'var(--text-secondary)' }}
         >
           {PROFILE.bio}
