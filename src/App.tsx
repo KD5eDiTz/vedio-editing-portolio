@@ -212,8 +212,8 @@ function CustomCursor() {
         border: '1.5px solid white',
         backgroundColor: isHover ? 'transparent' : 'white'
       }}
-      animate={{ scale: isHover ? 1.25 : 1, opacity: isVisible ? 1 : 0 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      animate={{ scale: isHover ? 1.15 : 1, opacity: isVisible ? 1 : 0 }}
+      transition={{ type: 'spring', stiffness: 150, damping: 25 }}
     />
   );
 }
