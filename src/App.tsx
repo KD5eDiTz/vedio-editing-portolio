@@ -1,514 +1,937 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useSpring } from 'motion/react';
-import { Play, Pause, Volume2, VolumeX, ArrowUpRight, Mail, Instagram, Music, Keyboard } from 'lucide-react';
-import Lenis from '@studio-freight/lenis';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+} from 'motion/react';
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Mail,
+  Instagram,
+  Sun,
+  Moon,
+  ArrowUpRight,
+  ArrowLeft,
+} from 'lucide-react';
 
-interface Project {
+/* =========================================================
+   PROFILE — edit this block with your real info.
+========================================================= */
+const PROFILE = {
+  mark: 'KD',
+  studio: 'Studio — KD',
+  role: 'Video Editor',
+  heroLine: "I edit for the first three seconds, and every one after it.",
+  bio:
+    "I'm KD, a video editor working mostly in short-form: pacing, sound design, and color that make people stop scrolling. Outside client work, I spend most of my time studying retention — why a cut works, why a hook doesn't, and how a fraction of a second changes both.",
+  email: 'kdeditzauthentic@gmail.com',
+  instagram: 'https://instagram.com',
+};
+
+/* =========================================================
+   WORK — your real projects, unchanged data, restyled.
+========================================================= */
+interface VideoProject {
   id: string;
   title: string;
   category: string;
   year: string;
+  views: string;
+  duration: string;
+  aspectRatio: string;
+  fps: number;
+  hook: string;
   description: string;
   videoUrl: string;
   techniques: string[];
 }
 
-const PROJECTS: Project[] = [
+const WORKS: VideoProject[] = [
   {
     id: 'retention-hook-promo',
     title: 'High-Retention Hook',
-    category: 'Short Form / Motion',
+    category: 'Short Form',
     year: '2026',
-    description: 'Dynamic product promo engineered with kinetic typography, zero dead air, and aggressive hyper-pacing.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_1_ilryuy.mp4',
-    techniques: ['Kinetic Typography', 'Pattern Interrupts', 'Speed Ramping']
+    views: '1.2M',
+    duration: '00:13',
+    aspectRatio: '9:16',
+    fps: 60,
+    hook: 'A product promo built entirely around never letting the eye rest.',
+    description:
+      'Dynamic product promo engineered with kinetic subtitles, zero dead air, and hyper-pacing. Every cut is timed against the voiceover so there is no moment for the viewer to disengage.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_1_ilryuy.mp4',
+    techniques: ['Kinetic Typography', 'Pattern Interrupts', 'Speed Ramping'],
   },
   {
     id: 'creator-efficiency-breakdown',
     title: 'Software Workflow Breakdown',
-    category: 'Short Form / Editorial',
+    category: 'Short Form',
     year: '2026',
-    description: 'Fast-paced timeline breakdown utilizing custom graphic callouts and hard sound hit syncing.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997098/FILE_2_mc78dn.mp4',
-    techniques: ['Graphic Callouts', 'SFX Syncing', 'Defocus Transitions']
+    views: '840K',
+    duration: '00:19',
+    aspectRatio: '9:16',
+    fps: 60,
+    hook: 'A timeline walkthrough that never once feels like a tutorial.',
+    description:
+      'Fast-paced timeline breakdown utilizing custom graphic callouts and hard sound-hit syncing, built to hold attention through what would normally be a dry explainer.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997098/FILE_2_mc78dn.mp4',
+    techniques: ['Graphic Callouts', 'SFX Syncing', 'Defocus Transitions'],
   },
   {
     id: 'lifestyle-brand-story',
     title: 'Aesthetic Brand Storytelling',
-    category: 'Commercial / Narrative',
+    category: 'Short Form',
     year: '2026',
-    description: 'Cinematic brand integration balancing premium color pacing with modern digital grit overlays.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997100/FILE_3_nhlwkf.mp4',
-    techniques: ['Glitch Textures', 'Atmospheric Pacing', 'Color Matching']
+    views: '2.1M',
+    duration: '00:16',
+    aspectRatio: '9:16',
+    fps: 23.976,
+    hook: 'Premium color pacing meeting a rougher, more honest texture.',
+    description:
+      'Cinematic brand integration balancing premium color pacing with modern digital grit overlays — built to feel aspirational without losing the feed-native texture that keeps people watching.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997100/FILE_3_nhlwkf.mp4',
+    techniques: ['Glitch Textures', 'Atmospheric Pacing', 'Color Matching'],
   },
   {
     id: 'micro-hook-retrospective',
     title: 'Viral Retention Architecture',
-    category: 'Short Form / Strategy',
+    category: 'Short Form',
     year: '2026',
-    description: 'Micro-retention structure utilizing immediate visual hooks and loop engineering to maximize replay rate.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_4_rfbxd1.mp4',
-    techniques: ['Loop Engineering', 'Visual Hook Pacing', 'Micro-Zooming']
+    views: '3.4M',
+    duration: '00:09',
+    aspectRatio: '9:16',
+    fps: 60,
+    hook: 'Nine seconds, engineered to be watched more than once.',
+    description:
+      'A micro-retention structure built on immediate visual hooks and loop engineering, designed so the end of the video feeds directly back into the beginning.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997093/FILE_4_rfbxd1.mp4',
+    techniques: ['Loop Engineering', 'Visual Hook Pacing', 'Micro-Zooming'],
   },
   {
     id: 'motion-design-showcase',
     title: 'Visual Effects & Motion Layout',
     category: 'Motion Design',
     year: '2026',
-    description: 'High-velocity visual edit driven entirely by custom motion design graphics and kinetic layout composition.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
-    techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding']
+    views: '450K',
+    duration: '00:05',
+    aspectRatio: '16:9',
+    fps: 24,
+    hook: 'A short edit carried entirely by motion, not footage.',
+    description:
+      'A high-velocity visual edit driven entirely by custom motion design graphics and keyframed layout composition rather than filmed footage.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
+    techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding'],
   },
   {
     id: 'premium-commercial-edit',
     title: 'Dynamic Narrative Flow',
-    category: 'Commercial Cut',
+    category: 'Short Form',
     year: '2026',
-    description: 'High-impact short-form edit leveraging synchronized velocity curves and complex mask layering.',
-    videoUrl: 'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784134682/FILE_6_hooop9.mp4',
-    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX']
-  }
+    views: '920K',
+    duration: '00:12',
+    aspectRatio: '9:16',
+    fps: 60,
+    hook: 'Velocity curves and sound design doing the storytelling.',
+    description:
+      'A high-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design to carry the narrative without dialogue.',
+    videoUrl:
+      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784134682/FILE_6_hooop9.mp4',
+    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX'],
+  },
 ];
 
-export default function App() {
-  const [activeProject, setActiveProject] = useState<Project>(PROJECTS[0]);
-  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(false);
-  const [showThemeTooltip, setShowThemeTooltip] = useState<boolean>(false);
+/* =========================================================
+   Routing — no router dependency, just the hash.
+========================================================= */
+type Route = { page: 'home' } | { page: 'project'; id: string };
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const bgmRef = useRef<HTMLAudioElement | null>(null);
-  const lenisRef = useRef<Lenis | null>(null);
+function routeFromHash(): Route {
+  const raw = window.location.hash.replace('#/', '');
+  if (raw.startsWith('work/')) {
+    const id = raw.slice(5);
+    if (WORKS.some((w) => w.id === id)) return { page: 'project', id };
+  }
+  return { page: 'home' };
+}
 
-  // Hardware-Accelerated Mouse Tracking
-  const mouseX = useSpring(0, { stiffness: 220, damping: 24 });
-  const mouseY = useSpring(0, { stiffness: 220, damping: 24 });
+/* =========================================================
+   Shared motion variants
+========================================================= */
+const wordVariant = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mouseX.set(e.clientX + 20);
-    mouseY.set(e.clientY + 20);
+const listContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const listItem = {
+  hidden: { opacity: 0, y: 26 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+/* =========================================================
+   Small shared bits
+========================================================= */
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      className="font-mono uppercase tracking-[0.2em] text-[11px]"
+      style={{ color: 'var(--text-muted)' }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function formatTimecode(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+/* Magnetic hover — pulls an element gently toward the cursor */
+function useMagnetic(strength = 16) {
+  const ref = useRef<HTMLElement | null>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 12, mass: 0.4 });
+  const springY = useSpring(y, { stiffness: 150, damping: 12, mass: 0.4 });
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const relX = e.clientX - (rect.left + rect.width / 2);
+    const relY = e.clientY - (rect.top + rect.height / 2);
+    x.set((relX / rect.width) * strength);
+    y.set((relY / rect.height) * strength);
+  };
+  const onMouseLeave = () => {
+    x.set(0);
+    y.set(0);
   };
 
-  // Lenis Inertia Smooth Scrolling Engine Setup
+  return { ref, style: { x: springX, y: springY }, onMouseMove, onMouseLeave };
+}
+
+/* Custom cursor — a ring that lags gently and inverts over content */
+function CustomCursor() {
+  const RING = 30;
+  const [isHover, setIsHover] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const springX = useSpring(x, { damping: 28, stiffness: 320, mass: 0.5 });
+  const springY = useSpring(y, { damping: 28, stiffness: 320, mass: 0.5 });
+
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-
-    lenisRef.current = lenis;
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
+    const move = (e: MouseEvent) => {
+      x.set(e.clientX - RING / 2);
+      y.set(e.clientY - RING / 2);
+      if (!isVisible) setIsVisible(true);
+    };
+    const over = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      setIsHover(!!target.closest('[data-hover]'));
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseover', over);
     return () => {
-      lenis.destroy();
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseover', over);
     };
-  }, []);
-
-  // Keyboard Shortcuts Handler (T: Top, B: Bottom, S: Sound Toggle)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing inside an input field
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
-
-      const key = e.key.toLowerCase();
-      if (key === 't') {
-        lenisRef.current?.scrollTo(0);
-      } else if (key === 'b') {
-        lenisRef.current?.scrollTo(document.body.scrollHeight);
-      } else if (key === 's') {
-        setIsBgmPlaying((prev) => !prev);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Background Music Controller Sync
-  useEffect(() => {
-    if (bgmRef.current) {
-      if (isBgmPlaying) {
-        bgmRef.current.play().catch(() => setIsBgmPlaying(false));
-      } else {
-        bgmRef.current.pause();
-      }
-    }
-  }, [isBgmPlaying]);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = isMuted;
-      if (isPlaying) {
-        videoRef.current.play().catch(() => setIsPlaying(false));
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  }, [activeProject, isPlaying, isMuted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVisible]);
 
   return (
-    <div 
-      onMouseMove={handleMouseMove}
-      className="bg-[#0D0D0E] text-[#ECECEC] font-sans min-h-screen selection:bg-white selection:text-black antialiased relative overflow-x-hidden"
+    <motion.div
+      aria-hidden
+      className="pointer-events-none fixed top-0 left-0 z-[999] hidden md:block rounded-full mix-blend-difference bg-white"
+      style={{ x: springX, y: springY, width: RING, height: RING }}
+      animate={{ scale: isHover ? 1.7 : 1, opacity: isVisible ? 1 : 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    />
+  );
+}
+
+/* Thin scroll progress bar — doubles as the site's "playhead" */
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left"
+      style={{ scaleX: scrollYProgress, background: 'var(--text-primary)' }}
+    />
+  );
+}
+
+/* =========================================================
+   Header — logotype, nav, theme toggle, live timecode clock
+========================================================= */
+function Header({
+  isDark,
+  onToggleTheme,
+  onNavigateHome,
+  onScrollTo,
+}: {
+  isDark: boolean;
+  onToggleTheme: () => void;
+  onNavigateHome: () => void;
+  onScrollTo: (id: string) => void;
+}) {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const time = now.toLocaleTimeString('en-GB', { hour12: false });
+  const zone =
+    new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+      .formatToParts(now)
+      .find((p) => p.type === 'timeZoneName')?.value ?? '';
+
+  return (
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="sticky top-0 z-50 backdrop-blur-md border-b"
+      style={{
+        borderColor: 'var(--hairline)',
+        background: 'color-mix(in srgb, var(--canvas) 82%, transparent)',
+      }}
     >
-      
-      {/* Background Audio Element (Lo-Fi Ambient Loop) */}
-      <audio 
-        ref={bgmRef} 
-        src="https://res.cloudinary.com/na4u8vzm/video/upload/v1784357186/White_Background_oxmqqe.mp4" 
-        loop 
-      />
+      <div className="max-w-5xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
+        <button
+          data-hover
+          onClick={onNavigateHome}
+          className="font-mono text-xs tracking-[0.15em] uppercase font-medium cursor-pointer"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {PROFILE.studio}
+        </button>
 
-      {/* Background Grid Lines Pattern */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem] z-0" />
-
-      {/* CURSOR-FOLLOWING FLOATING VIDEO HOVER PREVIEW */}
-      <AnimatePresence>
-        {hoveredProject && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
-            style={{
-              x: mouseX,
-              y: mouseY,
-            }}
-            className="fixed top-0 left-0 w-48 sm:w-64 aspect-video rounded-xl overflow-hidden pointer-events-none z-50 border border-white/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.75)] bg-neutral-900 hidden sm:block"
-          >
-            <video
-              src={hoveredProject.videoUrl}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover opacity-90"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-3 flex flex-col justify-end">
-              <span className="font-mono text-[9px] text-emerald-400 font-bold uppercase tracking-widest">HOVER PREVIEW</span>
-              <span className="text-xs font-bold text-white uppercase truncate">{hoveredProject.title}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Header Bar */}
-      <header className="fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-6 flex justify-between items-center backdrop-blur-md bg-[#0D0D0E]/80 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-mono text-xs tracking-widest uppercase text-neutral-400 font-bold">VIDEO D EDITOR // STUDIO</span>
-        </div>
-
-        <div className="flex items-center gap-6">
-          {/* THEME CONTROL & KEYBOARD SHORTCUT TOOLTIP TRIGGER */}
-          <div 
-            className="relative"
-            onMouseEnter={() => setShowThemeTooltip(true)}
-            onMouseLeave={() => setShowThemeTooltip(false)}
-          >
-            <button className="font-mono text-xs tracking-wider uppercase text-neutral-400 hover:text-white flex items-center gap-1.5 py-1 transition-colors">
-              <Keyboard className="w-3.5 h-3.5" />
-              <span>THEME [A]</span>
-            </button>
-
-            <AnimatePresence>
-              {showThemeTooltip && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 top-8 w-64 p-4 bg-[#141416] border border-white/15 rounded-xl shadow-2xl z-50 font-mono text-xs space-y-2.5 text-left"
-                >
-                  <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-bold block border-b border-white/10 pb-1">
-                    // KEYBOARD SHORTCUTS
-                  </span>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span>Scroll To Top</span>
-                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press T</kbd>
-                  </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span>Scroll To Bottom</span>
-                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press B</kbd>
-                  </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span>Pause / Resume BGM</span>
-                    <kbd className="bg-white/10 border border-white/20 px-2 py-0.5 rounded text-[10px] text-white">Press S</kbd>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* BGM MUSIC TOGGLE BUTTON */}
+        <div className="hidden sm:flex items-center gap-8 font-mono text-xs uppercase tracking-[0.15em]">
           <button
-            onClick={() => setIsBgmPlaying(!isBgmPlaying)}
-            className={`font-mono text-xs tracking-wider uppercase flex items-center gap-2 border px-3.5 py-1.5 rounded-full transition-all duration-300 ${
-              isBgmPlaying 
-                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400' 
-                : 'border-white/10 text-neutral-400 hover:border-white/30 hover:text-white'
-            }`}
+            data-hover
+            onClick={() => onScrollTo('work')}
+            className="cursor-pointer transition-colors hover:opacity-70"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            <Music className={`w-3.5 h-3.5 ${isBgmPlaying ? 'animate-spin' : ''}`} />
-            <span>SOUND [{isBgmPlaying ? 'ON' : 'OFF'}]</span>
+            Work
           </button>
-
-          <a 
-            href="mailto:kdeditzauthentic@gmail.com"
-            className="text-xs font-mono tracking-wider uppercase border border-white/20 hover:border-white px-4 py-2 rounded-full transition-all duration-300 hover:bg-white hover:text-black font-semibold hidden sm:inline-block"
+          <button
+            data-hover
+            onClick={() => onScrollTo('contact')}
+            className="cursor-pointer transition-colors hover:opacity-70"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            Get In Touch
-          </a>
+            Contact
+          </button>
         </div>
-      </header>
 
-      {/* Hero Header Section */}
-      <main className="relative z-10 pt-32 md:pt-40 px-6 md:px-12 max-w-7xl mx-auto space-y-24">
-        
-        {/* TEXT REVEAL MASKED ANIMATION */}
-        <section className="space-y-6">
-          <div className="overflow-hidden">
-            <motion.span 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="font-mono text-xs text-neutral-500 tracking-[0.3em] uppercase block font-bold"
-            >
-              PORTFOLIO 2026
+        <div className="flex items-center gap-4">
+          <span
+            className="hidden md:inline font-mono text-xs tabular tracking-wider"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {time} {zone}
+          </span>
+          <button
+            data-hover
+            onClick={onToggleTheme}
+            aria-label="Toggle theme"
+            className="p-2 rounded-full transition-colors cursor-pointer hover:opacity-70"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+    </motion.header>
+  );
+}
+
+/* =========================================================
+   Hero — scroll parallax + word-by-word entrance
+========================================================= */
+function Hero() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.25]);
+
+  const words = PROFILE.heroLine.split(' ');
+
+  return (
+    <section ref={ref} className="max-w-5xl mx-auto px-6 md:px-8 pt-20 md:pt-28 pb-16">
+      <motion.div style={{ y, opacity }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+          <Eyebrow>{PROFILE.role}</Eyebrow>
+        </motion.div>
+
+        <motion.h1
+          initial="hidden"
+          animate="visible"
+          transition={{ staggerChildren: 0.045, delayChildren: 0.15 }}
+          className="mt-4 text-[2.1rem] leading-[1.15] sm:text-5xl md:text-6xl font-semibold tracking-tight max-w-3xl"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {words.map((w, i) => (
+            <motion.span key={i} className="kinetic-word mr-3" variants={wordVariant}>
+              {w}
             </motion.span>
-          </div>
-          
-          <div className="overflow-hidden py-1">
-            <motion.h1 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter uppercase font-display leading-[0.9]"
-            >
-              Video D Editor<span className="text-neutral-600">.</span>
-            </motion.h1>
-          </div>
-          
-          <div className="overflow-hidden">
-            <motion.p 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="text-neutral-400 max-w-2xl text-base md:text-xl font-light leading-relaxed"
-            >
-              Crafting high-retention short-form edits, cinematic motion graphics, and viral storytelling architectures for modern digital brands.
-            </motion.p>
-          </div>
-        </section>
+          ))}
+        </motion.h1>
 
-        {/* Featured Theater / Main Monitor */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Main Stage Video Display */}
-          <div className="lg:col-span-8 bg-[#141416] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group">
-            <div className="relative aspect-video md:aspect-[16/10] bg-black flex items-center justify-center overflow-hidden">
-              <video
-                ref={videoRef}
-                src={activeProject.videoUrl}
-                className="w-full h-full object-contain"
-                loop
-                playsInline
-                preload="metadata"
-                onClick={() => setIsPlaying(!isPlaying)}
-              />
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 + words.length * 0.045 }}
+          className="mt-7 max-w-xl text-[15px] md:text-base leading-relaxed"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {PROFILE.bio}
+        </motion.p>
+      </motion.div>
+    </section>
+  );
+}
 
-              <AnimatePresence>
-                {!isPlaying && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    onClick={() => setIsPlaying(true)}
-                    className="absolute p-5 bg-white text-black rounded-full shadow-2xl hover:scale-110 transition-transform cursor-pointer z-20"
-                  >
-                    <Play className="w-6 h-6 fill-current text-black ml-0.5" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
+/* =========================================================
+   Work index — hybrid: thumbnail + one line, click for case study
+========================================================= */
+function WorkRow({ work, onOpen }: { work: VideoProject; onOpen: (id: string) => void }) {
+  return (
+    <motion.button
+      variants={listItem}
+      data-hover
+      onClick={() => onOpen(work.id)}
+      className="group w-full text-left flex items-center gap-5 md:gap-8 py-6 border-b cursor-pointer"
+      style={{ borderColor: 'var(--hairline)' }}
+    >
+      <motion.div
+        layoutId={`media-${work.id}`}
+        className="relative shrink-0 overflow-hidden rounded-md"
+        style={{
+          width: work.aspectRatio === '16:9' ? '9.5rem' : '4.6rem',
+          aspectRatio: work.aspectRatio === '16:9' ? '16/9' : '9/16',
+          background: 'var(--surface-2)',
+        }}
+      >
+        <video
+          src={work.videoUrl}
+          muted
+          loop
+          playsInline
+          autoPlay
+          onTimeUpdate={(e) => {
+            const v = e.currentTarget;
+            if (v.currentTime >= 4) v.currentTime = 0;
+          }}
+          className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.06]"
+        />
+      </motion.div>
 
-            {/* Video Sub-Bar Controls */}
-            <div className="px-6 py-4 bg-[#111113] border-t border-white/5 flex items-center justify-between font-mono text-xs text-neutral-400">
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="hover:text-white transition-colors p-1"
-                >
-                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </button>
-                <button 
-                  onClick={() => setIsMuted(!isMuted)}
-                  className="hover:text-white transition-colors p-1"
-                >
-                  {isMuted ? <VolumeX className="w-4 h-4 text-neutral-500" /> : <Volume2 className="w-4 h-4 text-white" />}
-                </button>
-              </div>
-              <span className="font-bold tracking-widest text-neutral-300">{activeProject.title.toUpperCase()}</span>
-              <span className="text-neutral-600">{activeProject.year}</span>
-            </div>
-          </div>
-
-          {/* Active Project Details Side Card */}
-          <div className="lg:col-span-4 bg-[#141416] border border-white/10 p-8 rounded-2xl space-y-8 flex flex-col justify-between h-full min-h-[420px]">
-            <div className="space-y-6">
-              <div className="space-y-2 border-b border-white/10 pb-4">
-                <span className="font-mono text-[10px] text-neutral-500 tracking-widest uppercase block">// ACTIVE INDEX</span>
-                <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">{activeProject.title}</h2>
-                <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-1 rounded">
-                  {activeProject.category}
-                </span>
-              </div>
-
-              <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                {activeProject.description}
-              </p>
-            </div>
-
-            <div className="space-y-3 pt-6 border-t border-white/10">
-              <span className="font-mono text-[10px] text-neutral-500 tracking-widest uppercase block">// TECHNIQUES APPLIED</span>
-              <div className="flex flex-wrap gap-2">
-                {activeProject.techniques.map((tech, i) => (
-                  <span key={i} className="text-xs font-mono bg-white/5 border border-white/10 px-3 py-1.5 rounded-md text-neutral-300">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Work List */}
-        <section className="space-y-8 pt-12">
-          <div className="border-b border-white/10 pb-4 flex justify-between items-end">
-            <div>
-              <span className="font-mono text-xs text-neutral-500 tracking-widest uppercase block">// INDEX</span>
-              <h2 className="text-3xl font-black uppercase tracking-tight">Selected Works</h2>
-            </div>
-            <span className="font-mono text-xs text-neutral-500">01 — 06</span>
-          </div>
-
-          <div className="divide-y divide-white/5">
-            {PROJECTS.map((project, index) => {
-              const isActive = activeProject.id === project.id;
-              return (
-                <motion.div
-                  key={project.id}
-                  onMouseEnter={() => setHoveredProject(project)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                  onClick={() => {
-                    setActiveProject(project);
-                    setIsPlaying(true);
-                  }}
-                  className={`group py-6 md:py-8 px-4 md:px-6 rounded-xl transition-all duration-300 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 ${
-                    isActive ? 'bg-white/10 text-white' : 'hover:bg-white/[0.03] text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center gap-6">
-                    <span className="font-mono text-xs text-neutral-600 font-bold">0{index + 1}</span>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tight group-hover:translate-x-2 transition-transform duration-300">
-                        {project.title}
-                      </h3>
-                      <span className="font-mono text-xs text-neutral-500 md:hidden block mt-1">{project.category}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between md:justify-end gap-12 font-mono text-xs">
-                    <span className="hidden md:block text-neutral-500">{project.category}</span>
-                    <span className="text-neutral-500">{project.year}</span>
-                    <ArrowUpRight className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'text-white rotate-45' : 'text-neutral-600 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1'}`} />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Workflow Section */}
-        <section className="bg-[#141416] border border-white/10 rounded-2xl p-8 md:p-12 space-y-10">
-          <div className="border-b border-white/10 pb-6">
-            <span className="font-mono text-xs text-neutral-500 tracking-widest uppercase block">// PROCESS</span>
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mt-1">How To Work Together</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 font-sans">
-            <div className="space-y-3 bg-white/[0.02] border border-white/5 p-6 rounded-xl">
-              <span className="font-mono text-xs text-emerald-400 font-bold block">01 // BRIEFING</span>
-              <h3 className="font-bold text-lg text-white">Footage & Direction</h3>
-              <p className="text-neutral-400 text-sm leading-relaxed font-light">
-                Send your raw footage assets along with tracking references, mood boards, and stylistic project goals.
-              </p>
-            </div>
-
-            <div className="space-y-3 bg-white/[0.02] border border-white/5 p-6 rounded-xl">
-              <span className="font-mono text-xs text-emerald-400 font-bold block">02 // PIPELINE CUT</span>
-              <h3 className="font-bold text-lg text-white">Assembly & Polish</h3>
-              <p className="text-neutral-400 text-sm leading-relaxed font-light">
-                I assemble the cuts using velocity hooks, dynamic color grading, sound hit syncing, and kinetic motion overlays.
-              </p>
-            </div>
-
-            <div className="space-y-3 bg-white/[0.02] border border-white/5 p-6 rounded-xl">
-              <span className="font-mono text-xs text-emerald-400 font-bold block">03 // DELIVERY</span>
-              <h3 className="font-bold text-lg text-white">Master Export</h3>
-              <p className="text-neutral-400 text-sm leading-relaxed font-light">
-                Review draft cuts and receive high-fidelity, platform-optimized files ready for publication pipelines.
-              </p>
-            </div>
-          </div>
-
-          {/* Contact Block */}
-          <div className="pt-6 border-t border-white/10 space-y-4">
-            <p className="text-sm font-mono text-neutral-300">Click this to contact me via Gmail:</p>
-            <div className="flex flex-wrap gap-4">
-              <a 
-                href="mailto:kdeditzauthentic@gmail.com"
-                className="inline-flex items-center gap-3 bg-white text-black hover:bg-neutral-200 px-6 py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer"
-              >
-                <Mail className="w-4 h-4 text-black" />
-                kdeditzauthentic@gmail.com
-              </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer"
-              >
-                <Instagram className="w-4 h-4 text-pink-400" />
-                Instagram
-              </a>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="mt-32 border-t border-white/10 py-12 px-6 md:px-12 bg-[#0A0A0B] relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black uppercase font-display tracking-tight">Let's cut something iconic.</h3>
-            <p className="font-mono text-xs text-neutral-500">// ALLOCATION SLOTS RESERVED FOR 2026 COMMISSIONS</p>
-          </div>
-          <div className="flex items-center gap-8 font-mono text-xs text-neutral-400">
-            <span className="font-bold text-white uppercase">Video D Editor</span>
-            <span>© 2026 STUDIO—KD</span>
-          </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline gap-3 flex-wrap">
+          <h3
+            className="text-base md:text-lg font-medium tracking-tight transition-transform duration-300 group-hover:translate-x-1"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {work.title}
+          </h3>
+          <span className="font-mono text-[11px] tracking-wide" style={{ color: 'var(--text-muted)' }}>
+            {work.category} · {work.year}
+          </span>
         </div>
-      </footer>
+        <p
+          className="mt-1.5 text-sm leading-snug hidden sm:block max-w-lg truncate"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {work.hook}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-3 shrink-0">
+        <span className="font-mono text-xs tabular hidden md:inline" style={{ color: 'var(--text-muted)' }}>
+          {work.duration}
+        </span>
+        <ArrowUpRight
+          className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+          style={{ color: 'var(--text-secondary)' }}
+        />
+      </div>
+    </motion.button>
+  );
+}
+
+function WorkIndex({ onOpen }: { onOpen: (id: string) => void }) {
+  return (
+    <section id="work" className="max-w-5xl mx-auto px-6 md:px-8 py-4 scroll-mt-20">
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.4 }}
+        className="flex items-baseline justify-between mb-2"
+      >
+        <h2 className="text-sm font-mono uppercase tracking-[0.2em]" style={{ color: 'var(--text-muted)' }}>
+          Selected Work
+        </h2>
+        <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+          {String(WORKS.length).padStart(2, '0')} projects
+        </span>
+      </motion.div>
+
+      <motion.div
+        variants={listContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        {WORKS.map((w) => (
+          <WorkRow key={w.id} work={w} onOpen={onOpen} />
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+/* =========================================================
+   Project / case-study view
+========================================================= */
+function ProjectPlayer({ work }: { work: VideoProject }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = isMuted;
+    if (isPlaying) v.play().catch(() => setIsPlaying(false));
+    else v.pause();
+  }, [isPlaying, isMuted]);
+
+  const isWidescreen = work.aspectRatio === '16:9';
+
+  return (
+    <div
+      className="rounded-lg overflow-hidden border"
+      style={{ borderColor: 'var(--hairline)', background: 'var(--surface)' }}
+    >
+      <motion.div
+        layoutId={`media-${work.id}`}
+        className={`relative flex items-center justify-center bg-black mx-auto ${
+          isWidescreen ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[380px] w-full'
+        }`}
+      >
+        <video
+          ref={videoRef}
+          src={work.videoUrl}
+          className="w-full h-full object-contain"
+          loop
+          playsInline
+          preload="metadata"
+          onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+          onClick={() => setIsPlaying((p) => !p)}
+        />
+        <AnimatePresence>
+          {!isPlaying && (
+            <motion.button
+              data-hover
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              onClick={() => setIsPlaying(true)}
+              className="absolute p-4 rounded-full bg-white text-black cursor-pointer"
+            >
+              <Play className="w-4 h-4 fill-current" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      <div className="px-4 py-3 flex items-center gap-4" style={{ borderTop: '1px solid var(--hairline)' }}>
+        <button
+          data-hover
+          onClick={() => setIsPlaying((p) => !p)}
+          className="cursor-pointer"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+        </button>
+        <button
+          data-hover
+          onClick={() => setIsMuted((m) => !m)}
+          className="cursor-pointer"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+        </button>
+
+        <div className="flex-1 h-[2px] rounded-full overflow-hidden" style={{ background: 'var(--hairline)' }}>
+          <motion.div
+            className="h-full"
+            style={{
+              width: duration ? `${(currentTime / duration) * 100}%` : '0%',
+              background: 'var(--text-primary)',
+            }}
+          />
+        </div>
+
+        <span className="font-mono text-xs tabular" style={{ color: 'var(--text-muted)' }}>
+          {formatTimecode(currentTime)} / {duration ? formatTimecode(duration) : work.duration}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ProjectView({
+  work,
+  onBack,
+  onOpen,
+}: {
+  work: VideoProject;
+  onBack: () => void;
+  onOpen: (id: string) => void;
+}) {
+  const idx = WORKS.findIndex((w) => w.id === work.id);
+  const prev = WORKS[(idx - 1 + WORKS.length) % WORKS.length];
+  const next = WORKS[(idx + 1) % WORKS.length];
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [work.id]);
+
+  return (
+    <motion.section
+      key={work.id}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="max-w-5xl mx-auto px-6 md:px-8 py-12 md:py-16"
+    >
+      <button
+        data-hover
+        onClick={onBack}
+        className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] mb-10 cursor-pointer hover:opacity-70"
+        style={{ color: 'var(--text-secondary)' }}
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> All Work
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14">
+        <div className="lg:col-span-3">
+          <ProjectPlayer work={work} />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="lg:col-span-2"
+        >
+          <Eyebrow>{work.category} · {work.year}</Eyebrow>
+          <h1
+            className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {work.title}
+          </h1>
+          <p className="mt-5 text-sm md:text-[15px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            {work.description}
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            {work.techniques.map((t) => (
+              <span
+                key={t}
+                className="font-mono text-[11px] px-2.5 py-1 rounded-full border"
+                style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <dl
+            className="mt-10 pt-6 grid grid-cols-2 gap-y-4 gap-x-4 font-mono text-xs"
+            style={{ borderTop: '1px solid var(--hairline)' }}
+          >
+            {[
+              ['Duration', work.duration],
+              ['Aspect Ratio', work.aspectRatio],
+              ['Frame Rate', `${work.fps} fps`],
+              ['Views', work.views],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <dt style={{ color: 'var(--text-muted)' }}>{k}</dt>
+                <dd className="mt-1" style={{ color: 'var(--text-primary)' }}>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </motion.div>
+      </div>
+
+      <div
+        className="mt-16 pt-6 flex items-center justify-between"
+        style={{ borderTop: '1px solid var(--hairline)' }}
+      >
+        <button data-hover onClick={() => onOpen(prev.id)} className="text-left cursor-pointer group">
+          <Eyebrow>Previous</Eyebrow>
+          <div
+            className="text-sm mt-1 group-hover:opacity-70 transition-opacity"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {prev.title}
+          </div>
+        </button>
+        <button data-hover onClick={() => onOpen(next.id)} className="text-right cursor-pointer group">
+          <Eyebrow>Next</Eyebrow>
+          <div
+            className="text-sm mt-1 group-hover:opacity-70 transition-opacity"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {next.title}
+          </div>
+        </button>
+      </div>
+    </motion.section>
+  );
+}
+
+/* =========================================================
+   Collaboration steps — a real sequence, so numbering earns its place
+========================================================= */
+function Collaborate() {
+  const steps = [
+    { n: '01', title: 'Brief', desc: 'Send over your raw footage, references, and what the edit needs to do.' },
+    { n: '02', title: 'Edit', desc: "I cut for pacing first — hooks, sound design, and color come once the structure holds." },
+    { n: '03', title: 'Deliver', desc: "You get a review draft, then export-ready files for wherever it's going." },
+  ];
+
+  return (
+    <motion.section
+      variants={listContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      className="max-w-5xl mx-auto px-6 md:px-8 py-16 md:py-20"
+    >
+      <motion.div variants={listItem}>
+        <Eyebrow>How we'd work together</Eyebrow>
+      </motion.div>
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        {steps.map((s) => (
+          <motion.div key={s.n} variants={listItem}>
+            <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{s.n}</span>
+            <h3 className="mt-2 text-lg font-medium" style={{ color: 'var(--text-primary)' }}>{s.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
+/* =========================================================
+   Contact outro — kinetic reveal + magnetic links
+========================================================= */
+function MagneticLink({
+  href,
+  external,
+  children,
+}: {
+  href: string;
+  external?: boolean;
+  children: React.ReactNode;
+}) {
+  const { ref, style, onMouseMove, onMouseLeave } = useMagnetic(14);
+  return (
+    <motion.a
+      ref={ref as React.RefObject<HTMLAnchorElement>}
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      data-hover
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ ...style, color: 'var(--text-primary)', borderColor: 'var(--border-strong)' }}
+      className="inline-flex items-center gap-2 text-sm border-b pb-0.5"
+    >
+      {children}
+    </motion.a>
+  );
+}
+
+function ContactOutro() {
+  const phrase = "Let's make something worth watching.";
+  const words = phrase.split(' ');
+
+  return (
+    <section id="contact" className="max-w-5xl mx-auto px-6 md:px-8 py-20 md:py-28 scroll-mt-20">
+      <motion.h2
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ staggerChildren: 0.05 }}
+        className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight max-w-2xl leading-tight"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {words.map((w, i) => (
+          <motion.span key={i} className="kinetic-word mr-3" variants={wordVariant}>
+            {w}
+          </motion.span>
+        ))}
+      </motion.h2>
+
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.6, delay: 0.35 }}
+        className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3"
+      >
+        <MagneticLink href={`mailto:${PROFILE.email}`}>
+          <Mail className="w-4 h-4" /> {PROFILE.email}
+        </MagneticLink>
+        <MagneticLink href={PROFILE.instagram} external>
+          <Instagram className="w-4 h-4" /> Instagram
+        </MagneticLink>
+      </motion.div>
+    </section>
+  );
+}
+
+/* =========================================================
+   Footer
+========================================================= */
+function Footer() {
+  return (
+    <footer className="border-t" style={{ borderColor: 'var(--hairline)' }}>
+      <div
+        className="max-w-5xl mx-auto px-6 md:px-8 py-6 flex items-center justify-between font-mono text-xs"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        <span>{PROFILE.studio}</span>
+        <span>© 2026</span>
+      </div>
+    </footer>
+  );
+}
+
+/* =========================================================
+   App
+========================================================= */
+export default function App() {
+  const [isDark, setIsDark] = useState(true);
+  const [route, setRoute] = useState<Route>(() => routeFromHash());
+
+  useEffect(() => {
+    const onHash = () => setRoute(routeFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const navigateHome = () => {
+    window.location.hash = '#/';
+  };
+  const openProject = (id: string) => {
+    window.location.hash = `#/work/${id}`;
+  };
+  const scrollTo = (id: string) => {
+    if (route.page !== 'home') {
+      window.location.hash = '#/';
+      requestAnimationFrame(() => {
+        setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 60);
+      });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const activeWork = route.page === 'project' ? WORKS.find((w) => w.id === route.id) : undefined;
+
+  return (
+    <div className={isDark ? '' : 'light'}>
+      <div
+        className="min-h-screen antialiased transition-colors duration-300"
+        style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}
+      >
+        <CustomCursor />
+        <ScrollProgress />
+
+        <Header
+          isDark={isDark}
+          onToggleTheme={() => setIsDark((d) => !d)}
+          onNavigateHome={navigateHome}
+          onScrollTo={scrollTo}
+        />
+
+        <AnimatePresence mode="wait">
+          {route.page === 'project' && activeWork ? (
+            <ProjectView key="project" work={activeWork} onBack={navigateHome} onOpen={openProject} />
+          ) : (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Hero />
+              <WorkIndex onOpen={openProject} />
+              <Collaborate />
+              <ContactOutro />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Footer />
+      </div>
     </div>
   );
 }
