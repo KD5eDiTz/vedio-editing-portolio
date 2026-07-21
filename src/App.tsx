@@ -209,10 +209,13 @@ function CustomCursor() {
         y: springY, 
         width: RING, 
         height: RING,
-        border: '1.5px solid white',
-        backgroundColor: isHover ? 'transparent' : 'white'
       }}
-      animate={{ scale: isHover ? 1.15 : 1, opacity: isVisible ? 1 : 0 }}
+      animate={{ 
+        scale: isHover ? 1.2 : 0.3, // 0.3 makes it a small 9px dot normally
+        backgroundColor: isHover ? 'transparent' : 'white',
+        border: isHover ? '1.5px solid white' : '0px solid transparent',
+        opacity: isVisible ? 1 : 0 
+      }}
       transition={{ type: 'spring', stiffness: 150, damping: 25 }}
     />
   );
@@ -847,7 +850,7 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 whileInView="visible"
                 viewport={{ once: false, amount: 0.1 }}
                 variants={listItem}
-                whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+                whileHover={{ scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
                 className={`group relative shrink-0 snap-start overflow-hidden rounded-2xl text-left cursor-pointer transition-all duration-300 ${
                   isActive ? 'ring-2 ring-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
                 }`}
