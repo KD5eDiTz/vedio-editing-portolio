@@ -67,26 +67,53 @@ body {
   background: radial-gradient(circle at 50% 30%, rgba(248, 249, 250, 0.5) 0%, rgba(220, 225, 230, 0.92) 100%);
 }
 
-/* Apple "Writing" Style Text */
+/* 3D Glass Hello — top-lit white highlight → rich emerald → deep forest shadow */
 .apple-glass-text {
   font-family: var(--font-apple-script);
-  font-weight: 400;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(167, 243, 208, 1) 20%, rgba(16, 185, 129, 1) 50%, rgba(4, 120, 87, 1) 85%, rgba(0, 0, 0, 0.8) 100%);
+  font-weight: 700;
+  background: linear-gradient(
+    168deg,
+    #ffffff    0%,
+    #d1fae5    7%,
+    #a7f3d0   14%,
+    #6ee7b7   22%,
+    #34d399   34%,
+    #10b981   50%,
+    #059669   65%,
+    #047857   78%,
+    #065f46   89%,
+    #022c22  100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
-  filter: drop-shadow(0px 25px 35px rgba(16, 185, 129, 0.5)) drop-shadow(0px 5px 5px rgba(0,0,0,0.6));
-  padding-right: 0.5em; 
-  padding-bottom: 0.2em;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
+  filter:
+    drop-shadow(0px   0px 100px rgba(52, 211, 153, 0.22))
+    drop-shadow(0px  55px  80px rgba(0,   0,   0, 0.95))
+    drop-shadow(0px  14px  28px rgba(0,   0,   0, 0.65));
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 0.08em;
 }
 
 .light .apple-glass-text {
-  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(148, 163, 184, 1) 20%, rgba(15, 23, 42, 1) 50%, rgba(2, 6, 23, 1) 85%, rgba(0, 0, 0, 0.8) 100%);
+  background: linear-gradient(
+    168deg,
+    #ffffff    0%,
+    #d1fae5   10%,
+    #6ee7b7   25%,
+    #34d399   40%,
+    #059669   62%,
+    #047857   80%,
+    #022c22  100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 15px 25px rgba(15, 23, 42, 0.4));
+  filter:
+    drop-shadow(0px  0px 60px rgba(4, 120, 87, 0.28))
+    drop-shadow(0px 30px 50px rgba(0,  0,  0, 0.30))
+    drop-shadow(0px  6px 14px rgba(0,  0,  0, 0.18));
 }
 
 /* Retro Glitch Animations */
@@ -109,3 +136,19 @@ body {
 
 .track-scroll { scrollbar-width: none; -ms-overflow-style: none; }
 .track-scroll::-webkit-scrollbar { display: none; }
+
+/* Dot Grid Overlay */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 75%);
+}
+
+.light .grid-overlay {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}

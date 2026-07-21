@@ -3,7 +3,6 @@ import {
   motion,
   AnimatePresence,
   useScroll,
-  useTransform,
   useMotionValue,
   useSpring,
 } from 'motion/react';
@@ -28,9 +27,9 @@ import {
    PROFILE DATA
 ========================================================= */
 const PROFILE = {
-  studio: 'Studio — KD',
+  studio: 'Vedio D Editor',
   role: 'Video Editor & Motion Designer',
-  bio: "I'm KD, a video editor working mostly in short-form: pacing, sound design, and color that make people stop scrolling. I spend most of my time studying retention — why a cut works, why a hook doesn't, and how a fraction of a second changes both.",
+  bio: "I'm Vedio D Editor, a video editor working mostly in short-form: pacing, sound design, and color that make people stop scrolling. I spend most of my time studying retention — why a cut works, why a hook doesn't, and how a fraction of a second changes both.",
   email: 'kdeditzauthentic@gmail.com',
   instagram: 'https://instagram.com',
 };
@@ -171,30 +170,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-function useMagnetic(strength = 16) {
-  const ref = useRef<HTMLElement | null>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 150, damping: 12, mass: 0.4 });
-  const springY = useSpring(y, { stiffness: 150, damping: 12, mass: 0.4 });
 
-  const onMouseMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const relX = e.clientX - (rect.left + rect.width / 2);
-    const relY = e.clientY - (rect.top + rect.height / 2);
-    x.set((relX / rect.width) * strength);
-    y.set((relY / rect.height) * strength);
-  };
-
-  const onMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return { ref, style: { x: springX, y: springY }, onMouseMove, onMouseLeave };
-}
 
 function CustomCursor() {
   const RING = 30;
@@ -387,6 +363,123 @@ function Header({
 }
 
 /* =========================================================
+   SVG HERO TEXT — spaghetti stroke-draw animation
+   Three layers: depth shadow → neon stroke draw → gradient fill
+========================================================= */
+const STROKE_DASH = 9000; // generous upper bound for Pacifico outline perimeter
+
+function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
+  const dur   = wordIndex === 0 ? 2.2 : 1.4;
+  const delay = wordIndex === 0 ? 0.32 : 0;
+  // Slightly bigger font for shorter words so both fill similar width
+  const fontSize = word.length > 6 ? 195 : 222;
+
+  return (
+    <svg
+      className="w-full select-none"
+      viewBox="0 0 1200 265"
+      style={{ overflow: 'visible' }}
+      aria-label={word}
+      role="img"
+    >
+      <defs>
+        {/* Top-lit gradient matching the existing apple-glass-text style */}
+        <linearGradient id="hGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor="#ffffff" />
+          <stop offset="10%"  stopColor="#d1fae5" />
+          <stop offset="25%"  stopColor="#6ee7b7" />
+          <stop offset="45%"  stopColor="#34d399" />
+          <stop offset="65%"  stopColor="#10b981" />
+          <stop offset="82%"  stopColor="#047857" />
+          <stop offset="100%" stopColor="#022c22" />
+        </linearGradient>
+
+        {/* Glow bloom around the drawing stroke */}
+        <filter id="hGlow" x="-15%" y="-15%" width="130%" height="130%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        {/* Deep drop-shadow for the filled text */}
+        <filter id="hDepth" x="-5%" y="-5%" width="120%" height="145%">
+          <feDropShadow dx="5"  dy="22" stdDeviation="20" floodColor="rgba(0,0,0,0.92)" />
+          <feDropShadow dx="0"  dy="5"  stdDeviation="8"  floodColor="rgba(0,0,0,0.55)" />
+          <feDropShadow dx="0"  dy="0"  stdDeviation="40" floodColor="rgba(52,211,153,0.18)" />
+        </filter>
+      </defs>
+
+      {/* Layer 1 — depth / ground shadow */}
+      <text
+        x="600" y="215"
+        textAnchor="middle"
+        fontSize={fontSize}
+        fontFamily="Pacifico, cursive"
+        fill="rgba(0,0,0,0.65)"
+        transform="translate(9,15)"
+        aria-hidden="true"
+        style={{ userSelect: 'none' }}
+      >
+        {word}
+      </text>
+
+      {/* Layer 2 — the 'spaghetti' stroke that draws the text */}
+      <motion.text
+        key={`stroke-${word}`}
+        x="600" y="215"
+        textAnchor="middle"
+        fontSize={fontSize}
+        fontFamily="Pacifico, cursive"
+        fill="none"
+        stroke="#34d399"
+        strokeWidth="7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        filter="url(#hGlow)"
+        style={{ userSelect: 'none' }}
+        initial={{ strokeDasharray: STROKE_DASH, strokeDashoffset: STROKE_DASH, opacity: 1 }}
+        animate={{
+          strokeDashoffset: 0,
+          opacity: [1, 1, 1, 0],
+        }}
+        transition={{
+          strokeDashoffset: { duration: dur, delay, ease: [0.76, 0, 0.24, 1] },
+          opacity: {
+            times: [0, 0.55, 0.85, 1],
+            duration: dur,
+            delay,
+            ease: 'easeIn',
+          },
+        }}
+      >
+        {word}
+      </motion.text>
+
+      {/* Layer 3 — filled gradient text fades in as stroke completes */}
+      <motion.text
+        key={`fill-${word}`}
+        x="600" y="215"
+        textAnchor="middle"
+        fontSize={fontSize}
+        fontFamily="Pacifico, cursive"
+        fill="url(#hGrad)"
+        stroke="rgba(255,255,255,0.07)"
+        strokeWidth="2"
+        filter="url(#hDepth)"
+        style={{ userSelect: 'none' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.85, delay: delay + dur * 0.58, ease: 'easeOut' }}
+      >
+        {word}
+      </motion.text>
+    </svg>
+  );
+}
+
+/* =========================================================
    HERO — Massive Apple Animation & Perfect Toggle Logic
 ========================================================= */
 function Hero() {
@@ -415,93 +508,66 @@ function Hero() {
   return (
     <section
       id="hero"
-      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-[90vh] flex flex-col justify-center overflow-visible scroll-mt-20"
+      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-28 md:pt-36 pb-16 min-h-[90vh] flex flex-col items-center justify-center text-center overflow-visible scroll-mt-20"
     >
-      <div className="relative z-10 space-y-4 md:space-y-6">
-        
-        <motion.div 
-          initial="hidden" 
-          whileInView="visible" 
-          viewport={{ once: false, amount: 0.1 }} 
-          variants={fadeUp}
+      <div className="relative z-10 w-full flex flex-col items-center gap-5 md:gap-7">
+
+        {/* Eyebrow — centered, fades in first */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <Eyebrow>{PROFILE.role}</Eyebrow>
         </motion.div>
 
-        {/* APPLE WRITING ANIMATION (Massive Size + 3.5s Draw) */}
-        <div className="relative min-h-[140px] sm:min-h-[200px] md:min-h-[280px] flex items-center overflow-visible pr-8">
+        {/* ── SPAGHETTI SVG DRAW ── */}
+        <div className="relative w-full flex items-center justify-center overflow-visible py-0 -my-2">
           <AnimatePresence mode="wait">
-            <motion.h1
-              key={isYokoso ? 'yokoso' : 'hello'}
-              initial={{ 
-                WebkitMaskPosition: "100% 0", 
-                maskPosition: "100% 0", 
-                filter: 'blur(15px)', 
-                opacity: 0, 
-                scale: 0.98 
-              }}
-              animate={{ 
-                WebkitMaskPosition: "0% 0", 
-                maskPosition: "0% 0", 
-                filter: 'blur(0px)', 
-                opacity: 1, 
-                scale: 1 
-              }}
-              exit={{ 
-                opacity: 0, 
-                filter: 'blur(15px)', 
-                transition: { duration: 0.4 } 
-              }}
-              /* 3.5s Slow, Buttery easing curve */
-              transition={{ 
-                duration: 3.5, 
-                ease: [0.25, 1, 0.4, 1] 
-              }}
-              className="apple-glass-text font-bold leading-none whitespace-nowrap"
-              style={{ 
-                /* Made significantly larger to match reference */
-                fontSize: 'clamp(6rem, 25vw, 18rem)',
-                WebkitMaskImage: 'linear-gradient(to right, black 45%, rgba(0,0,0,0) 55%)',
-                maskImage: 'linear-gradient(to right, black 45%, rgba(0,0,0,0) 55%)',
-                WebkitMaskSize: '220% 100%',
-                maskSize: '220% 100%',
-                WebkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
+            <motion.div
+              key={isYokoso ? 'yokoso' : 'welcome'}
+              className="w-full"
+              exit={{
+                opacity: 0,
+                scale: 0.95,
+                filter: 'blur(14px)',
+                transition: { duration: 0.35, ease: 'easeOut' },
               }}
             >
-              {isYokoso ? 'Yōkoso' : 'Hello'}
-            </motion.h1>
+              <HeroSVGText
+                word={isYokoso ? 'Yōkoso' : 'Welcome'}
+                wordIndex={wordIndex}
+              />
+            </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Subtitle Line with Bouncy Re-triggering Strikethrough Effect */}
+        {/* Subtitle row — staggered in after Hello */}
         <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.1 }}
-          className="font-mono text-sm sm:text-lg md:text-2xl font-semibold tracking-wide flex flex-wrap items-center gap-2 sm:gap-3 pt-2"
+          initial={{ opacity: 0, y: 26 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="font-mono text-sm sm:text-lg md:text-2xl font-semibold tracking-wide flex flex-wrap items-center justify-center gap-2 sm:gap-3"
           style={{ color: 'var(--text-secondary)' }}
         >
-          <motion.span variants={wordVariant} style={{ color: 'var(--text-primary)' }}>
-            {isYokoso ? 'Watashino' : 'Welcome to my'}
-          </motion.span>
+          <span style={{ color: 'var(--text-primary)' }}>
+            {isYokoso ? 'Watashino' : 'to my'}
+          </span>
 
-          <motion.span variants={wordVariant} className="relative inline-block font-bold" style={{ color: 'var(--text-primary)' }}>
+          <span className="relative inline-block font-bold" style={{ color: 'var(--text-primary)' }}>
             Soul Society
             <motion.span
               initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.6, delay: 0.4, ease: 'easeInOut' }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.55, delay: 1.25, ease: 'easeInOut' }}
               className="absolute left-0 top-1/2 w-full h-[3px] bg-rose-500 origin-left rounded-full shadow-[0_0_12px_rgba(244,63,94,0.9)]"
             />
-          </motion.span>
+          </span>
 
           <motion.span
-            initial={{ opacity: 0, x: -10, scale: 0.9 }}
-            whileInView={{ opacity: 1, x: 0, scale: 1 }}
-            viewport={{ once: false }}
-            transition={{ type: 'spring', damping: 12, stiffness: 120, delay: 0.9 }}
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', damping: 12, stiffness: 110, delay: 1.45 }}
             className="text-emerald-400 font-bold tracking-wider uppercase bg-emerald-950/60 border border-emerald-500/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
           >
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 animate-spin" />
@@ -509,13 +575,12 @@ function Hero() {
           </motion.span>
         </motion.div>
 
-        {/* Bio Text */}
+        {/* Bio — last to enter */}
         <motion.p
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.1 }}
-          variants={fadeUp}
-          className="mt-6 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed font-normal"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-xl text-sm sm:text-base md:text-lg leading-relaxed font-normal"
           style={{ color: 'var(--text-secondary)' }}
         >
           {PROFILE.bio}
@@ -674,11 +739,59 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
 ========================================================= */
 function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoProject, onSelectProject: (p: VideoProject) => void }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const targetXRef = useRef(0);
+  const currentXRef = useRef(0);
+  const rafRef = useRef<number>(0);
 
+  /* Momentum-eased horizontal scroll via RAF */
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+
+    const tick = () => {
+      const diff = targetXRef.current - currentXRef.current;
+      if (Math.abs(diff) < 0.4) {
+        currentXRef.current = targetXRef.current;
+        el.scrollLeft = currentXRef.current;
+        return;
+      }
+      currentXRef.current += diff * 0.11;
+      el.scrollLeft = currentXRef.current;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      targetXRef.current = Math.max(
+        0,
+        Math.min(el.scrollWidth - el.clientWidth, targetXRef.current + e.deltaY)
+      );
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  /* Arrow-button scroll also feeds the eased target */
   const scrollTrack = (direction: 'left' | 'right') => {
-    if (!trackRef.current) return;
-    const distance = 300;
-    trackRef.current.scrollBy({ left: direction === 'left' ? -distance : distance, behavior: 'smooth' });
+    const el = trackRef.current;
+    if (!el) return;
+    const delta = direction === 'left' ? -300 : 300;
+    targetXRef.current = Math.max(0, Math.min(el.scrollWidth - el.clientWidth, targetXRef.current + delta));
+    cancelAnimationFrame(rafRef.current);
+    const tick = () => {
+      const diff = targetXRef.current - currentXRef.current;
+      if (Math.abs(diff) < 0.4) { currentXRef.current = targetXRef.current; el.scrollLeft = currentXRef.current; return; }
+      currentXRef.current += diff * 0.11;
+      el.scrollLeft = currentXRef.current;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
   };
 
   return (
@@ -709,11 +822,12 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
         </div>
       </motion.div>
 
-      {/* Horizontal Filmstrip with Fade Mask */}
+      {/* Horizontal Filmstrip — data-lenis-prevent stops page scroll while hovering */}
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div 
-          ref={trackRef} 
-          className="track-scroll track-mask flex gap-6 overflow-x-auto py-4 px-2 snap-x snap-mandatory"
+          ref={trackRef}
+          data-lenis-prevent
+          className="track-scroll track-mask flex gap-6 overflow-x-auto py-4 px-2"
         >
           {WORKS.map((w) => {
             const isActive = activeProject.id === w.id;
@@ -867,25 +981,39 @@ function Collaborate() {
    CONTACT
 ========================================================= */
 function ContactOutro() {
-  const phrase = "Let's make something worth watching.";
-  const words = phrase.split(' ');
+  /* Split into individual lines so each word wraps cleanly at any viewport size */
+  const lines = ["Let's make", 'something', 'worth watching.']
 
   return (
-    <section id="contact" className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t scroll-mt-20" style={{ borderColor: 'var(--hairline)' }}>
-      <motion.h2
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, amount: 0.4 }}
-        transition={{ staggerChildren: 0.05 }}
-        className="font-black tracking-tighter max-w-4xl leading-[1.05] uppercase"
-        style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', color: 'var(--text-primary)' }}
-      >
-        {words.map((w, i) => (
-          <motion.span key={i} className="kinetic-word mr-4" variants={wordVariant}>
-            {w}
-          </motion.span>
+    <section
+      id="contact"
+      className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28 border-t scroll-mt-20 overflow-visible"
+      style={{ borderColor: 'var(--hairline)' }}
+    >
+      {/* Stacked word lines — each on its own row so they never overflow */}
+      <div className="flex flex-col gap-0 leading-none">
+        {lines.map((line, i) => (
+          <motion.p
+            key={i}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.3 }}
+            variants={wordVariant}
+            transition={{ delay: i * 0.08 }}
+            className="font-black tracking-tighter uppercase overflow-visible"
+            style={{
+              fontSize: 'clamp(2.2rem, 7vw, 5.5rem)',
+              lineHeight: 1.0,
+              color: 'var(--text-primary)',
+              /* Prevent any individual line from overflowing */
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+            }}
+          >
+            {line}
+          </motion.p>
         ))}
-      </motion.h2>
+      </div>
 
       <motion.div
         initial="hidden"
@@ -1018,7 +1146,7 @@ export default function App() {
 
   return (
     <div className={isDark ? '' : 'light'}>
-      <div className="min-h-screen antialiased relative overflow-x-hidden" style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}>
+      <div className="min-h-screen antialiased relative" style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}>
         
         {/* Cinematic Live MP4 Background */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -1028,8 +1156,9 @@ export default function App() {
             loop 
             playsInline 
             preload="auto" 
-            className="w-full h-full object-cover opacity-50 scale-105" 
-            src="/Neon Rounded Red Geometric live Wallpaper Abstract Gradient Background Animation    Free Version.mp4" 
+            className="w-full h-full object-cover scale-110"
+            style={{ filter: 'blur(10px) brightness(0.12) saturate(0.08)' }}
+            src="/Neon%20Rounded%20Red%20Geometric%20live%20Wallpaper%20Abstract%20Gradient%20Background%20Animation%20%20%20Free%20Version.mp4"
           />
           <div className="video-bg-overlay" />
         </div>
