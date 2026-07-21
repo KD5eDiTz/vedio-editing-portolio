@@ -688,7 +688,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
                   animate={{ opacity: 1, scale: 1 }} 
                   exit={{ opacity: 0, scale: 0.9 }} 
                   onClick={() => setIsPlaying(true)} 
-                  className="absolute p-5 bg-orange-500 text-black rounded-full shadow-[0_0_25px_rgba(52,211,153,0.8)] cursor-pointer z-20 hover:scale-110 transition-transform"
+                  className="absolute p-5 bg-white text-black rounded-full shadow-[0_0_25px_rgba(255,255,255,0.4)] cursor-pointer z-20 hover:scale-110 transition-transform"
                 >
                   <Play className="w-6 h-6 fill-current text-black ml-1" />
                 </motion.button>
@@ -1033,11 +1033,11 @@ function PixelTrailCursor() {
 
     const handleMouseMove = (e: MouseEvent) => {
       const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-      if (dist > 30) { // Spawn a pixel every 30px moved
+      if (dist > 15) { // Spawn a pixel every 15px moved to form a tight line
         lastX = e.clientX;
         lastY = e.clientY;
         const newPixel = { id: idCounter++, x: e.clientX, y: e.clientY };
-        setTrail(prev => [...prev, newPixel].slice(-15)); // Keep max 15 pixels alive
+        setTrail(prev => [...prev, newPixel].slice(-5)); // Keep max 5 pixels
       }
     };
     
@@ -1051,12 +1051,12 @@ function PixelTrailCursor() {
         {trail.map((p) => (
           <motion.div
             key={p.id}
-            initial={{ opacity: 0.8, scale: 1, rotate: Math.random() * 90 }}
-            animate={{ opacity: 0, scale: 0.1, y: p.y + 40 }} // drift down
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 0, scale: 0 }} // Shrink in place, don't fall down
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="absolute w-2.5 h-2.5 bg-red-600 border border-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.8)]"
-            style={{ left: p.x - 5, top: p.y - 5 }}
+            transition={{ duration: 0.3, ease: 'linear' }}
+            className="absolute w-2 h-2 bg-red-600 border border-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)] rounded-sm"
+            style={{ left: p.x - 4, top: p.y - 4 }}
           />
         ))}
       </AnimatePresence>
@@ -1109,12 +1109,12 @@ function ContactOutro() {
         variants={fadeUp}
         className="mt-12 flex flex-wrap items-center gap-4"
       >
-        <a href={`mailto:${PROFILE.email}`} data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-orange-500 text-black border-orange-500 hover:bg-white hover:text-black hover:border-white shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+        <a href={`mailto:${PROFILE.email}`} data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-orange-500 text-black border-orange-500 hover:bg-white hover:text-black hover:border-white shadow-[0_0_20px_rgba(249,115,22,0.4)]">
           <Mail className="w-4 h-4" /> {PROFILE.email}
         </a>
 
-        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-orange-600/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md" style={{ color: 'var(--text-primary)' }}>
-          <Instagram className="w-4 h-4 text-pink-400" /> Instagram
+        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="group inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-orange-600/30 hover:bg-white text-white hover:text-black hover:border-white backdrop-blur-md">
+          <Instagram className="w-4 h-4 text-pink-400 group-hover:text-black" /> Instagram
         </a>
       </motion.div>
     </section>
