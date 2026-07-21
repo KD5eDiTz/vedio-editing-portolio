@@ -163,8 +163,8 @@ const fadeUp = {
 ========================================================= */
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 font-mono uppercase tracking-[0.25em] text-[11px] font-bold text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-orange-600/10 border border-orange-600/30 font-mono uppercase tracking-[0.25em] text-[11px] font-bold text-orange-500 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
+      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
       <span>{children}</span>
     </div>
   );
@@ -203,8 +203,15 @@ function CustomCursor() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed top-0 left-0 z-[999] hidden md:block rounded-full mix-blend-difference bg-white"
-      style={{ x: springX, y: springY, width: RING, height: RING }}
+      className="pointer-events-none fixed top-0 left-0 z-[999] hidden md:block rounded-full mix-blend-difference"
+      style={{ 
+        x: springX, 
+        y: springY, 
+        width: RING, 
+        height: RING,
+        border: '1.5px solid white',
+        backgroundColor: isHover ? 'transparent' : 'white'
+      }}
       animate={{ scale: isHover ? 1.7 : 1, opacity: isVisible ? 1 : 0 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     />
@@ -215,7 +222,7 @@ function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-[3px] z-[60] origin-left bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+      className="fixed top-0 left-0 right-0 h-[3px] z-[60] origin-left bg-gradient-to-r from-orange-500 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
       style={{ scaleX: scrollYProgress }}
     />
   );
@@ -227,10 +234,10 @@ function ScrollProgress() {
 function RetroGlitchShapes() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
-      <div className="absolute top-[18%] left-[8%] text-emerald-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#34d399]">▲</div>
+      <div className="absolute top-[18%] left-[8%] text-orange-500 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#f97316]">▲</div>
       <div className="absolute top-[35%] right-[10%] text-rose-500 font-mono text-4xl font-bold glitch-symbol drop-shadow-[0_0_10px_#f43f5e]">○</div>
       <div className="absolute bottom-[28%] left-[12%] text-cyan-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#38bdf8]">✕</div>
-      <div className="absolute bottom-[18%] right-[15%] text-amber-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#fbbf24]">□</div>
+      <div className="absolute bottom-[18%] right-[15%] text-red-500 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#ef4444]">□</div>
     </div>
   );
 }
@@ -262,15 +269,15 @@ function ShortcutsHint() {
           >
             <div className="flex justify-between">
               <span>Scroll to top</span>
-              <span className="text-emerald-400 font-bold">T</span>
+              <span className="text-orange-500 font-bold">T</span>
             </div>
             <div className="flex justify-between">
               <span>Scroll to bottom</span>
-              <span className="text-emerald-400 font-bold">B</span>
+              <span className="text-orange-500 font-bold">B</span>
             </div>
             <div className="flex justify-between">
               <span>Toggle sound</span>
-              <span className="text-emerald-400 font-bold">S</span>
+              <span className="text-orange-500 font-bold">S</span>
             </div>
           </motion.div>
         )}
@@ -319,20 +326,20 @@ function Header({
           className="font-mono text-xs tracking-[0.15em] uppercase font-extrabold cursor-pointer flex items-center gap-2" 
           style={{ color: 'var(--text-primary)' }}
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-[0_0_8px_#34d399]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-orange-500 to-cyan-400 shadow-[0_0_8px_#f97316]" />
           {PROFILE.studio}
         </button>
 
         {/* Navigation */}
         <div className="hidden sm:flex items-center gap-10 font-mono text-xs uppercase tracking-[0.15em] font-semibold">
-          <button data-hover onClick={() => onScrollTo('viewer')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>Work</button>
-          <button data-hover onClick={() => onScrollTo('about')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>About</button>
-          <button data-hover onClick={() => onScrollTo('contact')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>Contact</button>
+          <button data-hover onClick={() => onScrollTo('viewer')} className="cursor-pointer hover:text-orange-500 transition-colors" style={{ color: 'var(--text-primary)' }}>Work</button>
+          <button data-hover onClick={() => onScrollTo('about')} className="cursor-pointer hover:text-orange-500 transition-colors" style={{ color: 'var(--text-primary)' }}>About</button>
+          <button data-hover onClick={() => onScrollTo('contact')} className="cursor-pointer hover:text-orange-500 transition-colors" style={{ color: 'var(--text-primary)' }}>Contact</button>
         </div>
 
         {/* Utilities */}
         <div className="flex items-center gap-2 md:gap-4">
-          <span className="hidden md:inline font-mono text-[10px] tabular tracking-widest mr-2 text-emerald-400/80 font-bold">
+          <span className="hidden md:inline font-mono text-[10px] tabular tracking-widest mr-2 text-orange-500/80 font-bold">
             {time} {zone}
           </span>
           <ShortcutsHint />
@@ -341,7 +348,7 @@ function Header({
             data-hover 
             onClick={onToggleAudio} 
             aria-label="Toggle background audio" 
-            className={`p-2 rounded-full transition-all cursor-pointer ${isAudioPlaying ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 shadow-[0_0_12px_rgba(52,211,153,0.3)]' : 'hover:opacity-70'}`} 
+            className={`p-2 rounded-full transition-all cursor-pointer ${isAudioPlaying ? 'text-orange-500 bg-orange-600/20 border border-orange-600/40 shadow-[0_0_12px_rgba(52,211,153,0.3)]' : 'hover:opacity-70'}`} 
             style={{ color: isAudioPlaying ? undefined : 'var(--text-secondary)' }}
           >
             {isAudioPlaying ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
@@ -388,7 +395,7 @@ function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
           <stop offset="0%"   stopColor="#ffffff" />
           <stop offset="10%"  stopColor="#d1fae5" />
           <stop offset="25%"  stopColor="#6ee7b7" />
-          <stop offset="45%"  stopColor="#34d399" />
+          <stop offset="45%"  stopColor="#f97316" />
           <stop offset="65%"  stopColor="#10b981" />
           <stop offset="82%"  stopColor="#047857" />
           <stop offset="100%" stopColor="#022c22" />
@@ -433,7 +440,7 @@ function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
         fontSize={fontSize}
         fontFamily="Pacifico, cursive"
         fill="none"
-        stroke="#34d399"
+        stroke="#f97316"
         strokeWidth="7"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -568,9 +575,9 @@ function Hero() {
             initial={{ opacity: 0, scale: 0.88 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', damping: 12, stiffness: 110, delay: 1.45 }}
-            className="text-emerald-400 font-bold tracking-wider uppercase bg-emerald-950/60 border border-emerald-500/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
+            className="text-orange-500 font-bold tracking-wider uppercase bg-red-950/60 border border-orange-600/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
           >
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 animate-spin" />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 animate-spin" />
             <span className="text-[10px] sm:text-base">Editing Society</span>
           </motion.span>
         </motion.div>
@@ -606,17 +613,17 @@ function KineticMarquee() {
         style={{ color: 'var(--text-primary)' }}
       >
         <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
         <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
         <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
         <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
         <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
         <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
-        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
+        <Star className="w-4 h-4 text-orange-500 fill-orange-500 drop-shadow-[0_0_8px_#f97316] shrink-0" />
       </motion.div>
     </div>
   );
@@ -656,10 +663,10 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
           {/* Top Bar */}
           <div className="px-6 py-4 flex items-center justify-between font-mono text-xs tracking-widest border-b" style={{ borderColor: 'var(--hairline)' }}>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_#f97316]" />
               <span className="uppercase font-bold" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</span>
             </div>
-            <span className="text-emerald-400 font-bold">{activeProject.aspectRatio}</span>
+            <span className="text-orange-500 font-bold">{activeProject.aspectRatio}</span>
           </div>
 
           {/* Video Container */}
@@ -681,7 +688,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
                   animate={{ opacity: 1, scale: 1 }} 
                   exit={{ opacity: 0, scale: 0.9 }} 
                   onClick={() => setIsPlaying(true)} 
-                  className="absolute p-5 bg-emerald-400 text-black rounded-full shadow-[0_0_25px_rgba(52,211,153,0.8)] cursor-pointer z-20 hover:scale-110 transition-transform"
+                  className="absolute p-5 bg-orange-500 text-black rounded-full shadow-[0_0_25px_rgba(52,211,153,0.8)] cursor-pointer z-20 hover:scale-110 transition-transform"
                 >
                   <Play className="w-6 h-6 fill-current text-black ml-1" />
                 </motion.button>
@@ -691,10 +698,10 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
 
           {/* Bottom Controls */}
           <div className="px-6 py-4 flex items-center gap-4 border-t" style={{ borderColor: 'var(--hairline)' }}>
-            <button data-hover onClick={() => setIsPlaying((p) => !p)} className="cursor-pointer transition-colors hover:text-emerald-400" style={{ color: 'var(--text-primary)' }}>
+            <button data-hover onClick={() => setIsPlaying((p) => !p)} className="cursor-pointer transition-colors hover:text-orange-500" style={{ color: 'var(--text-primary)' }}>
               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
             </button>
-            <button data-hover onClick={() => setIsMuted((m) => !m)} className="cursor-pointer transition-colors hover:text-emerald-400" style={{ color: 'var(--text-secondary)' }}>
+            <button data-hover onClick={() => setIsMuted((m) => !m)} className="cursor-pointer transition-colors hover:text-orange-500" style={{ color: 'var(--text-secondary)' }}>
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
           </div>
@@ -707,9 +714,9 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
         >
           <div className="space-y-6">
             <div className="space-y-3 border-b pb-6" style={{ borderColor: 'var(--hairline)' }}>
-              <span className="font-mono text-xs tracking-widest uppercase block font-bold text-emerald-400">// ACTIVE INDEX</span>
+              <span className="font-mono text-xs tracking-widest uppercase block font-bold text-orange-500">// ACTIVE INDEX</span>
               <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</h2>
-              <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/50 px-3 py-1.5 rounded-lg uppercase tracking-wider font-bold shadow-[0_0_10px_rgba(52,211,153,0.2)]">
+              <span className="inline-block text-xs font-mono text-orange-500 bg-red-950/60 border border-orange-600/50 px-3 py-1.5 rounded-lg uppercase tracking-wider font-bold shadow-[0_0_10px_rgba(52,211,153,0.2)]">
                 {activeProject.category}
               </span>
             </div>
@@ -719,10 +726,10 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
           </div>
 
           <div className="space-y-4 pt-6 mt-6 border-t" style={{ borderColor: 'var(--hairline)' }}>
-            <span className="font-mono text-xs tracking-widest uppercase block font-bold text-emerald-400">// PIPELINE TECHNIQUES</span>
+            <span className="font-mono text-xs tracking-widest uppercase block font-bold text-orange-500">// PIPELINE TECHNIQUES</span>
             <div className="flex flex-wrap gap-2">
               {activeProject.techniques.map((tech, i) => (
-                <span key={i} className="text-xs font-mono border border-emerald-500/30 bg-emerald-950/20 px-3 py-1.5 rounded-lg text-emerald-300 font-semibold">
+                <span key={i} className="tech-pill text-xs font-mono border px-3 py-1.5 rounded-lg font-semibold">
                   {tech}
                 </span>
               ))}
@@ -813,10 +820,10 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
         </div>
         
         <div className="flex items-center gap-2">
-          <button onClick={() => scrollTrack('left')} className="p-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all cursor-pointer">
+          <button onClick={() => scrollTrack('left')} className="p-2.5 rounded-full border border-orange-600/30 bg-orange-600/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button onClick={() => scrollTrack('right')} className="p-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all cursor-pointer">
+          <button onClick={() => scrollTrack('right')} className="p-2.5 rounded-full border border-orange-600/30 bg-orange-600/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all cursor-pointer">
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
@@ -842,7 +849,7 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 variants={listItem}
                 whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
                 className={`group relative shrink-0 snap-start overflow-hidden rounded-2xl text-left cursor-pointer transition-all duration-300 ${
-                  isActive ? 'ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
+                  isActive ? 'ring-2 ring-orange-500 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
                 }`}
                 style={{ width: '220px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--border-strong)' }}
               >
@@ -852,10 +859,10 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
                 
                 <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-extrabold block">{w.category}</span>
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-orange-500 font-extrabold block">{w.category}</span>
                   <h3 className="mt-1 text-sm font-bold text-white tracking-tight leading-snug truncate">{w.title}</h3>
                 </div>
-                <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-emerald-400 font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-emerald-500/30 backdrop-blur-md pointer-events-none">
+                <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-orange-500 font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-orange-600/30 backdrop-blur-md pointer-events-none">
                   {w.duration}
                 </span>
               </motion.button>
@@ -911,24 +918,24 @@ function SignatureAbout() {
                 {/* Main Stem */}
                 <motion.path
                   d="M 280 120 C 270 190, 240 250, 170 270 C 120 280, 50 275, 10 270"
-                  stroke={isHovered ? '#38bdf8' : '#34d399'} strokeWidth="3.5" strokeLinecap="round" filter="url(#branchGlow)"
+                  stroke={isHovered ? '#38bdf8' : '#f97316'} strokeWidth="3.5" strokeLinecap="round" filter="url(#branchGlow)"
                   initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 1.8, ease: 'easeOut' }}
                 />
                 {/* Branches */}
                 <motion.path
                   d="M 255 170 C 235 150, 210 135, 190 140 C 175 145, 165 160, 160 175"
-                  stroke={isHovered ? '#38bdf8' : '#34d399'} strokeWidth="2.5" strokeLinecap="round" filter="url(#branchGlow)"
+                  stroke={isHovered ? '#38bdf8' : '#f97316'} strokeWidth="2.5" strokeLinecap="round" filter="url(#branchGlow)"
                   initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 1.5, delay: 0.4, ease: 'easeOut' }}
                 />
                 <motion.path
                   d="M 195 265 C 180 235, 150 220, 120 230 C 100 238, 90 255, 80 260"
-                  stroke={isHovered ? '#38bdf8' : '#34d399'} strokeWidth="2.5" strokeLinecap="round" filter="url(#branchGlow)"
+                  stroke={isHovered ? '#38bdf8' : '#f97316'} strokeWidth="2.5" strokeLinecap="round" filter="url(#branchGlow)"
                   initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 1.5, delay: 0.6, ease: 'easeOut' }}
                 />
                 {/* Twigs */}
                 <motion.path
                   d="M 270 140 Q 250 125, 240 110 M 145 240 Q 130 215, 115 210 M 70 270 Q 50 250, 40 240"
-                  stroke={isHovered ? '#38bdf8' : '#34d399'} strokeWidth="1.8" strokeLinecap="round" filter="url(#branchGlow)"
+                  stroke={isHovered ? '#38bdf8' : '#f97316'} strokeWidth="1.8" strokeLinecap="round" filter="url(#branchGlow)"
                   initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 1.2, delay: 0.9, ease: 'easeOut' }}
                 />
               </svg>
@@ -967,7 +974,7 @@ function Collaborate() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
         {steps.map((s) => (
           <motion.div key={s.n} variants={listItem} className="border p-8 rounded-2xl backdrop-blur-xl" style={{ borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
-            <span className="font-mono text-sm text-emerald-400 font-extrabold block">{s.n} // STEP</span>
+            <span className="font-mono text-sm text-orange-500 font-extrabold block">{s.n} // STEP</span>
             <h3 className="mt-4 text-2xl font-extrabold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{s.title}</h3>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
           </motion.div>
@@ -1022,11 +1029,11 @@ function ContactOutro() {
         variants={fadeUp}
         className="mt-12 flex flex-wrap items-center gap-4"
       >
-        <a href={`mailto:${PROFILE.email}`} data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-emerald-400 text-black border-emerald-400 hover:bg-white hover:text-black hover:border-white shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+        <a href={`mailto:${PROFILE.email}`} data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-orange-500 text-black border-orange-500 hover:bg-white hover:text-black hover:border-white shadow-[0_0_20px_rgba(52,211,153,0.4)]">
           <Mail className="w-4 h-4" /> {PROFILE.email}
         </a>
 
-        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-emerald-500/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md" style={{ color: 'var(--text-primary)' }}>
+        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-orange-600/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md" style={{ color: 'var(--text-primary)' }}>
           <Instagram className="w-4 h-4 text-pink-400" /> Instagram
         </a>
       </motion.div>
@@ -1042,10 +1049,10 @@ function Footer() {
     <footer className="border-t backdrop-blur-xl" style={{ borderColor: 'var(--hairline)', background: 'var(--surface)' }}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex items-center justify-between font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
         <span className="font-extrabold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span className="w-2 h-2 rounded-full bg-orange-500" />
           {PROFILE.studio}
         </span>
-        <span className="text-emerald-400 font-bold">© 2026</span>
+        <span className="text-orange-500 font-bold">© 2026</span>
       </div>
     </footer>
   );

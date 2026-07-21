@@ -1,37 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Pacifico&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Pacifico&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-apple-script: "Pacifico", "Caveat", "Dancing Script", cursive;
+  --font-heading: "Bebas Neue", sans-serif;
 }
 
 /* =========================================================
    THEME VARIABLES
 ========================================================= */
 :root {
-  --canvas: #0a0a0c;
-  --surface: rgba(19, 19, 21, 0.75);
-  --surface-2: rgba(25, 25, 28, 0.85);
+  --canvas: #09090b; /* Slightly deeper black */
+  --surface: rgba(24, 24, 27, 0.75);
+  --surface-2: rgba(39, 39, 42, 0.85);
   --border: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.35);
   --text-primary: #ffffff;
-  --text-secondary: #d1d5db;
-  --text-muted: #34d399;
+  --text-secondary: #a1a1aa;
+  --text-muted: #f97316; /* Getsuga Orange */
   --hairline: rgba(255, 255, 255, 0.12);
   --grid-line: rgba(255, 255, 255, 0.06);
 }
 
 .light, :root.light {
-  --canvas: #f8f9fa;
+  --canvas: #fafafa;
   --surface: rgba(255, 255, 255, 0.95);
-  --surface-2: rgba(240, 243, 246, 0.95);
+  --surface-2: rgba(244, 244, 245, 0.95);
   --border: rgba(0, 0, 0, 0.15);
   --border-strong: rgba(0, 0, 0, 0.35);
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #059669;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #ea580c; /* Darker orange for light mode */
   --hairline: rgba(0, 0, 0, 0.12);
   --grid-line: rgba(0, 0, 0, 0.08);
 }
@@ -72,29 +73,29 @@ body {
   );
 }
 
-/* 3D Glass Hello — top-lit white highlight → rich emerald → deep forest shadow */
+/* 3D Glass Hello — Bleach Getsuga Theme: white → orange → crimson → black */
 .apple-glass-text {
   font-family: var(--font-apple-script);
   font-weight: 700;
   background: linear-gradient(
     168deg,
     #ffffff    0%,
-    #d1fae5    7%,
-    #a7f3d0   14%,
-    #6ee7b7   22%,
-    #34d399   34%,
-    #10b981   50%,
-    #059669   65%,
-    #047857   78%,
-    #065f46   89%,
-    #022c22  100%
+    #ffedd5    7%,
+    #fdba74   14%,
+    #f97316   22%,
+    #ea580c   34%,
+    #dc2626   50%,
+    #991b1b   65%,
+    #7f1d1d   78%,
+    #450a0a   89%,
+    #000000  100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
   filter:
-    drop-shadow(0px   0px 100px rgba(52, 211, 153, 0.22))
+    drop-shadow(0px   0px 100px rgba(249, 115, 22, 0.3))
     drop-shadow(0px  55px  80px rgba(0,   0,   0, 0.95))
     drop-shadow(0px  14px  28px rgba(0,   0,   0, 0.65));
   -webkit-font-smoothing: antialiased;
@@ -105,18 +106,18 @@ body {
   background: linear-gradient(
     168deg,
     #ffffff    0%,
-    #d1fae5   10%,
-    #6ee7b7   25%,
-    #34d399   40%,
-    #059669   62%,
-    #047857   80%,
-    #022c22  100%
+    #ffedd5   10%,
+    #fdba74   25%,
+    #f97316   40%,
+    #ea580c   62%,
+    #dc2626   80%,
+    #7f1d1d  100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   filter:
-    drop-shadow(0px  0px 60px rgba(4, 120, 87, 0.28))
+    drop-shadow(0px  0px 60px rgba(220, 38, 38, 0.28))
     drop-shadow(0px 30px 50px rgba(0,  0,  0, 0.30))
     drop-shadow(0px  6px 14px rgba(0,  0,  0, 0.18));
 }
@@ -148,14 +149,27 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
   background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, transparent 90%);
 }
 
 .light .grid-overlay {
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.14) 1px, transparent 1px);
+}
+
+/* Technique Pills - Bleach Theme */
+.tech-pill {
+  background-color: rgba(69, 10, 10, 0.4); /* red-950/40 */
+  color: #fdba74; /* orange-300 */
+  border-color: rgba(220, 38, 38, 0.4); /* red-600/40 */
+}
+
+.light .tech-pill {
+  background-color: rgba(249, 115, 22, 0.12); /* orange-500/12 */
+  color: #b91c1c; /* red-700 */
+  border-color: rgba(249, 115, 22, 0.3); /* orange-500/30 */
 }
 
 /* =========================================================
