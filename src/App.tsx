@@ -17,8 +17,8 @@ import {
   Instagram,
   Sun,
   Moon,
-  ArrowUpRight,
   Keyboard,
+  Sparkles,
 } from 'lucide-react';
 
 /* =========================================================
@@ -26,8 +26,7 @@ import {
 ========================================================= */
 const PROFILE = {
   studio: 'Studio — KD',
-  role: 'Video Editor',
-  heroLines: ['Hello,', "I'm KD."],
+  role: 'Video Editor & Motion Designer',
   bio:
     "I'm KD, a video editor working mostly in short-form: pacing, sound design, and color that make people stop scrolling. I spend most of my time studying retention — why a cut works, why a hook doesn't, and how a fraction of a second changes both.",
   email: 'kdeditzauthentic@gmail.com',
@@ -124,65 +123,36 @@ const WORKS: VideoProject[] = [
     description:
       'A high-velocity visual edit driven entirely by custom motion design graphics and keyframed layout composition rather than filmed footage.',
     videoUrl:
-      'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1783997072/FILE_5_li2r3u.mov',
-    techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding'],
-  },
-  {
-    id: 'premium-commercial-edit',
-    title: 'Dynamic Narrative Flow',
-    category: 'Short Form',
-    year: '2026',
-    views: '920K',
-    duration: '00:12',
-    aspectRatio: '9:16',
-    fps: 60,
-    description:
-      'A high-impact short-form edit leveraging synchronized velocity curves, complex mask layering, and custom impact sound design to carry the narrative without dialogue.',
-    videoUrl:
       'https://res.cloudinary.com/na4u8vzm/video/upload/f_auto,q_auto/v1784134682/FILE_6_hooop9.mp4',
-    techniques: ['Velocity Curves', 'Mask Layering', 'Impact SFX'],
+    techniques: ['Vector Animation', 'Keyframe Precision', 'Dynamic Branding'],
   },
 ];
 
 /* =========================================================
-   Shared motion variants
+   Shared Motion Variants
 ========================================================= */
 const wordVariant = {
-  hidden: { opacity: 0, y: 26, scale: 0.9 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.42, duration: 0.7 } },
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 };
-const listContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } }, exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } } };
+const listContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const listItem = {
-  hidden: { opacity: 0, y: 34, scale: 0.94 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.4, duration: 0.8 } },
+  hidden: { opacity: 0, y: 26 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
 };
 const fadeUp = {
-  hidden: { opacity: 0, y: 34, scale: 0.96 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.38, duration: 0.85 } },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-/* A little idle float + wobble for decorative scattered elements */
-const floatIdle = (delay = 0) => ({
-  y: [0, -10, 0],
-  rotate: [0, 2.5, -2.5, 0],
-  transition: { duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay },
-});
-
-/* =========================================================
-   Small shared bits
-========================================================= */
+/* High-Visibility Eyebrow Tag */
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono uppercase tracking-[0.2em] text-[11px]" style={{ color: 'var(--text-muted)' }}>
-      {children}
-    </span>
+    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 font-mono uppercase tracking-[0.25em] text-[11px] font-bold text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+      <span>{children}</span>
+    </div>
   );
-}
-
-function formatTimecode(seconds: number) {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
 function useMagnetic(strength = 16) {
@@ -209,7 +179,6 @@ function useMagnetic(strength = 16) {
   return { ref, style: { x: springX, y: springY }, onMouseMove, onMouseLeave };
 }
 
-/* Custom cursor */
 function CustomCursor() {
   const RING = 30;
   const [isHover, setIsHover] = useState(false);
@@ -252,8 +221,8 @@ function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left"
-      style={{ scaleX: scrollYProgress, background: 'var(--text-primary)' }}
+      className="fixed top-0 left-0 right-0 h-[3px] z-[60] origin-left bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-500 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+      style={{ scaleX: scrollYProgress }}
     />
   );
 }
@@ -280,12 +249,12 @@ function ShortcutsHint() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 mt-2 w-52 rounded-md border p-3 font-mono text-[11px] space-y-1.5 z-50 shadow-2xl"
-            style={{ background: 'var(--surface)', borderColor: 'var(--hairline)', color: 'var(--text-secondary)' }}
+            className="absolute right-0 mt-2 w-52 rounded-xl border p-3 font-mono text-[11px] space-y-1.5 z-50 shadow-2xl backdrop-blur-xl"
+            style={{ background: 'var(--surface)', borderColor: 'var(--border-strong)', color: 'var(--text-secondary)' }}
           >
-            <div className="flex justify-between"><span>Scroll to top</span><span style={{ color: 'var(--text-primary)' }}>T</span></div>
-            <div className="flex justify-between"><span>Scroll to bottom</span><span style={{ color: 'var(--text-primary)' }}>B</span></div>
-            <div className="flex justify-between"><span>Toggle sound</span><span style={{ color: 'var(--text-primary)' }}>S</span></div>
+            <div className="flex justify-between"><span>Scroll to top</span><span className="text-emerald-400 font-bold">T</span></div>
+            <div className="flex justify-between"><span>Scroll to bottom</span><span className="text-emerald-400 font-bold">B</span></div>
+            <div className="flex justify-between"><span>Toggle sound</span><span className="text-emerald-400 font-bold">S</span></div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -321,33 +290,34 @@ function Header({
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 left-0 w-full z-50 backdrop-blur-md border-b"
-      style={{ borderColor: 'var(--hairline)', background: 'color-mix(in srgb, var(--canvas) 60%, transparent)' }}
+      className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl border-b"
+      style={{ borderColor: 'var(--hairline)', background: 'color-mix(in srgb, var(--canvas) 70%, transparent)' }}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
         <button
           data-hover
           onClick={() => onScrollTo('hero')}
-          className="font-mono text-xs tracking-[0.15em] uppercase font-bold cursor-pointer"
+          className="font-mono text-xs tracking-[0.15em] uppercase font-extrabold cursor-pointer flex items-center gap-2"
           style={{ color: 'var(--text-primary)' }}
         >
+          <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-[0_0_8px_#34d399]" />
           {PROFILE.studio}
         </button>
 
-        <div className="hidden sm:flex items-center gap-10 font-mono text-xs uppercase tracking-[0.15em] font-medium">
-          <button data-hover onClick={() => onScrollTo('viewer')} className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: 'var(--text-primary)' }}>
+        <div className="hidden sm:flex items-center gap-10 font-mono text-xs uppercase tracking-[0.15em] font-semibold">
+          <button data-hover onClick={() => onScrollTo('viewer')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>
             Work
           </button>
-          <button data-hover onClick={() => onScrollTo('about')} className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: 'var(--text-primary)' }}>
+          <button data-hover onClick={() => onScrollTo('about')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>
             About
           </button>
-          <button data-hover onClick={() => onScrollTo('contact')} className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: 'var(--text-primary)' }}>
+          <button data-hover onClick={() => onScrollTo('contact')} className="cursor-pointer hover:text-emerald-400 transition-colors" style={{ color: 'var(--text-primary)' }}>
             Contact
           </button>
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <span className="hidden md:inline font-mono text-[10px] tabular tracking-widest mr-2" style={{ color: 'var(--text-muted)' }}>
+          <span className="hidden md:inline font-mono text-[10px] tabular tracking-widest mr-2 text-emerald-400/80 font-bold">
             {time} {zone}
           </span>
           <ShortcutsHint />
@@ -355,10 +325,10 @@ function Header({
             data-hover
             onClick={onToggleAudio}
             aria-label="Toggle background audio"
-            className="p-2 rounded-full transition-colors cursor-pointer hover:opacity-70"
-            style={{ color: 'var(--text-secondary)' }}
+            className={`p-2 rounded-full transition-all cursor-pointer ${isAudioPlaying ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 shadow-[0_0_12px_rgba(52,211,153,0.3)]' : 'hover:opacity-70'}`}
+            style={{ color: isAudioPlaying ? undefined : 'var(--text-secondary)' }}
           >
-            {isAudioPlaying ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            {isAudioPlaying ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
           </button>
           <button
             data-hover
@@ -367,7 +337,7 @@ function Header({
             className="p-2 rounded-full transition-colors cursor-pointer hover:opacity-70"
             style={{ color: 'var(--text-secondary)' }}
           >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {isDark ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
         </div>
       </div>
@@ -376,16 +346,23 @@ function Header({
 }
 
 /* =========================================================
-   Hero — 2D Paper Animation & Scroll Linked Physics
+   Hero
 ========================================================= */
 function Hero() {
   const heroRef = useRef<HTMLDivElement | null>(null);
+  const [useYokoso, setUseYokoso] = useState(false);
+
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   
-  const helloScale = useTransform(scrollYProgress, [0, 1], [1, 0.42]);
-  const helloY = useTransform(scrollYProgress, [0, 1], [0, -260]);
-  const helloRotate = useTransform(scrollYProgress, [0, 1], [0, -16]);
-  const helloOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.3]);
+  useEffect(() => {
+    return scrollYProgress.on('change', (latest) => {
+      if (latest > 0.8 && !useYokoso) {
+        setUseYokoso(true);
+      } else if (latest < 0.1 && useYokoso) {
+        setUseYokoso(false);
+      }
+    });
+  }, [scrollYProgress, useYokoso]);
 
   return (
     <section
@@ -393,100 +370,101 @@ function Hero() {
       ref={heroRef}
       className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-screen flex flex-col justify-center overflow-hidden scroll-mt-20"
     >
-      <motion.div
-        style={{ scale: helloScale, y: helloY, rotate: helloRotate, opacity: helloOpacity }}
-        className="pointer-events-none select-none absolute right-[-5%] sm:right-[0%] top-[10%] w-[85vw] max-w-[900px] z-0"
-      >
-        <svg viewBox="0 0 400 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl">
-           <motion.path 
-              d="M 50 100 C 50 60 70 40 90 40 C 110 40 100 80 100 120 C 100 140 115 140 125 120 C 140 80 145 40 145 40 M 145 40 C 145 80 140 120 160 120 C 180 120 185 80 185 80 C 185 60 165 60 160 80 C 155 100 165 120 185 120 C 205 120 215 80 215 40 C 215 20 215 20 215 20 M 215 20 C 215 60 210 120 230 120 C 250 120 255 80 255 40 C 255 20 255 20 255 20 M 255 20 C 255 60 250 120 270 120 C 290 120 305 80 305 60 C 305 40 285 40 275 60 C 265 80 275 120 300 120 C 320 120 340 80 340 80"
-              stroke="var(--text-primary)" 
-              strokeWidth="6" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.2, ease: "easeInOut", delay: 0.2 }}
-           />
-        </svg>
-      </motion.div>
-
-      <div className="relative z-10">
+      <div className="relative z-10 space-y-6">
         <Eyebrow>{PROFILE.role}</Eyebrow>
 
-        <h1
-          className="mt-8 font-semibold uppercase leading-[0.9] tracking-tighter"
-          style={{ color: 'var(--text-primary)', fontSize: 'clamp(3.5rem, 11vw, 9.5rem)' }}
+        {/* Main Colorful Title */}
+        <div className="overflow-hidden py-2">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={useYokoso ? 'yokoso' : 'hello'}
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{ y: '0%', opacity: 1 }}
+              exit={{ y: '-100%', opacity: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="font-black uppercase tracking-tighter leading-none bg-gradient-to-r from-white via-neutral-100 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_10px_30px_rgba(52,211,153,0.15)]"
+              style={{ fontSize: 'clamp(4.5rem, 14vw, 11rem)' }}
+            >
+              {useYokoso ? 'Yōkoso' : 'Hello'}
+            </motion.h1>
+          </AnimatePresence>
+        </div>
+
+        {/* Subtitle Line with Strikethrough Effect */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="font-mono text-base sm:text-xl md:text-2xl font-semibold tracking-wide flex flex-wrap items-center gap-3 pt-2"
+          style={{ color: 'var(--text-secondary)' }}
         >
-          {PROFILE.heroLines.map((line, li) => (
-            <span key={li} className="block overflow-hidden pb-2">
-              <motion.span
-                className="block"
-                initial={{ y: '110%' }}
-                whileInView={{ y: '0%' }}
-                viewport={{ once: false }}
-                transition={{ type: 'spring', bounce: 0.32, duration: 1.0, delay: li * 0.15 }}
-              >
-                {line}
-              </motion.span>
-            </span>
-          ))}
-        </h1>
+          <span className="text-white">{useYokoso ? 'Watashino' : 'Welcome to my'}</span>
+
+          <span className="relative inline-block font-bold text-neutral-300">
+            Soul Society
+            <motion.span
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.6, ease: 'easeInOut' }}
+              className="absolute left-0 top-1/2 w-full h-[3px] bg-rose-500 origin-left rounded-full shadow-[0_0_12px_rgba(244,63,94,0.9)]"
+            />
+          </span>
+
+          <motion.span
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 1.1 }}
+            className="text-emerald-400 font-bold tracking-wider uppercase bg-emerald-950/60 border border-emerald-500/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-400 animate-spin" />
+            Editing Society
+          </motion.span>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.3, duration: 0.8, delay: 0.5 }}
-          className="mt-8 max-w-xl text-base md:text-lg leading-relaxed font-light"
-          style={{ color: 'var(--text-secondary)' }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed font-normal text-neutral-300"
         >
           {PROFILE.bio}
         </motion.p>
-
-        {/* Scattered ambient labels + doodles, echoing the reference's floating ephemera */}
-        <motion.div
-          className="hidden md:block absolute left-[46%] top-[2%] font-mono text-[11px] leading-snug uppercase tracking-wide"
-          style={{ color: 'var(--text-muted)' }}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.6 }}
-          transition={{ type: 'spring', bounce: 0.35, duration: 0.8, delay: 0.3 }}
-        >
-          Cut with intention.
-          <br />
-          Paced with purpose.
-        </motion.div>
-
-        <motion.svg
-          viewBox="0 0 60 60"
-          className="hidden md:block absolute right-[6%] bottom-[6%] w-10 h-10 pointer-events-none"
-          initial={{ opacity: 0, scale: 0.6, rotate: -20 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          viewport={{ once: false, amount: 0.6 }}
-          transition={{ type: 'spring', bounce: 0.55, duration: 0.9, delay: 0.5 }}
-          animate={floatIdle(0.8)}
-        >
-          <path d="M8 4 L54 30 L8 56 L18 30 Z" fill="var(--text-primary)" opacity="0.85" />
-        </motion.svg>
-
-        <motion.div
-          className="hidden lg:block absolute left-[2%] top-[38%] font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full border"
-          style={{ color: 'var(--text-secondary)', borderColor: 'var(--border)' }}
-          initial={{ opacity: 0, scale: 0.7 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.6 }}
-          transition={{ type: 'spring', bounce: 0.5, duration: 0.7, delay: 0.6 }}
-          animate={floatIdle(1.4)}
-        >
-          ● rendering
-        </motion.div>
       </div>
     </section>
   );
 }
 
 /* =========================================================
-   Inline Main Viewer (Loaded into same page)
+   Kinetic Marquee Ticker
+========================================================= */
+function KineticMarquee() {
+  return (
+    <div className="w-full py-6 border-y overflow-hidden select-none my-8 backdrop-blur-md" style={{ borderColor: 'var(--hairline)', background: 'rgba(52, 211, 153, 0.03)' }}>
+      <motion.div
+        animate={{ x: ['0%', '-50%'] }}
+        transition={{ repeat: Infinity, ease: 'linear', duration: 18 }}
+        className="flex whitespace-nowrap gap-12 font-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em]"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
+        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+      </motion.div>
+    </div>
+  );
+}
+
+/* =========================================================
+   Inline Main Viewer
 ========================================================= */
 function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -502,23 +480,21 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
   }, [isPlaying, isMuted, activeProject]);
 
   return (
-    <section id="viewer" className="max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-16 scroll-mt-24">
+    <section id="viewer" className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-12 scroll-mt-24">
       <motion.div 
         key={activeProject.id}
-        initial={{ opacity: 0, y: 24, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ type: 'spring', bounce: 0.28, duration: 0.6 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
       >
-        {/* Video Player */}
-        <div className="lg:col-span-8 border rounded-2xl overflow-hidden shadow-2xl flex flex-col relative group" style={{ borderColor: 'var(--hairline)', background: 'var(--surface-2)' }}>
-          
-          <div className="px-6 py-4 flex items-center justify-between font-mono text-[10px] tracking-widest border-b" style={{ borderColor: 'var(--hairline)' }}>
+        <div className="lg:col-span-8 border rounded-2xl overflow-hidden shadow-2xl flex flex-col relative group backdrop-blur-xl" style={{ borderColor: 'var(--border-strong)', background: 'var(--surface-2)' }}>
+          <div className="px-6 py-4 flex items-center justify-between font-mono text-xs tracking-widest border-b" style={{ borderColor: 'var(--hairline)' }}>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="uppercase font-bold" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+              <span className="uppercase font-bold text-white">{activeProject.title}</span>
             </div>
-            <span style={{ color: 'var(--text-muted)' }}>{activeProject.aspectRatio}</span>
+            <span className="text-emerald-400 font-bold">{activeProject.aspectRatio}</span>
           </div>
 
           <div className="relative aspect-video md:aspect-[16/10] bg-black flex items-center justify-center overflow-hidden w-full">
@@ -539,7 +515,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={() => setIsPlaying(true)}
-                  className="absolute p-5 bg-white text-black rounded-full shadow-2xl cursor-pointer"
+                  className="absolute p-5 bg-emerald-400 text-black rounded-full shadow-[0_0_25px_rgba(52,211,153,0.8)] cursor-pointer z-20 hover:scale-110 transition-transform"
                 >
                   <Play className="w-6 h-6 fill-current text-black ml-1" />
                 </motion.button>
@@ -548,35 +524,34 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
           </div>
 
           <div className="px-6 py-4 flex items-center gap-4 border-t" style={{ borderColor: 'var(--hairline)' }}>
-            <button data-hover onClick={() => setIsPlaying((p) => !p)} className="cursor-pointer transition-colors hover:opacity-70" style={{ color: 'var(--text-primary)' }}>
+            <button data-hover onClick={() => setIsPlaying((p) => !p)} className="cursor-pointer transition-colors hover:text-emerald-400" style={{ color: 'var(--text-primary)' }}>
               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
             </button>
-            <button data-hover onClick={() => setIsMuted((m) => !m)} className="cursor-pointer transition-colors hover:opacity-70" style={{ color: 'var(--text-secondary)' }}>
+            <button data-hover onClick={() => setIsMuted((m) => !m)} className="cursor-pointer transition-colors hover:text-emerald-400" style={{ color: 'var(--text-secondary)' }}>
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
-        {/* Project Details Side Card */}
-        <div className="lg:col-span-4 border p-8 rounded-2xl flex flex-col justify-between h-full min-h-[420px]" style={{ borderColor: 'var(--hairline)', background: 'var(--surface-2)' }}>
+        <div className="lg:col-span-4 border p-8 rounded-2xl flex flex-col justify-between h-full min-h-[420px] backdrop-blur-xl" style={{ borderColor: 'var(--border-strong)', background: 'var(--surface-2)' }}>
           <div className="space-y-6">
             <div className="space-y-3 border-b pb-6" style={{ borderColor: 'var(--hairline)' }}>
-              <span className="font-mono text-[10px] tracking-widest uppercase block" style={{ color: 'var(--text-muted)' }}>// ACTIVE INDEX</span>
-              <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</h2>
-              <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-950/30 border border-emerald-800/40 px-3 py-1.5 rounded uppercase tracking-wider">
+              <span className="font-mono text-xs tracking-widest uppercase block font-bold text-emerald-400">// ACTIVE INDEX</span>
+              <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-white">{activeProject.title}</h2>
+              <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/50 px-3 py-1.5 rounded-lg uppercase tracking-wider font-bold shadow-[0_0_10px_rgba(52,211,153,0.2)]">
                 {activeProject.category}
               </span>
             </div>
-            <p className="text-sm md:text-base leading-relaxed font-light" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm md:text-base leading-relaxed font-normal text-neutral-300">
               {activeProject.description}
             </p>
           </div>
 
           <div className="space-y-4 pt-6 mt-6 border-t" style={{ borderColor: 'var(--hairline)' }}>
-            <span className="font-mono text-[10px] tracking-widest uppercase block" style={{ color: 'var(--text-muted)' }}>// PIPELINE TECHNIQUES</span>
+            <span className="font-mono text-xs tracking-widest uppercase block font-bold text-emerald-400">// PIPELINE TECHNIQUES</span>
             <div className="flex flex-wrap gap-2">
               {activeProject.techniques.map((tech, i) => (
-                <span key={i} className="text-[10px] font-mono border px-3 py-1.5 rounded-md" style={{ borderColor: 'var(--border-strong)', color: 'var(--text-primary)' }}>
+                <span key={i} className="text-xs font-mono border border-emerald-500/30 bg-emerald-950/20 px-3 py-1.5 rounded-lg text-emerald-300 font-semibold">
                   {tech}
                 </span>
               ))}
@@ -589,7 +564,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
 }
 
 /* =========================================================
-   Selected Works — Fixed CSS Padding & Aspect Ratios
+   Selected Works
 ========================================================= */
 function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoProject, onSelectProject: (p: VideoProject) => void }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -609,118 +584,136 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
   return (
     <section className="relative py-12 md:py-16 border-t" style={{ borderColor: 'var(--hairline)' }}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-baseline justify-between mb-8">
-        <h2 className="font-semibold uppercase tracking-tight" style={{ color: 'var(--text-primary)', fontSize: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
-          Selected Works
-        </h2>
-        <span className="font-mono text-xs hidden sm:inline" style={{ color: 'var(--text-muted)' }}>
+        {/* FIXED: Highly visible title header */}
+        <div className="flex items-center gap-3">
+          <Eyebrow>PORTFOLIO REEL</Eyebrow>
+          <h2 className="font-extrabold uppercase tracking-tight text-white text-2xl md:text-4xl">
+            Selected Works
+          </h2>
+        </div>
+        <span className="font-mono text-xs text-emerald-400 font-bold hidden sm:inline">
           Scroll horizontally →
         </span>
       </div>
 
-      <div ref={trackRef} className="track-scroll flex gap-6 overflow-x-auto px-6 md:px-12 pb-8 pt-4 snap-x snap-mandatory">
-        {WORKS.map((w) => {
-          const isActive = activeProject.id === w.id;
-          return (
-            <motion.button
-              key={w.id}
-              data-hover
-              onClick={() => onSelectProject(w)}
-              whileHover={{ y: -6 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className={`group relative shrink-0 snap-center overflow-hidden rounded-xl text-left cursor-pointer transition-all duration-300 ${
-                isActive ? 'ring-2 ring-emerald-500 shadow-2xl' : 'opacity-70 hover:opacity-100'
-              }`}
-              // FIX: Clean exactly 9:16 vertical rectangles preventing cut off.
-              style={{ width: '260px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--hairline)' }}
-            >
-              <div className="absolute inset-0">
-                <video
-                  src={w.videoUrl}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  onTimeUpdate={(e) => {
-                    const v = e.currentTarget;
-                    if (v.currentTime >= 4) v.currentTime = 0;
-                  }}
-                  className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.05]"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent pointer-events-none" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 pointer-events-none">
-                <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-bold">
-                  {w.category} · {w.year}
+      <div className="relative max-w-7xl mx-auto px-6 md:px-12">
+        <div ref={trackRef} className="track-scroll flex gap-5 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory track-mask">
+          {WORKS.map((w) => {
+            const isActive = activeProject.id === w.id;
+            return (
+              <motion.button
+                key={w.id}
+                data-hover
+                onClick={() => onSelectProject(w)}
+                whileHover={{ y: -6 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className={`group relative shrink-0 snap-center overflow-hidden rounded-xl text-left cursor-pointer transition-all duration-300 ${
+                  isActive ? 'ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-70 hover:opacity-100'
+                }`}
+                style={{ width: '190px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--border-strong)' }}
+              >
+                <div className="absolute inset-0">
+                  <video
+                    src={w.videoUrl}
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    onTimeUpdate={(e) => {
+                      const v = e.currentTarget;
+                      if (v.currentTime >= 4) v.currentTime = 0;
+                    }}
+                    className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.05]"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-extrabold block">
+                    {w.category}
+                  </span>
+                  <h3 className="mt-1 text-xs font-bold text-white tracking-tight leading-snug truncate">{w.title}</h3>
+                </div>
+                <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-emerald-400 font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-emerald-500/30 backdrop-blur-md pointer-events-none">
+                  {w.duration}
                 </span>
-                <h3 className="mt-1.5 text-base font-bold text-white tracking-tight leading-snug">{w.title}</h3>
-              </div>
-              <span className="absolute top-4 right-4 font-mono text-[10px] text-white/80 tabular px-2 py-1 bg-black/40 rounded backdrop-blur-sm pointer-events-none">
-                {w.duration}
-              </span>
-            </motion.button>
-          )
-        })}
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
 
 /* =========================================================
-   Profile / About
+   Signature & About
 ========================================================= */
 function SignatureAbout() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <section id="about" className="relative max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32 border-t scroll-mt-20" style={{ borderColor: 'var(--hairline)' }}>
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-12 items-center">
+      <div className="space-y-8">
         
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.4 }}
-          className="lg:col-span-3 order-2 lg:order-1"
-        >
-          <Eyebrow>Profile</Eyebrow>
-          <p className="mt-6 font-medium tracking-tight leading-relaxed" style={{ color: 'var(--text-primary)', fontSize: 'clamp(1.2rem, 2.5vw, 2.2rem)' }}>
-            {PROFILE.bio}
-          </p>
-        </motion.div>
+        {/* FIXED: Highly Visible Section Label */}
+        <Eyebrow>PROFILE & CREATIVE DIRECTION</Eyebrow>
 
-        <div className="lg:col-span-2 relative order-1 lg:order-2 flex justify-center lg:justify-end">
-          <div className="relative w-full max-w-[320px] aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border" style={{ background: 'var(--surface-2)', borderColor: 'var(--hairline)' }}>
-             <img 
-               src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-               alt="KD Profile" 
-               className="w-full h-full object-cover grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-700" 
-             />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-12 items-center">
+          
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="lg:col-span-3 order-2 lg:order-1"
+          >
+            <p className="font-medium tracking-tight leading-relaxed text-white text-xl md:text-3xl">
+              {PROFILE.bio}
+            </p>
+          </motion.div>
+
+          <div className="lg:col-span-2 relative order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div 
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="relative w-full max-w-[320px] aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] border cursor-pointer group" 
+              style={{ background: 'var(--surface-2)', borderColor: 'var(--border-strong)' }}
+            >
+               <img 
+                 src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+                 alt="KD Profile" 
+                 className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" 
+               />
+            </div>
+
+            <div className="absolute -bottom-8 -right-4 lg:-right-10 w-[240px] md:w-[320px] z-10 pointer-events-none drop-shadow-[0_0_15px_rgba(52,211,153,0.8)]">
+              <svg viewBox="0 0 400 120" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="sigGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <motion.path
+                  d="M 30 70 Q 50 20 70 70 T 110 70 Q 140 30 170 70 T 210 70 M 230 40 L 230 90 M 250 40 C 290 40 290 90 250 90 Z"
+                  stroke={isHovered ? '#38bdf8' : '#34d399'}
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  filter="url(#sigGlow)"
+                  initial={{ pathLength: 0, opacity: 0.3 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 1.6, ease: 'easeInOut' }}
+                />
+              </svg>
+            </div>
           </div>
 
-          <div className="absolute -bottom-8 -right-4 lg:-right-10 w-[240px] md:w-[320px] z-10 pointer-events-none drop-shadow-2xl">
-            <svg viewBox="0 0 420 140" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="sigGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <motion.path
-                d="M10,95 C22,42 44,18 62,58 C76,90 54,112 38,90 C27,74 44,52 72,47 C104,41 126,68 114,96 C104,118 134,102 145,70 C154,42 176,32 190,58 C199,76 182,93 167,87 C156,83 162,64 179,59 C206,51 238,60 243,86 C247,103 260,92 265,71 C271,49 291,40 312,54 C328,64 322,82 305,81 C294,80 294,64 311,59 C338,50 370,57 380,80 C387,97 405,88 412,64"
-                stroke="#34d399"
-                strokeWidth="4"
-                strokeLinecap="round"
-                filter="url(#sigGlow)"
-                initial={{ pathLength: 0, opacity: 0.3 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: false, amount: 0.6 }}
-                transition={{ duration: 1.8, ease: 'easeInOut' }}
-              />
-            </svg>
-          </div>
         </div>
-
       </div>
     </section>
   );
@@ -741,19 +734,18 @@ function Collaborate() {
       variants={listContainer}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, amount: 0.3 }}
-      className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-24 border-t"
+      viewport={{ once: true, amount: 0.3 }}
+      className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-24 border-t space-y-8"
       style={{ borderColor: 'var(--hairline)' }}
     >
-      <motion.div variants={listItem}>
-        <Eyebrow>How we'd work together</Eyebrow>
-      </motion.div>
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+      <Eyebrow>WORKFLOW PIPELINE</Eyebrow>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
         {steps.map((s) => (
-          <motion.div key={s.n} variants={listItem} className="border p-8 rounded-2xl" style={{ borderColor: 'var(--hairline)', background: 'var(--surface)' }}>
-            <span className="font-mono text-xs text-emerald-400 font-bold">{s.n}</span>
-            <h3 className="mt-4 text-xl font-bold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{s.title}</h3>
-            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
+          <motion.div key={s.n} variants={listItem} className="border p-8 rounded-2xl backdrop-blur-xl" style={{ borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
+            <span className="font-mono text-sm text-emerald-400 font-extrabold block">{s.n} // STEP</span>
+            <h3 className="mt-4 text-2xl font-extrabold uppercase tracking-tight text-white">{s.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-300">{s.desc}</p>
           </motion.div>
         ))}
       </div>
@@ -762,27 +754,8 @@ function Collaborate() {
 }
 
 /* =========================================================
-   Contact outro
+   Contact Outro
 ========================================================= */
-function MagneticLink({ href, external, children }: { href: string; external?: boolean; children: React.ReactNode }) {
-  const { ref, style, onMouseMove, onMouseLeave } = useMagnetic(14);
-  return (
-    <motion.a
-      ref={ref as React.RefObject<HTMLAnchorElement>}
-      href={href}
-      target={external ? '_blank' : undefined}
-      rel={external ? 'noopener noreferrer' : undefined}
-      data-hover
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{ ...style, color: 'var(--text-primary)', borderColor: 'var(--border-strong)' }}
-      className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-wider px-6 py-4 border rounded-full transition-colors hover:bg-white hover:text-black"
-    >
-      {children}
-    </motion.a>
-  );
-}
-
 function ContactOutro() {
   const phrase = "Let's make something worth watching.";
   const words = phrase.split(' ');
@@ -792,10 +765,10 @@ function ContactOutro() {
       <motion.h2
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.5 }}
         transition={{ staggerChildren: 0.05 }}
-        className="font-semibold tracking-tighter max-w-3xl leading-[1.05] uppercase"
-        style={{ color: 'var(--text-primary)', fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
+        className="font-black tracking-tighter max-w-4xl leading-[1.05] uppercase text-white"
+        style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
       >
         {words.map((w, i) => (
           <motion.span key={i} className="kinetic-word mr-4" variants={wordVariant}>
@@ -807,16 +780,27 @@ function ContactOutro() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.6, delay: 0.35 }}
         className="mt-12 flex flex-wrap items-center gap-4"
       >
-        <MagneticLink href={`mailto:${PROFILE.email}`}>
+        <a
+          href={`mailto:${PROFILE.email}`}
+          data-hover
+          className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-emerald-400 text-black border-emerald-400 hover:bg-white hover:text-black hover:border-white shadow-[0_0_20px_rgba(52,211,153,0.4)]"
+        >
           <Mail className="w-4 h-4" /> {PROFILE.email}
-        </MagneticLink>
-        <MagneticLink href={PROFILE.instagram} external>
-          <Instagram className="w-4 h-4" /> Instagram
-        </MagneticLink>
+        </a>
+
+        <a
+          href={PROFILE.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-hover
+          className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent text-white border-white/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md"
+        >
+          <Instagram className="w-4 h-4 text-pink-400" /> Instagram
+        </a>
       </motion.div>
     </section>
   );
@@ -827,17 +811,20 @@ function ContactOutro() {
 ========================================================= */
 function Footer() {
   return (
-    <footer className="border-t" style={{ borderColor: 'var(--hairline)' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex items-center justify-between font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-        <span className="font-bold text-white">{PROFILE.studio}</span>
-        <span>© 2026</span>
+    <footer className="border-t backdrop-blur-xl" style={{ borderColor: 'var(--hairline)', background: 'var(--surface)' }}>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex items-center justify-between font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+        <span className="font-extrabold text-white flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          {PROFILE.studio}
+        </span>
+        <span className="text-emerald-400 font-bold">© 2026</span>
       </div>
     </footer>
   );
 }
 
 /* =========================================================
-   App
+   Main App
 ========================================================= */
 export default function App() {
   const [isDark, setIsDark] = useState(true);
@@ -845,6 +832,8 @@ export default function App() {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
+
+  const audioSource = "https://res.cloudinary.com/na4u8vzm/video/upload/v1784357186/White_Background_oxmqqe.mp4";
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -871,15 +860,32 @@ export default function App() {
   const toggleAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
+    
     if (isAudioPlaying) {
       audio.pause();
       setIsAudioPlaying(false);
     } else {
+      audio.currentTime = 0;
       audio
         .play()
         .then(() => setIsAudioPlaying(true))
-        .catch(() => setIsAudioPlaying(false));
+        .catch((err) => {
+          console.error("Audio playback error:", err);
+          setIsAudioPlaying(false);
+        });
     }
+  };
+
+  const toggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -916,16 +922,31 @@ export default function App() {
 
   return (
     <div className={isDark ? '' : 'light'}>
-      <div className="min-h-screen antialiased relative" style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}>
+      <div className="min-h-screen antialiased relative overflow-x-hidden" style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}>
+        
+        {/* MP4 LIVE VIDEO BACKGROUND */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover opacity-60 scale-105"
+            src="/Neon Rounded Red Geometric live Wallpaper Abstract Gradient Background Animation    Free Version.mp4"
+          />
+          <div className="video-bg-overlay" />
+        </div>
+
         <div className="grid-overlay" />
-        <audio ref={audioRef} src="/audio/ambient-loop.mp3" loop preload="none" />
+        <audio ref={audioRef} src={audioSource} loop preload="auto" crossOrigin="anonymous" />
 
         <CustomCursor />
         <ScrollProgress />
 
         <Header
           isDark={isDark}
-          onToggleTheme={() => setIsDark((d) => !d)}
+          onToggleTheme={toggleTheme}
           onScrollTo={scrollTo}
           isAudioPlaying={isAudioPlaying}
           onToggleAudio={toggleAudio}
@@ -933,9 +954,8 @@ export default function App() {
 
         <div className="relative z-10">
           <Hero />
-          {/* THE NEW INLINE MAIN VIEWER */}
+          <KineticMarquee />
           <InlineViewer activeProject={activeProject} />
-          {/* THE FIXED HORIZONTAL TRACK */}
           <WorkTrack activeProject={activeProject} onSelectProject={handleSelectProject} />
           <SignatureAbout />
           <Collaborate />
