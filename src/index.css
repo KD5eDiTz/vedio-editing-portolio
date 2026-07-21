@@ -64,7 +64,12 @@ body {
 }
 
 .light .video-bg-overlay {
-  background: radial-gradient(circle at 50% 30%, rgba(248, 249, 250, 0.5) 0%, rgba(220, 225, 230, 0.92) 100%);
+  /* Near-opaque cream overlay completely covers the dark video in light mode */
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(248, 252, 248, 0.97) 0%,
+    rgba(236, 245, 238, 0.97) 100%
+  );
 }
 
 /* 3D Glass Hello — top-lit white highlight → rich emerald → deep forest shadow */
@@ -151,4 +156,44 @@ body {
 
 .light .grid-overlay {
   background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+/* =========================================================
+   MOBILE PERFORMANCE OPTIMISATIONS
+   — hide GPU-heavy elements on small screens
+========================================================= */
+@media (max-width: 768px) {
+  /* Completely remove background video on mobile — biggest lag source */
+  .bg-video-wrap {
+    display: none;
+  }
+
+  /* Remove SVG blur/shadow filters on mobile — feGaussianBlur is GPU heavy */
+  .hero-svg text {
+    filter: none !important;
+  }
+
+  /* Hide floating glitch symbols on mobile */
+  .glitch-shapes-wrap {
+    display: none;
+  }
+
+  /* Disable backdrop-blur on mobile (very expensive on mid-range phones) */
+  .mobile-no-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Simplify dot-grid on mobile */
+  .grid-overlay {
+    display: none;
+  }
+
+  /* Reduce animation durations globally on mobile */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      animation-duration: 0.6s !important;
+      transition-duration: 0.3s !important;
+    }
+  }
 }
