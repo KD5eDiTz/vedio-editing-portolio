@@ -1148,20 +1148,7 @@ export default function App() {
     <div className={isDark ? '' : 'light'}>
       <div className="min-h-screen antialiased relative" style={{ background: 'var(--canvas)', color: 'var(--text-primary)' }}>
         
-        {/* Cinematic Live MP4 Background */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            preload="auto" 
-            className="w-full h-full object-cover scale-110"
-            style={{ filter: 'blur(10px) brightness(0.12) saturate(0.08)' }}
-            src="/Neon%20Rounded%20Red%20Geometric%20live%20Wallpaper%20Abstract%20Gradient%20Background%20Animation%20%20%20Free%20Version.mp4"
-          />
-          <div className="video-bg-overlay" />
-        </div>
+
 
         {/* Layered Visuals */}
         <RetroGlitchShapes />
