@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-apple-script: "Caveat", "Dancing Script", -apple-system, BlinkMacSystemFont, cursive;
 }
 
 :root {
@@ -14,7 +15,6 @@
   --border-strong: rgba(255, 255, 255, 0.35);
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
-  /* FIXED: Bright, highly visible text for eyebrows & section labels */
   --text-muted: #34d399; 
   --hairline: rgba(255, 255, 255, 0.12);
   --grid-line: rgba(255, 255, 255, 0.06);
@@ -22,20 +22,20 @@
 
 .light,
 :root.light {
-  --canvas: #f2f2f0;
-  --surface: rgba(255, 255, 255, 0.85);
-  --surface-2: rgba(233, 239, 235, 0.9);
-  --border: rgba(0, 0, 0, 0.12);
-  --border-strong: rgba(0, 0, 0, 0.3);
+  --canvas: #f8f9fa;
+  --surface: rgba(255, 255, 255, 0.95);
+  --surface-2: rgba(240, 243, 246, 0.95);
+  --border: rgba(0, 0, 0, 0.15);
+  --border-strong: rgba(0, 0, 0, 0.35);
   --text-primary: #0f172a;
-  --text-secondary: #475569;
+  --text-secondary: #334155;
   --text-muted: #059669;
   --hairline: rgba(0, 0, 0, 0.12);
-  --grid-line: rgba(0, 0, 0, 0.06);
+  --grid-line: rgba(0, 0, 0, 0.08);
 }
 
 html {
-  background-color: #050505;
+  background-color: var(--canvas);
 }
 
 html.lenis,
@@ -51,20 +51,53 @@ body {
   background-color: var(--canvas);
   color: var(--text-primary);
   overscroll-behavior: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Background Overlay for Video */
 .video-bg-overlay {
   position: fixed;
   inset: 0;
-  /* Vignette & color blend over the live wallpaper */
-  background: radial-gradient(circle at 50% 30%, rgba(10, 10, 15, 0.45) 0%, rgba(5, 5, 8, 0.85) 100%);
+  background: radial-gradient(circle at 50% 30%, rgba(10, 10, 15, 0.4) 0%, rgba(5, 5, 8, 0.85) 100%);
   z-index: -1;
   pointer-events: none;
 }
 
 .light .video-bg-overlay {
-  background: radial-gradient(circle at 50% 30%, rgba(242, 242, 240, 0.6) 0%, rgba(220, 220, 215, 0.9) 100%);
+  background: radial-gradient(circle at 50% 30%, rgba(248, 249, 250, 0.5) 0%, rgba(220, 225, 230, 0.92) 100%);
+}
+
+/* Apple Liquid Glass Effect */
+.apple-glass-text {
+  font-family: var(--font-apple-script);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 50%, rgba(52,211,153,0.8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 10px 25px rgba(52, 211, 153, 0.35));
+  position: relative;
+}
+
+.light .apple-glass-text {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #059669 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 10px 20px rgba(5, 150, 105, 0.25));
+}
+
+/* Retro Gaming Shape Glitch Keyframes */
+@keyframes glitch-anim {
+  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+  20% { transform: translate(-3px, 2px); clip-path: inset(15% 0 30% 0); }
+  40% { transform: translate(3px, -2px); clip-path: inset(40% 0 10% 0); }
+  60% { transform: translate(-2px, -1px); clip-path: inset(5% 0 60% 0); }
+  80% { transform: translate(2px, 1px); clip-path: inset(50% 0 20% 0); }
+  100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+}
+
+.glitch-symbol {
+  animation: glitch-anim 3.5s infinite ease-in-out alternate-reverse;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -114,23 +147,6 @@ body {
 }
 .track-scroll::-webkit-scrollbar {
   display: none;
-}
-
-.track-mask {
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 6%,
-    black 94%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 6%,
-    black 94%,
-    transparent 100%
-  );
 }
 
 @media (max-width: 640px) {

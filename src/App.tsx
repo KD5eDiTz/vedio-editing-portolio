@@ -3,7 +3,6 @@ import {
   motion,
   AnimatePresence,
   useScroll,
-  useTransform,
   useMotionValue,
   useSpring,
 } from 'motion/react';
@@ -19,6 +18,8 @@ import {
   Moon,
   Keyboard,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 /* =========================================================
@@ -145,10 +146,9 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-/* High-Visibility Eyebrow Tag */
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 font-mono uppercase tracking-[0.25em] text-[11px] font-bold text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
+    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 font-mono uppercase tracking-[0.25em] text-[11px] font-bold text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
       <span>{children}</span>
     </div>
@@ -228,6 +228,32 @@ function ScrollProgress() {
 }
 
 /* =========================================================
+   Retro Gaming Floating Glitch Shapes Overlay
+========================================================= */
+function RetroGlitchShapes() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
+      {/* Triangle */}
+      <div className="absolute top-[18%] left-[8%] text-emerald-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#34d399]">
+        ▲
+      </div>
+      {/* Circle */}
+      <div className="absolute top-[35%] right-[10%] text-rose-500 font-mono text-4xl font-bold glitch-symbol drop-shadow-[0_0_10px_#f43f5e]">
+        ○
+      </div>
+      {/* Cross X */}
+      <div className="absolute bottom-[28%] left-[12%] text-cyan-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#38bdf8]">
+        ✕
+      </div>
+      {/* Square */}
+      <div className="absolute bottom-[18%] right-[15%] text-amber-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#fbbf24]">
+        □
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
    Header 
 ========================================================= */
 function ShortcutsHint() {
@@ -290,7 +316,7 @@ function Header({
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl border-b"
+      className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl border-b transition-colors duration-300"
       style={{ borderColor: 'var(--hairline)', background: 'color-mix(in srgb, var(--canvas) 70%, transparent)' }}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
@@ -356,9 +382,9 @@ function Hero() {
   
   useEffect(() => {
     return scrollYProgress.on('change', (latest) => {
-      if (latest > 0.8 && !useYokoso) {
+      if (latest > 0.6 && !useYokoso) {
         setUseYokoso(true);
-      } else if (latest < 0.1 && useYokoso) {
+      } else if (latest < 0.2 && useYokoso) {
         setUseYokoso(false);
       }
     });
@@ -373,17 +399,17 @@ function Hero() {
       <div className="relative z-10 space-y-6">
         <Eyebrow>{PROFILE.role}</Eyebrow>
 
-        {/* Main Colorful Title */}
-        <div className="overflow-hidden py-2">
+        {/* Apple Cursive Liquid Glass Title */}
+        <div className="overflow-hidden py-2 min-h-[160px] md:min-h-[220px] flex items-center">
           <AnimatePresence mode="wait">
             <motion.h1
               key={useYokoso ? 'yokoso' : 'hello'}
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: '0%', opacity: 1 }}
-              exit={{ y: '-100%', opacity: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="font-black uppercase tracking-tighter leading-none bg-gradient-to-r from-white via-neutral-100 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_10px_30px_rgba(52,211,153,0.15)]"
-              style={{ fontSize: 'clamp(4.5rem, 14vw, 11rem)' }}
+              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="apple-glass-text font-bold leading-tight"
+              style={{ fontSize: 'clamp(5rem, 16vw, 13rem)' }}
             >
               {useYokoso ? 'Yōkoso' : 'Hello'}
             </motion.h1>
@@ -398,9 +424,9 @@ function Hero() {
           className="font-mono text-base sm:text-xl md:text-2xl font-semibold tracking-wide flex flex-wrap items-center gap-3 pt-2"
           style={{ color: 'var(--text-secondary)' }}
         >
-          <span className="text-white">{useYokoso ? 'Watashino' : 'Welcome to my'}</span>
+          <span style={{ color: 'var(--text-primary)' }}>{useYokoso ? 'Watashino' : 'Welcome to my'}</span>
 
-          <span className="relative inline-block font-bold text-neutral-300">
+          <span className="relative inline-block font-bold" style={{ color: 'var(--text-primary)' }}>
             Soul Society
             <motion.span
               initial={{ scaleX: 0 }}
@@ -425,7 +451,8 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed font-normal text-neutral-300"
+          className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed font-normal"
+          style={{ color: 'var(--text-secondary)' }}
         >
           {PROFILE.bio}
         </motion.p>
@@ -492,7 +519,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
           <div className="px-6 py-4 flex items-center justify-between font-mono text-xs tracking-widest border-b" style={{ borderColor: 'var(--hairline)' }}>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-              <span className="uppercase font-bold text-white">{activeProject.title}</span>
+              <span className="uppercase font-bold" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</span>
             </div>
             <span className="text-emerald-400 font-bold">{activeProject.aspectRatio}</span>
           </div>
@@ -537,12 +564,12 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
           <div className="space-y-6">
             <div className="space-y-3 border-b pb-6" style={{ borderColor: 'var(--hairline)' }}>
               <span className="font-mono text-xs tracking-widest uppercase block font-bold text-emerald-400">// ACTIVE INDEX</span>
-              <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-white">{activeProject.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{activeProject.title}</h2>
               <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/50 px-3 py-1.5 rounded-lg uppercase tracking-wider font-bold shadow-[0_0_10px_rgba(52,211,153,0.2)]">
                 {activeProject.category}
               </span>
             </div>
-            <p className="text-sm md:text-base leading-relaxed font-normal text-neutral-300">
+            <p className="text-sm md:text-base leading-relaxed font-normal" style={{ color: 'var(--text-secondary)' }}>
               {activeProject.description}
             </p>
           </div>
@@ -564,40 +591,54 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
 }
 
 /* =========================================================
-   Selected Works
+   Selected Works — Fixed Native Smooth Track
 ========================================================= */
 function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoProject, onSelectProject: (p: VideoProject) => void }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY * 1.4;
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, []);
+  const scrollTrack = (direction: 'left' | 'right') => {
+    if (!trackRef.current) return;
+    const distance = 300;
+    trackRef.current.scrollBy({
+      left: direction === 'left' ? -distance : distance,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <section className="relative py-12 md:py-16 border-t" style={{ borderColor: 'var(--hairline)' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-baseline justify-between mb-8">
-        {/* FIXED: Highly visible title header */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Eyebrow>PORTFOLIO REEL</Eyebrow>
-          <h2 className="font-extrabold uppercase tracking-tight text-white text-2xl md:text-4xl">
+          <h2 className="font-extrabold uppercase tracking-tight text-2xl md:text-4xl" style={{ color: 'var(--text-primary)' }}>
             Selected Works
           </h2>
         </div>
-        <span className="font-mono text-xs text-emerald-400 font-bold hidden sm:inline">
-          Scroll horizontally →
-        </span>
+
+        {/* Scroll Controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => scrollTrack('left')}
+            className="p-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all cursor-pointer"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => scrollTrack('right')}
+            className="p-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all cursor-pointer"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 md:px-12">
-        <div ref={trackRef} className="track-scroll flex gap-5 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory track-mask">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div
+          ref={trackRef}
+          className="track-scroll flex gap-6 overflow-x-auto py-4 px-2 snap-x snap-mandatory"
+        >
           {WORKS.map((w) => {
             const isActive = activeProject.id === w.id;
             return (
@@ -607,10 +648,10 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 onClick={() => onSelectProject(w)}
                 whileHover={{ y: -6 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className={`group relative shrink-0 snap-center overflow-hidden rounded-xl text-left cursor-pointer transition-all duration-300 ${
-                  isActive ? 'ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-70 hover:opacity-100'
+                className={`group relative shrink-0 snap-start overflow-hidden rounded-2xl text-left cursor-pointer transition-all duration-300 ${
+                  isActive ? 'ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
                 }`}
-                style={{ width: '190px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--border-strong)' }}
+                style={{ width: '220px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--border-strong)' }}
               >
                 <div className="absolute inset-0">
                   <video
@@ -631,7 +672,7 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                   <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-extrabold block">
                     {w.category}
                   </span>
-                  <h3 className="mt-1 text-xs font-bold text-white tracking-tight leading-snug truncate">{w.title}</h3>
+                  <h3 className="mt-1 text-sm font-bold text-white tracking-tight leading-snug truncate">{w.title}</h3>
                 </div>
                 <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-emerald-400 font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-emerald-500/30 backdrop-blur-md pointer-events-none">
                   {w.duration}
@@ -654,12 +695,9 @@ function SignatureAbout() {
   return (
     <section id="about" className="relative max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32 border-t scroll-mt-20" style={{ borderColor: 'var(--hairline)' }}>
       <div className="space-y-8">
-        
-        {/* FIXED: Highly Visible Section Label */}
         <Eyebrow>PROFILE & CREATIVE DIRECTION</Eyebrow>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-12 items-center">
-          
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -667,7 +705,7 @@ function SignatureAbout() {
             viewport={{ once: true, amount: 0.4 }}
             className="lg:col-span-3 order-2 lg:order-1"
           >
-            <p className="font-medium tracking-tight leading-relaxed text-white text-xl md:text-3xl">
+            <p className="font-medium tracking-tight leading-relaxed text-xl md:text-3xl" style={{ color: 'var(--text-primary)' }}>
               {PROFILE.bio}
             </p>
           </motion.div>
@@ -712,7 +750,6 @@ function SignatureAbout() {
               </svg>
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -744,8 +781,8 @@ function Collaborate() {
         {steps.map((s) => (
           <motion.div key={s.n} variants={listItem} className="border p-8 rounded-2xl backdrop-blur-xl" style={{ borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
             <span className="font-mono text-sm text-emerald-400 font-extrabold block">{s.n} // STEP</span>
-            <h3 className="mt-4 text-2xl font-extrabold uppercase tracking-tight text-white">{s.title}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-neutral-300">{s.desc}</p>
+            <h3 className="mt-4 text-2xl font-extrabold uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>{s.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.desc}</p>
           </motion.div>
         ))}
       </div>
@@ -767,8 +804,8 @@ function ContactOutro() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
         transition={{ staggerChildren: 0.05 }}
-        className="font-black tracking-tighter max-w-4xl leading-[1.05] uppercase text-white"
-        style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
+        className="font-black tracking-tighter max-w-4xl leading-[1.05] uppercase"
+        style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', color: 'var(--text-primary)' }}
       >
         {words.map((w, i) => (
           <motion.span key={i} className="kinetic-word mr-4" variants={wordVariant}>
@@ -797,7 +834,8 @@ function ContactOutro() {
           target="_blank"
           rel="noopener noreferrer"
           data-hover
-          className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent text-white border-white/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md"
+          className="inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-emerald-500/30 hover:bg-white hover:text-black hover:border-white backdrop-blur-md"
+          style={{ color: 'var(--text-primary)' }}
         >
           <Instagram className="w-4 h-4 text-pink-400" /> Instagram
         </a>
@@ -813,7 +851,7 @@ function Footer() {
   return (
     <footer className="border-t backdrop-blur-xl" style={{ borderColor: 'var(--hairline)', background: 'var(--surface)' }}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex items-center justify-between font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
-        <span className="font-extrabold text-white flex items-center gap-2">
+        <span className="font-extrabold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
           <span className="w-2 h-2 rounded-full bg-emerald-400" />
           {PROFILE.studio}
         </span>
@@ -932,11 +970,14 @@ export default function App() {
             loop
             playsInline
             preload="auto"
-            className="w-full h-full object-cover opacity-60 scale-105"
+            className="w-full h-full object-cover opacity-50 scale-105"
             src="/Neon Rounded Red Geometric live Wallpaper Abstract Gradient Background Animation    Free Version.mp4"
           />
           <div className="video-bg-overlay" />
         </div>
+
+        {/* Retro Gaming Floating Glitch Shapes */}
+        <RetroGlitchShapes />
 
         <div className="grid-overlay" />
         <audio ref={audioRef} src={audioSource} loop preload="auto" crossOrigin="anonymous" />
