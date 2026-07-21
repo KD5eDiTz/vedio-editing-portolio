@@ -814,16 +814,16 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
       >
         <div className="flex items-center gap-3">
           <Eyebrow>PORTFOLIO REEL</Eyebrow>
-          <h2 className="font-extrabold uppercase tracking-tight text-2xl md:text-4xl" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="font-heading font-normal uppercase tracking-wide text-3xl md:text-5xl" style={{ color: 'var(--text-primary)' }}>
             Selected Works
           </h2>
         </div>
         
         <div className="flex items-center gap-2">
-          <button onClick={() => scrollTrack('left')} className="p-2.5 rounded-full border border-orange-600/30 bg-orange-600/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all cursor-pointer">
+          <button onClick={() => scrollTrack('left')} className="p-2.5 rounded-full border border-red-600/30 bg-red-600/10 text-red-500 hover:bg-red-500 hover:text-black transition-all cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <button onClick={() => scrollTrack('right')} className="p-2.5 rounded-full border border-orange-600/30 bg-orange-600/10 text-orange-500 hover:bg-orange-500 hover:text-black transition-all cursor-pointer">
+          <button onClick={() => scrollTrack('right')} className="p-2.5 rounded-full border border-red-600/30 bg-red-600/10 text-red-500 hover:bg-red-500 hover:text-black transition-all cursor-pointer">
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
@@ -849,7 +849,7 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 variants={listItem}
                 whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
                 className={`group relative shrink-0 snap-start overflow-hidden rounded-2xl text-left cursor-pointer transition-all duration-300 ${
-                  isActive ? 'ring-2 ring-orange-500 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
+                  isActive ? 'ring-2 ring-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-[1.02]' : 'opacity-80 hover:opacity-100'
                 }`}
                 style={{ width: '220px', aspectRatio: '9/16', background: 'var(--surface-2)', border: '1px solid var(--border-strong)' }}
               >
@@ -859,10 +859,10 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
                 
                 <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-orange-500 font-extrabold block">{w.category}</span>
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-white/70 font-bold block">{w.category}</span>
                   <h3 className="mt-1 text-sm font-bold text-white tracking-tight leading-snug truncate">{w.title}</h3>
                 </div>
-                <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-orange-500 font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-orange-600/30 backdrop-blur-md pointer-events-none">
+                <span className="absolute top-2.5 right-2.5 font-mono text-[9px] text-white font-bold tabular px-2 py-0.5 bg-black/70 rounded-md border border-white/20 backdrop-blur-md pointer-events-none">
                   {w.duration}
                 </span>
               </motion.button>
