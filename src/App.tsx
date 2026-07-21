@@ -393,12 +393,12 @@ function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
         {/* Top-lit gradient matching the existing apple-glass-text style */}
         <linearGradient id="hGrad" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stopColor="#ffffff" />
-          <stop offset="10%"  stopColor="#d1fae5" />
-          <stop offset="25%"  stopColor="#6ee7b7" />
+          <stop offset="10%"  stopColor="#ffedd5" />
+          <stop offset="25%"  stopColor="#fdba74" />
           <stop offset="45%"  stopColor="#f97316" />
-          <stop offset="65%"  stopColor="#10b981" />
-          <stop offset="82%"  stopColor="#047857" />
-          <stop offset="100%" stopColor="#022c22" />
+          <stop offset="65%"  stopColor="#dc2626" />
+          <stop offset="82%"  stopColor="#991b1b" />
+          <stop offset="100%" stopColor="#450a0a" />
         </linearGradient>
 
         {/* Glow bloom around the drawing stroke */}
@@ -414,7 +414,7 @@ function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
         <filter id="hDepth" x="-5%" y="-5%" width="120%" height="145%">
           <feDropShadow dx="5"  dy="22" stdDeviation="20" floodColor="rgba(0,0,0,0.92)" />
           <feDropShadow dx="0"  dy="5"  stdDeviation="8"  floodColor="rgba(0,0,0,0.55)" />
-          <feDropShadow dx="0"  dy="0"  stdDeviation="40" floodColor="rgba(52,211,153,0.18)" />
+          <feDropShadow dx="0"  dy="0"  stdDeviation="40" floodColor="rgba(249,115,22,0.3)" />
         </filter>
       </defs>
 
@@ -549,12 +549,12 @@ function Hero() {
           </AnimatePresence>
         </div>
 
-        {/* Subtitle row — staggered in after Hello */}
+        {/* Subtitle row — staggered in after Hello, set to z-20 so Yokoso goes backside */}
         <motion.div
           initial={{ opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
-          className="font-mono text-sm sm:text-lg md:text-2xl font-semibold tracking-wide flex flex-wrap items-center justify-center gap-2 sm:gap-3"
+          className="relative z-20 font-heading text-xl sm:text-3xl md:text-5xl font-normal tracking-wider flex flex-wrap items-center justify-center gap-2 sm:gap-3"
           style={{ color: 'var(--text-secondary)' }}
         >
           <span style={{ color: 'var(--text-primary)' }}>
@@ -575,7 +575,7 @@ function Hero() {
             initial={{ opacity: 0, scale: 0.88 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', damping: 12, stiffness: 110, delay: 1.45 }}
-            className="text-orange-500 font-bold tracking-wider uppercase bg-red-950/60 border border-orange-600/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(52,211,153,0.3)] flex items-center gap-1.5"
+            className="font-mono text-xs sm:text-sm text-orange-500 font-bold tracking-wider uppercase bg-red-950/80 border border-orange-600/60 px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(249,115,22,0.3)] flex items-center gap-1.5 ml-2"
           >
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 animate-spin" />
             <span className="text-[10px] sm:text-base">Editing Society</span>
