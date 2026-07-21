@@ -143,20 +143,6 @@ body {
 .track-scroll { scrollbar-width: none; -ms-overflow-style: none; }
 .track-scroll::-webkit-scrollbar { display: none; }
 
-/* Dot Grid Overlay */
-.grid-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.25) 1.5px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.light .grid-overlay {
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.2) 1.5px, transparent 1px);
-}
-
 /* Technique Pills - Bleach Theme */
 .tech-pill {
   background-color: rgba(69, 10, 10, 0.4); /* red-950/40 */

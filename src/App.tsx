@@ -554,7 +554,7 @@ function Hero() {
           initial={{ opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-20 font-heading text-xl sm:text-3xl md:text-5xl font-normal tracking-wider flex flex-wrap items-center justify-center gap-2 sm:gap-3"
+          className="relative z-20 font-mono text-sm sm:text-lg md:text-2xl font-semibold tracking-wide flex flex-wrap items-center justify-center gap-2 sm:gap-3"
           style={{ color: 'var(--text-secondary)' }}
         >
           <span style={{ color: 'var(--text-primary)' }}>
@@ -985,7 +985,87 @@ function Collaborate() {
 }
 
 /* =========================================================
-   CONTACT
+   INTERACTIVE GRID & PIXEL TRAIL (Bleach Theme)
+========================================================= */
+function InteractiveGrid() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  useEffect(() => {
+    // Disable parallax on mobile for performance
+    if (window.innerWidth < 768) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // Calculate normalized mouse position offset from center, scaled down for subtlety
+      mouseX.set((e.clientX - window.innerWidth / 2) * -0.05);
+      mouseY.set((e.clientY - window.innerHeight / 2) * -0.05);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const smoothX = useSpring(mouseX, { damping: 40, stiffness: 80 });
+  const smoothY = useSpring(mouseY, { damping: 40, stiffness: 80 });
+
+  return (
+    <motion.div 
+      className="fixed inset-[-50%] z-0 pointer-events-none opacity-50 sm:opacity-80"
+      style={{
+        x: smoothX,
+        y: smoothY,
+        backgroundImage: 'linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
+        backgroundSize: '40px 40px',
+      }}
+    />
+  );
+}
+
+function PixelTrailCursor() {
+  const [trail, setTrail] = useState<{ id: number; x: number; y: number }[]>([]);
+  
+  useEffect(() => {
+    let lastX = 0;
+    let lastY = 0;
+    let idCounter = 0;
+    
+    // Only spawn pixels on desktop to avoid mobile lag
+    if (window.innerWidth < 768) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+      if (dist > 30) { // Spawn a pixel every 30px moved
+        lastX = e.clientX;
+        lastY = e.clientY;
+        const newPixel = { id: idCounter++, x: e.clientX, y: e.clientY };
+        setTrail(prev => [...prev, newPixel].slice(-15)); // Keep max 15 pixels alive
+      }
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden hidden md:block">
+      <AnimatePresence>
+        {trail.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{ opacity: 0.8, scale: 1, rotate: Math.random() * 90 }}
+            animate={{ opacity: 0, scale: 0.1, y: p.y + 40 }} // drift down
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="absolute w-2.5 h-2.5 bg-red-600 border border-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.8)]"
+            style={{ left: p.x - 5, top: p.y - 5 }}
+          />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* =========================================================
+   CUSTOM CURSOR (Existing hollow ring)
 ========================================================= */
 function ContactOutro() {
   /* Split into individual lines so each word wraps cleanly at any viewport size */
@@ -1159,9 +1239,10 @@ export default function App() {
 
         {/* Layered Visuals */}
         <RetroGlitchShapes />
-        <div className="grid-overlay" />
+        <InteractiveGrid />
         <audio ref={audioRef} src={audioSource} loop preload="auto" crossOrigin="anonymous" />
 
+        <PixelTrailCursor />
         <CustomCursor />
         <ScrollProgress />
 
