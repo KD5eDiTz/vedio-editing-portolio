@@ -20,6 +20,7 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  Star,
 } from 'lucide-react';
 
 /* =========================================================
@@ -233,19 +234,15 @@ function ScrollProgress() {
 function RetroGlitchShapes() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
-      {/* Triangle */}
       <div className="absolute top-[18%] left-[8%] text-emerald-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#34d399]">
         ▲
       </div>
-      {/* Circle */}
       <div className="absolute top-[35%] right-[10%] text-rose-500 font-mono text-4xl font-bold glitch-symbol drop-shadow-[0_0_10px_#f43f5e]">
         ○
       </div>
-      {/* Cross X */}
       <div className="absolute bottom-[28%] left-[12%] text-cyan-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#38bdf8]">
         ✕
       </div>
-      {/* Square */}
       <div className="absolute bottom-[18%] right-[15%] text-amber-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#fbbf24]">
         □
       </div>
@@ -372,7 +369,7 @@ function Header({
 }
 
 /* =========================================================
-   Hero
+   Hero — Unclipped Apple Liquid Cursive Title
 ========================================================= */
 function Hero() {
   const heroRef = useRef<HTMLDivElement | null>(null);
@@ -394,22 +391,22 @@ function Hero() {
     <section
       id="hero"
       ref={heroRef}
-      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-screen flex flex-col justify-center overflow-hidden scroll-mt-20"
+      className="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-24 md:pb-32 min-h-screen flex flex-col justify-center overflow-visible scroll-mt-20"
     >
       <div className="relative z-10 space-y-6">
         <Eyebrow>{PROFILE.role}</Eyebrow>
 
-        {/* Apple Cursive Liquid Glass Title */}
-        <div className="overflow-hidden py-2 min-h-[160px] md:min-h-[220px] flex items-center">
+        {/* FIX: Unclipped container with zero side slicing */}
+        <div className="relative min-h-[160px] md:min-h-[220px] flex items-center overflow-visible pr-8">
           <AnimatePresence mode="wait">
             <motion.h1
               key={useYokoso ? 'yokoso' : 'hello'}
-              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+              initial={{ opacity: 0, y: 25, filter: 'blur(12px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
+              exit={{ opacity: 0, y: -25, filter: 'blur(12px)' }}
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               className="apple-glass-text font-bold leading-tight"
-              style={{ fontSize: 'clamp(5rem, 16vw, 13rem)' }}
+              style={{ fontSize: 'clamp(5.5rem, 17vw, 13.5rem)' }}
             >
               {useYokoso ? 'Yōkoso' : 'Hello'}
             </motion.h1>
@@ -462,7 +459,7 @@ function Hero() {
 }
 
 /* =========================================================
-   Kinetic Marquee Ticker
+   Kinetic Marquee Ticker — Clean SVG Star (No Box Artifact)
 ========================================================= */
 function KineticMarquee() {
   return (
@@ -470,21 +467,21 @@ function KineticMarquee() {
       <motion.div
         animate={{ x: ['0%', '-50%'] }}
         transition={{ repeat: Infinity, ease: 'linear', duration: 18 }}
-        className="flex whitespace-nowrap gap-12 font-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em]"
+        className="flex whitespace-nowrap gap-12 font-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] items-center"
         style={{ color: 'var(--text-primary)' }}
       >
         <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
         <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
         <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
         <span>THIS IS HOW YOU IMPROVE YOUR QUALITY OF EDIT</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
         <span className="text-cyan-400">THIS IS WHERE YOU CAN INCREASE YOUR IDEAS</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
         <span>RETENTION ARCHITECTURE // CINEMATIC PACING</span>
-        <span className="text-emerald-400 shadow-[0_0_10px_#34d399]">★</span>
+        <Star className="w-4 h-4 text-emerald-400 fill-emerald-400 drop-shadow-[0_0_8px_#34d399] shrink-0" />
       </motion.div>
     </div>
   );
@@ -591,7 +588,7 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
 }
 
 /* =========================================================
-   Selected Works — Fixed Native Smooth Track
+   Selected Works — Smooth Horizontal Selector
 ========================================================= */
 function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoProject, onSelectProject: (p: VideoProject) => void }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -615,7 +612,6 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
           </h2>
         </div>
 
-        {/* Scroll Controls */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => scrollTrack('left')}
@@ -689,6 +685,9 @@ function WorkTrack({ activeProject, onSelectProject }: { activeProject: VideoPro
 /* =========================================================
    Signature & About
 ========================================================= */
+/* =========================================================
+   Profile / About — Organic Glowing Branch Corner Overlay
+========================================================= */
 function SignatureAbout() {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -724,28 +723,69 @@ function SignatureAbout() {
                />
             </div>
 
-            <div className="absolute -bottom-8 -right-4 lg:-right-10 w-[240px] md:w-[320px] z-10 pointer-events-none drop-shadow-[0_0_15px_rgba(52,211,153,0.8)]">
-              <svg viewBox="0 0 400 120" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Organic Glowing Tree Branches Wrapping the Lower-Right Corner */}
+            <div className="absolute -bottom-6 -right-6 w-[220px] sm:w-[260px] h-[220px] sm:h-[260px] z-10 pointer-events-none drop-shadow-[0_0_12px_rgba(52,211,153,0.7)]">
+              <svg viewBox="0 0 300 300" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <filter id="sigGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="3" result="blur" />
+                  <filter id="branchGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
                     <feMerge>
                       <feMergeNode in="blur" />
                       <feMergeNode in="SourceGraphic" />
                     </feMerge>
                   </filter>
                 </defs>
+
+                {/* Main Vine / Branch Stem hugging the corner */}
                 <motion.path
-                  d="M 30 70 Q 50 20 70 70 T 110 70 Q 140 30 170 70 T 210 70 M 230 40 L 230 90 M 250 40 C 290 40 290 90 250 90 Z"
+                  d="M 280 120 C 270 190, 240 250, 170 270 C 120 280, 50 275, 10 270"
                   stroke={isHovered ? '#38bdf8' : '#34d399'}
-                  strokeWidth="4"
+                  strokeWidth="3.5"
                   strokeLinecap="round"
-                  strokeLinejoin="round"
-                  filter="url(#sigGlow)"
-                  initial={{ pathLength: 0, opacity: 0.3 }}
-                  whileInView={{ pathLength: 1, opacity: 1 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 1.6, ease: 'easeInOut' }}
+                  filter="url(#branchGlow)"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.8, ease: 'easeOut' }}
+                />
+
+                {/* Upper Secondary Branch */}
+                <motion.path
+                  d="M 255 170 C 235 150, 210 135, 190 140 C 175 145, 165 160, 160 175"
+                  stroke={isHovered ? '#38bdf8' : '#34d399'}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#branchGlow)"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.5, delay: 0.4, ease: 'easeOut' }}
+                />
+
+                {/* Lower Secondary Branch */}
+                <motion.path
+                  d="M 195 265 C 180 235, 150 220, 120 230 C 100 238, 90 255, 80 260"
+                  stroke={isHovered ? '#38bdf8' : '#34d399'}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#branchGlow)"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.5, delay: 0.6, ease: 'easeOut' }}
+                />
+
+                {/* Delicate Twigs & Offshoots */}
+                <motion.path
+                  d="M 270 140 Q 250 125, 240 110 M 145 240 Q 130 215, 115 210 M 70 270 Q 50 250, 40 240"
+                  stroke={isHovered ? '#38bdf8' : '#34d399'}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  filter="url(#branchGlow)"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.2, delay: 0.9, ease: 'easeOut' }}
                 />
               </svg>
             </div>

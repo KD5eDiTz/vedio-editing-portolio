@@ -54,7 +54,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Background Overlay for Video */
 .video-bg-overlay {
   position: fixed;
   inset: 0;
@@ -67,15 +66,16 @@ body {
   background: radial-gradient(circle at 50% 30%, rgba(248, 249, 250, 0.5) 0%, rgba(220, 225, 230, 0.92) 100%);
 }
 
-/* Apple Liquid Glass Effect */
+/* Apple Cursive Liquid Glass Effect - Unclipped */
 .apple-glass-text {
   font-family: var(--font-apple-script);
-  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 50%, rgba(52,211,153,0.8) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.7) 45%, rgba(52,211,153,0.9) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 10px 25px rgba(52, 211, 153, 0.35));
-  position: relative;
+  filter: drop-shadow(0 12px 28px rgba(52, 211, 153, 0.4));
+  padding-right: 0.25em; /* Prevents right-edge character slicing */
+  padding-bottom: 0.1em;
 }
 
 .light .apple-glass-text {
@@ -86,7 +86,6 @@ body {
   filter: drop-shadow(0 10px 20px rgba(5, 150, 105, 0.25));
 }
 
-/* Retro Gaming Shape Glitch Keyframes */
 @keyframes glitch-anim {
   0% { transform: translate(0); clip-path: inset(0 0 0 0); }
   20% { transform: translate(-3px, 2px); clip-path: inset(15% 0 30% 0); }
