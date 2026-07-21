@@ -148,18 +148,25 @@ const WORKS: VideoProject[] = [
    Shared motion variants
 ========================================================= */
 const wordVariant = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 26, scale: 0.9 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.42, duration: 0.7 } },
 };
-const listContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
+const listContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } }, exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } } };
 const listItem = {
-  hidden: { opacity: 0, y: 26 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 34, scale: 0.94 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.4, duration: 0.8 } },
 };
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 34, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.38, duration: 0.85 } },
 };
+
+/* A little idle float + wobble for decorative scattered elements */
+const floatIdle = (delay = 0) => ({
+  y: [0, -10, 0],
+  rotate: [0, 2.5, -2.5, 0],
+  transition: { duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay },
+});
 
 /* =========================================================
    Small shared bits
@@ -417,8 +424,8 @@ function Hero() {
                 className="block"
                 initial={{ y: '110%' }}
                 whileInView={{ y: '0%' }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.9, delay: li * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                viewport={{ once: false }}
+                transition={{ type: 'spring', bounce: 0.32, duration: 1.0, delay: li * 0.15 }}
               >
                 {line}
               </motion.span>
@@ -429,12 +436,50 @@ function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ type: 'spring', bounce: 0.3, duration: 0.8, delay: 0.5 }}
           className="mt-8 max-w-xl text-base md:text-lg leading-relaxed font-light"
           style={{ color: 'var(--text-secondary)' }}
         >
           {PROFILE.bio}
         </motion.p>
+
+        {/* Scattered ambient labels + doodles, echoing the reference's floating ephemera */}
+        <motion.div
+          className="hidden md:block absolute left-[46%] top-[2%] font-mono text-[11px] leading-snug uppercase tracking-wide"
+          style={{ color: 'var(--text-muted)' }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.6 }}
+          transition={{ type: 'spring', bounce: 0.35, duration: 0.8, delay: 0.3 }}
+        >
+          Cut with intention.
+          <br />
+          Paced with purpose.
+        </motion.div>
+
+        <motion.svg
+          viewBox="0 0 60 60"
+          className="hidden md:block absolute right-[6%] bottom-[6%] w-10 h-10 pointer-events-none"
+          initial={{ opacity: 0, scale: 0.6, rotate: -20 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: false, amount: 0.6 }}
+          transition={{ type: 'spring', bounce: 0.55, duration: 0.9, delay: 0.5 }}
+          animate={floatIdle(0.8)}
+        >
+          <path d="M8 4 L54 30 L8 56 L18 30 Z" fill="var(--text-primary)" opacity="0.85" />
+        </motion.svg>
+
+        <motion.div
+          className="hidden lg:block absolute left-[2%] top-[38%] font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full border"
+          style={{ color: 'var(--text-secondary)', borderColor: 'var(--border)' }}
+          initial={{ opacity: 0, scale: 0.7 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false, amount: 0.6 }}
+          transition={{ type: 'spring', bounce: 0.5, duration: 0.7, delay: 0.6 }}
+          animate={floatIdle(1.4)}
+        >
+          ● rendering
+        </motion.div>
       </div>
     </section>
   );
@@ -460,9 +505,9 @@ function InlineViewer({ activeProject }: { activeProject: VideoProject }) {
     <section id="viewer" className="max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-16 scroll-mt-24">
       <motion.div 
         key={activeProject.id}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, y: 24, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: 'spring', bounce: 0.28, duration: 0.6 }}
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
       >
         {/* Video Player */}
@@ -632,7 +677,7 @@ function SignatureAbout() {
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.4 }}
+          viewport={{ once: false, amount: 0.4 }}
           className="lg:col-span-3 order-2 lg:order-1"
         >
           <Eyebrow>Profile</Eyebrow>
@@ -669,7 +714,7 @@ function SignatureAbout() {
                 filter="url(#sigGlow)"
                 initial={{ pathLength: 0, opacity: 0.3 }}
                 whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
+                viewport={{ once: false, amount: 0.6 }}
                 transition={{ duration: 1.8, ease: 'easeInOut' }}
               />
             </svg>
@@ -696,7 +741,7 @@ function Collaborate() {
       variants={listContainer}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-24 border-t"
       style={{ borderColor: 'var(--hairline)' }}
     >
@@ -747,7 +792,7 @@ function ContactOutro() {
       <motion.h2
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: false, amount: 0.5 }}
         transition={{ staggerChildren: 0.05 }}
         className="font-semibold tracking-tighter max-w-3xl leading-[1.05] uppercase"
         style={{ color: 'var(--text-primary)', fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
@@ -762,7 +807,7 @@ function ContactOutro() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 0.6, delay: 0.35 }}
         className="mt-12 flex flex-wrap items-center gap-4"
       >
