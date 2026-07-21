@@ -38,7 +38,7 @@
 
 /* Lenis owns scrolling now — native smooth-scroll would fight it */
 html {
-  background-color: var(--canvas);
+  background-color: #050505;
 }
 
 html.lenis,
@@ -50,10 +50,27 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
+/* 1. THE NEW 3D BACKGROUND */
 body {
-  background-color: var(--canvas);
+  /* Attach your 3D geometric image */
+  background-image: url('/wallpaperflare.com_wallpaper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: var(--canvas); /* Fallback */
   color: var(--text-primary);
   overscroll-behavior: none;
+}
+
+/* 2. THE CINEMATIC DARK WASH (Spotlight effect) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  /* This radial gradient creates the deep studio lighting effect */
+  background: radial-gradient(circle at 50% 0%, rgba(13,13,14,0.65) 0%, rgba(8,8,10,0.98) 100%);
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Custom cursor replaces the native one, desktop only */
@@ -86,7 +103,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Fixed subtle grid overlay behind all content */
+/* 3. THE EDITORIAL GRID OVERLAY */
 .grid-overlay {
   position: fixed;
   inset: 0;
@@ -96,16 +113,8 @@ body {
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 72px 72px;
+  /* Fades the grid out at the edges for a premium look */
   mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 40%, transparent 90%);
-}
-
-/* Horizontal track: hide scrollbar, keep native touch/wheel scroll */
-.track-scroll {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.track-scroll::-webkit-scrollbar {
-  display: none;
 }
 
 @media (max-width: 640px) {
