@@ -7,6 +7,9 @@
   --font-apple-script: "Caveat", "Dancing Script", -apple-system, BlinkMacSystemFont, cursive;
 }
 
+/* =========================================================
+   DARK MODE (DEFAULT) TOKENS
+========================================================= */
 :root {
   --canvas: #0a0a0c;
   --surface: rgba(19, 19, 21, 0.75);
@@ -15,11 +18,14 @@
   --border-strong: rgba(255, 255, 255, 0.35);
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
-  --text-muted: #34d399; 
+  --text-muted: #34d399; /* Bright Emerald */
   --hairline: rgba(255, 255, 255, 0.12);
   --grid-line: rgba(255, 255, 255, 0.06);
 }
 
+/* =========================================================
+   LIGHT MODE TOKENS
+========================================================= */
 .light,
 :root.light {
   --canvas: #f8f9fa;
@@ -29,11 +35,14 @@
   --border-strong: rgba(0, 0, 0, 0.35);
   --text-primary: #0f172a;
   --text-secondary: #334155;
-  --text-muted: #059669;
+  --text-muted: #059669; /* Darker Emerald for contrast */
   --hairline: rgba(0, 0, 0, 0.12);
   --grid-line: rgba(0, 0, 0, 0.08);
 }
 
+/* =========================================================
+   GLOBAL SCROLL & BODY
+========================================================= */
 html {
   background-color: var(--canvas);
 }
@@ -54,19 +63,27 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* =========================================================
+   LIVE MP4 BACKGROUND OVERLAYS
+========================================================= */
 .video-bg-overlay {
   position: fixed;
   inset: 0;
+  /* Deep dark cinematic wash over the live wallpaper */
   background: radial-gradient(circle at 50% 30%, rgba(10, 10, 15, 0.4) 0%, rgba(5, 5, 8, 0.85) 100%);
   z-index: -1;
   pointer-events: none;
+  transition: background 0.3s ease;
 }
 
 .light .video-bg-overlay {
+  /* Bright cinematic wash for light mode */
   background: radial-gradient(circle at 50% 30%, rgba(248, 249, 250, 0.5) 0%, rgba(220, 225, 230, 0.92) 100%);
 }
 
-/* Apple Cursive Liquid Glass Effect - Unclipped */
+/* =========================================================
+   APPLE LIQUID GLASS TEXT
+========================================================= */
 .apple-glass-text {
   font-family: var(--font-apple-script);
   background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.7) 45%, rgba(52,211,153,0.9) 100%);
@@ -74,7 +91,8 @@ body {
   background-clip: text;
   color: transparent;
   filter: drop-shadow(0 12px 28px rgba(52, 211, 153, 0.4));
-  padding-right: 0.25em; /* Prevents right-edge character slicing */
+  /* Padding prevents the cursive swashes from clipping */
+  padding-right: 0.25em; 
   padding-bottom: 0.1em;
 }
 
@@ -86,12 +104,15 @@ body {
   filter: drop-shadow(0 10px 20px rgba(5, 150, 105, 0.25));
 }
 
+/* =========================================================
+   RETRO GAMING GLITCH ANIMATIONS
+========================================================= */
 @keyframes glitch-anim {
-  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-  20% { transform: translate(-3px, 2px); clip-path: inset(15% 0 30% 0); }
-  40% { transform: translate(3px, -2px); clip-path: inset(40% 0 10% 0); }
-  60% { transform: translate(-2px, -1px); clip-path: inset(5% 0 60% 0); }
-  80% { transform: translate(2px, 1px); clip-path: inset(50% 0 20% 0); }
+  0%   { transform: translate(0); clip-path: inset(0 0 0 0); }
+  20%  { transform: translate(-3px, 2px); clip-path: inset(15% 0 30% 0); }
+  40%  { transform: translate(3px, -2px); clip-path: inset(40% 0 10% 0); }
+  60%  { transform: translate(-2px, -1px); clip-path: inset(5% 0 60% 0); }
+  80%  { transform: translate(2px, 1px); clip-path: inset(50% 0 20% 0); }
   100% { transform: translate(0); clip-path: inset(0 0 0 0); }
 }
 
@@ -99,6 +120,9 @@ body {
   animation: glitch-anim 3.5s infinite ease-in-out alternate-reverse;
 }
 
+/* =========================================================
+   CUSTOM CURSOR & SCROLLBAR
+========================================================= */
 @media (hover: hover) and (pointer: fine) {
   *,
   *::before,
@@ -119,6 +143,9 @@ body {
   border-radius: 0px;
 }
 
+/* =========================================================
+   UTILITIES & OVERLAYS
+========================================================= */
 .kinetic-word {
   display: inline-block;
   will-change: transform, opacity;
@@ -138,6 +165,24 @@ body {
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 40%, transparent 90%);
+}
+
+/* Soft Feathered Edge Fade for Selected Works Filmstrip */
+.track-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
 }
 
 .track-scroll {
