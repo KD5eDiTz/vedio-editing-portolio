@@ -379,113 +379,22 @@ function Header({
 const STROKE_DASH = 9000; // generous upper bound for Pacifico outline perimeter
 
 function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
-  const dur   = wordIndex === 0 ? 2.2 : 1.4;
-  const delay = wordIndex === 0 ? 0.32 : 0;
-  // Slightly bigger font for shorter words so both fill similar width
-  const fontSize = word.length > 6 ? 195 : 222;
-
+  const dur = wordIndex === 0 ? 1.2 : 0.8;
+  const delay = wordIndex === 0 ? 0.2 : 0;
+  
   return (
-    <svg
-      className="w-full select-none"
-      viewBox="0 0 1200 265"
-      style={{ overflow: 'visible' }}
-      aria-label={word}
-      role="img"
+    <motion.h1
+      className="apple-glass-text text-center w-full select-none"
+      style={{ 
+        fontSize: word.length > 6 ? 'clamp(4rem, 15vw, 10rem)' : 'clamp(5rem, 20vw, 13rem)',
+        lineHeight: 1.2,
+      }}
+      initial={{ opacity: 0, y: 30, filter: 'blur(15px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{ duration: dur, delay, ease: 'easeOut' }}
     >
-      <defs>
-        {/* Top-lit gradient matching the existing apple-glass-text style */}
-        <linearGradient id="hGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#ffffff" />
-          <stop offset="10%"  stopColor="#ffedd5" />
-          <stop offset="25%"  stopColor="#fdba74" />
-          <stop offset="45%"  stopColor="#f97316" />
-          <stop offset="65%"  stopColor="#dc2626" />
-          <stop offset="82%"  stopColor="#991b1b" />
-          <stop offset="100%" stopColor="#450a0a" />
-        </linearGradient>
-
-        {/* Glow bloom around the drawing stroke */}
-        <filter id="hGlow" x="-15%" y="-15%" width="130%" height="130%">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
-        {/* Deep drop-shadow for the filled text */}
-        <filter id="hDepth" x="-5%" y="-5%" width="120%" height="145%">
-          <feDropShadow dx="5"  dy="22" stdDeviation="20" floodColor="rgba(0,0,0,0.92)" />
-          <feDropShadow dx="0"  dy="5"  stdDeviation="8"  floodColor="rgba(0,0,0,0.55)" />
-          <feDropShadow dx="0"  dy="0"  stdDeviation="40" floodColor="rgba(249,115,22,0.3)" />
-        </filter>
-      </defs>
-
-      {/* Layer 1 — depth / ground shadow */}
-      <text
-        x="600" y="215"
-        textAnchor="middle"
-        fontSize={fontSize}
-        fontFamily="Pacifico, cursive"
-        fill="rgba(0,0,0,0.65)"
-        transform="translate(9,15)"
-        aria-hidden="true"
-        style={{ userSelect: 'none' }}
-      >
-        {word}
-      </text>
-
-      {/* Layer 2 — the 'spaghetti' stroke that draws the text */}
-      <motion.text
-        key={`stroke-${word}`}
-        x="600" y="215"
-        textAnchor="middle"
-        fontSize={fontSize}
-        fontFamily="Pacifico, cursive"
-        fill="none"
-        stroke="#f97316"
-        strokeWidth="7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter="url(#hGlow)"
-        style={{ userSelect: 'none' }}
-        initial={{ strokeDasharray: STROKE_DASH, strokeDashoffset: STROKE_DASH, opacity: 1 }}
-        animate={{
-          strokeDashoffset: 0,
-          opacity: [1, 1, 1, 0],
-        }}
-        transition={{
-          strokeDashoffset: { duration: dur, delay, ease: [0.76, 0, 0.24, 1] },
-          opacity: {
-            times: [0, 0.55, 0.85, 1],
-            duration: dur,
-            delay,
-            ease: 'easeIn',
-          },
-        }}
-      >
-        {word}
-      </motion.text>
-
-      {/* Layer 3 — filled gradient text fades in as stroke completes */}
-      <motion.text
-        key={`fill-${word}`}
-        x="600" y="215"
-        textAnchor="middle"
-        fontSize={fontSize}
-        fontFamily="Pacifico, cursive"
-        fill="url(#hGrad)"
-        stroke="rgba(255,255,255,0.07)"
-        strokeWidth="2"
-        filter="url(#hDepth)"
-        style={{ userSelect: 'none' }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.85, delay: delay + dur * 0.58, ease: 'easeOut' }}
-      >
-        {word}
-      </motion.text>
-    </svg>
+      {word}
+    </motion.h1>
   );
 }
 
