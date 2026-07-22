@@ -52,6 +52,7 @@ body {
   background-color: var(--canvas);
   color: var(--text-primary);
   overscroll-behavior: none;
+  cursor: none;
 }
 
 /* Video Background Vignette */

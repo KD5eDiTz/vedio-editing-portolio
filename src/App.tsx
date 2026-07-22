@@ -123,38 +123,38 @@ const WORKS: VideoProject[] = [
    BOUNCY SPRING MOTION VARIANTS
 ========================================================= */
 const wordVariant = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 15 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { type: 'spring', damping: 12, stiffness: 120 } 
+    transition: { type: 'spring', damping: 20, stiffness: 80 } 
   },
 };
 
 const listContainer = { 
   hidden: {}, 
   visible: { 
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 } 
+    transition: { staggerChildren: 0.05, delayChildren: 0.05 } 
   } 
 };
 
 const listItem = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 20, scale: 1 },
   visible: { 
     opacity: 1, 
     y: 0, 
     scale: 1, 
-    transition: { type: 'spring', damping: 14, stiffness: 100 } 
+    transition: { type: 'spring', damping: 20, stiffness: 80 } 
   },
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  hidden: { opacity: 0, y: 20, scale: 1 },
   visible: { 
     opacity: 1, 
     y: 0, 
     scale: 1, 
-    transition: { type: 'spring', damping: 15, stiffness: 90 } 
+    transition: { type: 'spring', damping: 20, stiffness: 80 } 
   },
 };
 
@@ -1058,7 +1058,7 @@ function PixelTrailCursor() {
             animate={{ opacity: 0, scale: 0 }} // Shrink in place, don't fall down
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: 'linear' }}
-            className="absolute w-2 h-2 bg-red-600 border border-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)] rounded-sm"
+            className="absolute w-2 h-2 bg-red-600 border border-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)] rounded-none"
             style={{ left: p.x - 4, top: p.y - 4 }}
           />
         ))}
@@ -1145,7 +1145,7 @@ function Footer() {
    MAIN APP SHELL
 ========================================================= */
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [activeProject, setActiveProject] = useState<VideoProject>(WORKS[0]);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   
@@ -1246,7 +1246,6 @@ export default function App() {
         <audio ref={audioRef} src={audioSource} loop preload="auto" crossOrigin="anonymous" />
 
         <PixelTrailCursor />
-        <CustomCursor />
         <ScrollProgress />
 
         <Header 
