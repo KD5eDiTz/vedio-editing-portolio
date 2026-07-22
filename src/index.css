@@ -129,7 +129,16 @@ body {
    BLEACH POSTER STYLES (Solid White + Heavy Outline)
 ========================================================= */
 .bleach-poster-title {
-  color: #ffffff;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffffff 40%,
+    #ffedd5 65%,
+    #f97316 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   -webkit-text-stroke: 3px #18181b; /* Sharp black outline */
   filter: 
     drop-shadow(5px 6px 0px #18181b) /* Hard block shadow */
