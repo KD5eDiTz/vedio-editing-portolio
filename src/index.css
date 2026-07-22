@@ -125,6 +125,40 @@ body {
     drop-shadow(0px  6px 14px rgba(0,  0,  0, 0.18));
 }
 
+/* =========================================================
+   BLEACH POSTER STYLES (Solid White + Heavy Outline)
+========================================================= */
+.bleach-poster-title {
+  color: #ffffff;
+  -webkit-text-stroke: 3px #18181b; /* Sharp black outline */
+  filter: 
+    drop-shadow(5px 6px 0px #18181b) /* Hard block shadow */
+    drop-shadow(0px 10px 30px rgba(220, 38, 38, 0.5)); /* Crimson glow */
+}
+
+.light .bleach-poster-title {
+  color: #ffffff;
+  -webkit-text-stroke: 3px #09090b;
+  filter: 
+    drop-shadow(5px 6px 0px #09090b)
+    drop-shadow(0px 15px 35px rgba(249, 115, 22, 0.4));
+}
+
+/* Bleach Poster Subtitle (Brush Script) */
+.bleach-poster-subtitle {
+  font-family: 'Caveat', cursive;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  -webkit-text-stroke: 1.5px #18181b;
+  filter: drop-shadow(2px 2px 0px #18181b);
+}
+
+.light .bleach-poster-subtitle {
+  color: #ffffff;
+  -webkit-text-stroke: 1.5px #09090b;
+  filter: drop-shadow(3px 3px 0px #09090b);
+}
+
 /* Retro Glitch Animations */
 @keyframes glitch-anim {
   0% { transform: translate(0); clip-path: inset(0 0 0 0); }
