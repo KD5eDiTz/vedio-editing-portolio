@@ -49,10 +49,22 @@ html {
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   background-color: var(--canvas);
   color: var(--text-primary);
-  overscroll-behavior: none;
-  cursor: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+::selection {
+  background: var(--text-muted);
+  color: white;
 }
 
 /* Video Background Vignette */
@@ -76,22 +88,17 @@ body {
 
 /* 3D Glass Hello — Bleach Getsuga Theme: white → orange → crimson → black */
 .apple-glass-text {
-  font-family: var(--font-heading);
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
+  font-family: var(--font-apple-script);
   font-weight: 700;
   background: linear-gradient(
     168deg,
     #ffffff    0%,
-    #ffedd5    7%,
-    #fdba74   14%,
-    #f97316   22%,
-    #ea580c   34%,
-    #dc2626   50%,
-    #991b1b   65%,
-    #7f1d1d   78%,
-    #450a0a   89%,
-    #000000  100%
+    #ffedd5   10%,
+    #fdba74   25%,
+    #f97316   40%,
+    #ea580c   62%,
+    #dc2626   80%,
+    #7f1d1d  100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -123,49 +130,6 @@ body {
     drop-shadow(0px  0px 60px rgba(220, 38, 38, 0.28))
     drop-shadow(0px 30px 50px rgba(0,  0,  0, 0.30))
     drop-shadow(0px  6px 14px rgba(0,  0,  0, 0.18));
-}
-
-/* =========================================================
-   BLEACH POSTER STYLES (Solid White + Heavy Outline)
-========================================================= */
-.bleach-poster-title {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #ffffff 40%,
-    #ffedd5 65%,
-    #f97316 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-stroke: 3px #18181b; /* Sharp black outline */
-  filter: 
-    drop-shadow(5px 6px 0px #18181b) /* Hard block shadow */
-    drop-shadow(0px 10px 30px rgba(220, 38, 38, 0.5)); /* Crimson glow */
-}
-
-.light .bleach-poster-title {
-  color: #ffffff;
-  -webkit-text-stroke: 3px #09090b;
-  filter: 
-    drop-shadow(5px 6px 0px #09090b)
-    drop-shadow(0px 15px 35px rgba(249, 115, 22, 0.4));
-}
-
-/* Bleach Poster Subtitle (Brush Script) */
-.bleach-poster-subtitle {
-  font-family: 'Caveat', cursive;
-  color: #ffffff;
-  letter-spacing: 0.05em;
-  -webkit-text-stroke: 1.5px #18181b;
-  filter: drop-shadow(2px 2px 0px #18181b);
-}
-
-.light .bleach-poster-subtitle {
-  color: #ffffff;
-  -webkit-text-stroke: 1.5px #09090b;
-  filter: drop-shadow(3px 3px 0px #09090b);
 }
 
 /* Retro Glitch Animations */
