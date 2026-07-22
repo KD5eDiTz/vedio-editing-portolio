@@ -379,43 +379,91 @@ function Header({
 const STROKE_DASH = 9000; // generous upper bound for Pacifico outline perimeter
 
 function HeroSVGText({ word, wordIndex }: { word: string; wordIndex: number }) {
-  const dur = wordIndex === 0 ? 1.0 : 0.8;
-  const delay = wordIndex === 0 ? 0.1 : 0;
+  const dur = wordIndex === 0 ? 1.4 : 1.2;
+  const delay = 0.1;
+  const DASH = 3000;
   
   return (
     <div className="relative w-full flex flex-col items-center justify-center">
-      {/* Main BLEACH style block text */}
-      <motion.h1
-        className="bleach-poster-title text-center w-full select-none leading-none tracking-tight"
+      {/* SVG Container with hardware-accelerated CSS drop shadow */}
+      <svg
+        className="w-full select-none"
+        viewBox="0 0 1200 280"
         style={{ 
-          fontSize: word.length > 6 ? 'clamp(4rem, 15vw, 12rem)' : 'clamp(5rem, 20vw, 15rem)',
-          fontFamily: 'Impact, "Arial Black", sans-serif',
-          fontWeight: 900,
-          textTransform: 'uppercase',
-          transform: 'scaleY(0.85)', /* Squashes it to be wide and blocky like the Bleach logo */
+          overflow: 'visible',
+          filter: 'drop-shadow(5px 6px 0px #18181b) drop-shadow(0px 10px 30px rgba(220, 38, 38, 0.4))'
         }}
-        initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: dur, delay, ease: 'easeOut' }}
       >
-        {word}
-      </motion.h1>
+        <defs>
+          <linearGradient id="bleachGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="40%" stopColor="#ffffff" />
+            <stop offset="65%" stopColor="#ffedd5" />
+            <stop offset="100%" stopColor="#f97316" />
+          </linearGradient>
+        </defs>
+
+        {/* Layer 1: Thick Black Outline (fades in alongside fill) */}
+        <motion.text
+          x="600" y="230" textAnchor="middle"
+          fontSize={word.length > 6 ? 220 : 255}
+          fontFamily="Impact, 'Arial Black', sans-serif" fontWeight="900" textTransform="uppercase"
+          fill="none" stroke="#18181b" strokeWidth="14" strokeLinejoin="round"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: delay + dur - 0.2, ease: "easeOut" }}
+          style={{ transformOrigin: 'center', transform: 'scaleY(0.85)' }}
+        >
+          {word}
+        </motion.text>
+
+        {/* Layer 2: Gradient Fill (fades in) */}
+        <motion.text
+          x="600" y="230" textAnchor="middle"
+          fontSize={word.length > 6 ? 220 : 255}
+          fontFamily="Impact, 'Arial Black', sans-serif" fontWeight="900" textTransform="uppercase"
+          fill="url(#bleachGrad)" stroke="none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: delay + dur - 0.2, ease: "easeOut" }}
+          style={{ transformOrigin: 'center', transform: 'scaleY(0.85)' }}
+        >
+          {word}
+        </motion.text>
+
+        {/* Layer 3: The animated thin drawing stroke (traces the letters, then fades out) */}
+        <motion.text
+          x="600" y="230" textAnchor="middle"
+          fontSize={word.length > 6 ? 220 : 255}
+          fontFamily="Impact, 'Arial Black', sans-serif" fontWeight="900" textTransform="uppercase"
+          fill="none" stroke="#f97316" strokeWidth="4" strokeLinejoin="round"
+          initial={{ strokeDasharray: DASH, strokeDashoffset: DASH, opacity: 1 }}
+          animate={{ strokeDashoffset: 0, opacity: 0 }}
+          transition={{ 
+            strokeDashoffset: { duration: dur, delay, ease: "easeInOut" },
+            opacity: { duration: 0.4, delay: delay + dur - 0.2, ease: "easeOut" }
+          }}
+          style={{ transformOrigin: 'center', transform: 'scaleY(0.85)' }}
+        >
+          {word}
+        </motion.text>
+      </svg>
       
       {/* Thousand-Year Blood War style subtitle */}
       <motion.div
         className="absolute bottom-[-15%] right-[5%] md:right-[20%] z-20 pointer-events-none"
         initial={{ opacity: 0, x: -30, rotate: -3 }}
         animate={{ opacity: 1, x: 0, rotate: -3 }}
-        transition={{ duration: dur, delay: delay + 0.35, ease: 'easeOut' }}
+        transition={{ duration: dur, delay: delay + dur - 0.2, ease: 'easeOut' }}
       >
         <h2 
           className="bleach-poster-subtitle text-red-600 dark:text-red-500 text-right"
           style={{ 
-            fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+            fontSize: 'clamp(2.5rem, 6vw, 5.5rem)',
             fontWeight: 700,
           }}
         >
-          {wordIndex === 0 ? 'Editing Society' : 'Watashino Soul Society'}
+          {wordIndex === 0 ? 'Motion Designer' : 'Watashino Soul Society'}
         </h2>
       </motion.div>
     </div>
