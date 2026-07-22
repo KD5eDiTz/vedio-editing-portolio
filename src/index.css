@@ -76,7 +76,9 @@ body {
 
 /* 3D Glass Hello — Bleach Getsuga Theme: white → orange → crimson → black */
 .apple-glass-text {
-  font-family: var(--font-apple-script);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
   font-weight: 700;
   background: linear-gradient(
     168deg,

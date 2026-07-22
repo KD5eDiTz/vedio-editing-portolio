@@ -1025,8 +1025,8 @@ function ContactOutro() {
           <Mail className="w-4 h-4" /> {PROFILE.email}
         </a>
 
-        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="group inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-orange-600/30 hover:bg-white text-white hover:text-black hover:border-white backdrop-blur-md">
-          <Instagram className="w-4 h-4 text-pink-400 group-hover:text-black" /> Instagram
+        <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" data-hover className="group inline-flex items-center gap-3 text-sm font-extrabold uppercase tracking-wider px-8 py-4 border rounded-full transition-all duration-300 bg-transparent border-orange-600/30 hover:bg-[var(--text-primary)] text-[var(--text-primary)] hover:text-[var(--canvas)] hover:border-[var(--text-primary)] backdrop-blur-md">
+          <Instagram className="w-4 h-4 text-pink-400 group-hover:text-[var(--canvas)]" /> Instagram
         </a>
       </motion.div>
     </section>
