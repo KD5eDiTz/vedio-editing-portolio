@@ -203,7 +203,7 @@ function CustomCursor() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed top-0 left-0 z-[999] hidden md:block rounded-full mix-blend-difference"
+      className="pointer-events-none fixed top-0 left-0 z-[999] hidden md:block rounded-full"
       style={{ 
         x: springX, 
         y: springY, 
@@ -236,11 +236,11 @@ function ScrollProgress() {
 ========================================================= */
 function RetroGlitchShapes() {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
-      <div className="absolute top-[18%] left-[8%] text-orange-500 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#f97316]">▲</div>
-      <div className="absolute top-[35%] right-[10%] text-rose-500 font-mono text-4xl font-bold glitch-symbol drop-shadow-[0_0_10px_#f43f5e]">○</div>
-      <div className="absolute bottom-[28%] left-[12%] text-cyan-400 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#38bdf8]">✕</div>
-      <div className="absolute bottom-[18%] right-[15%] text-red-500 font-mono text-3xl font-bold glitch-symbol drop-shadow-[0_0_8px_#ef4444]">□</div>
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20 select-none">
+      <div className="absolute top-[18%] left-[8%] text-orange-500 font-mono text-3xl font-bold glitch-symbol">▲</div>
+      <div className="absolute top-[35%] right-[10%] text-rose-500 font-mono text-4xl font-bold glitch-symbol">○</div>
+      <div className="absolute bottom-[28%] left-[12%] text-cyan-400 font-mono text-3xl font-bold glitch-symbol">✕</div>
+      <div className="absolute bottom-[18%] right-[15%] text-red-500 font-mono text-3xl font-bold glitch-symbol">□</div>
     </div>
   );
 }
@@ -967,7 +967,7 @@ function PixelTrailCursor() {
             animate={{ opacity: 0, scale: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: 'linear' }}
-            className="absolute w-2 h-2 bg-gradient-to-br from-yellow-400 to-orange-500 shadow-[0_0_8px_rgba(250,204,21,0.8)] rounded-none origin-center"
+            className="absolute w-2 h-2 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-none origin-center"
             style={{ x: p.x - 4, y: p.y - 4, top: 0, left: 0 }} // Hardware accelerated
           />
         ))}
